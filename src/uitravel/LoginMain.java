@@ -4,9 +4,14 @@ import uitravel.Components.PanelCover;
 import uitravel.Components.PanelLoginAndRegister;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
@@ -21,6 +26,7 @@ public class LoginMain extends javax.swing.JFrame {
     /**
      * Creates new form LoginMain
      */
+    private JLabel exit;
     private MigLayout layout;
     private PanelCover cover;
     private PanelLoginAndRegister loginAndRegister;
@@ -28,17 +34,44 @@ public class LoginMain extends javax.swing.JFrame {
     private final double addSize = 30;
     private final double coverSize = 50;
     private final double loginSize = 50;
+    public void setLogin(boolean t){
+        this.isLogin = t;
+        init();
+
+    }
     public LoginMain() {
         initComponents();
-        init();
+     
     }
     private void init(){
         layout = new MigLayout("fill, insets 0");
         cover = new PanelCover();
+        cover.setLogin(isLogin);
         loginAndRegister = new PanelLoginAndRegister();
+        loginAndRegister.setLogin(isLogin);
         bg.setLayout(layout);
-        bg.add(cover,"width " + coverSize + "%, pos 0al 0 n 100%");
-        bg.add(loginAndRegister,"width " + loginSize + "%, pos 1al 0 n 100%");
+        System.out.println(isLogin);
+        exit = new JLabel();
+        bg.add(exit,"dock north");
+        exit.addMouseListener( new MouseAdapter(){
+            @Override
+            public void mousePressed(MouseEvent e) {
+                UserMain um = new UserMain();
+                um.setVisible(true);
+                dispose();
+            }   
+        });
+        if(isLogin){
+            bg.add(cover,"width " + coverSize + "%, pos al 0 n 100%");
+            bg.add(loginAndRegister,"width " + loginSize + "%, pos 0al 0 n 100%");
+           exit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Arrow - Left - blue.png")));
+
+        }
+        else{
+            bg.add(cover,"width " + coverSize + "%, pos 0al 0 n 100%");
+            bg.add(loginAndRegister,"width " + loginSize + "%, pos 1al 0 n 100%");
+           exit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Arrow - Left.png")));
+        }
 
         TimingTarget target = new TimingTargetAdapter(){
             @Override
@@ -50,10 +83,13 @@ public class LoginMain extends javax.swing.JFrame {
                     
                     fractionCover = 1f-faction;
                     fractionLogin = faction;
+                    exit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Arrow - Left.png")));
+
                 }
                 else{
                     fractionCover = faction;
                     fractionLogin = 1-faction;
+                    exit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Arrow - Left - blue.png")));
 
                 }
                 if(faction>=0.5f){
@@ -75,6 +111,7 @@ public class LoginMain extends javax.swing.JFrame {
                 ani.start();                
             }
         });
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.

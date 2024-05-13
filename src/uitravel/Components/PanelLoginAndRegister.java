@@ -18,13 +18,25 @@ import net.miginfocom.swing.MigLayout;
 
 public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
 
-    
+    private boolean isLogin;
+    public void setLogin(boolean t){
+        this.isLogin = t;
+        if(t){
+            login.setVisible(true);
+            register.setVisible(false);
+        }
+        else{
+             login.setVisible(false);
+         register.setVisible(true);
+        }
+
+    }
     public PanelLoginAndRegister() {
         initComponents();
         initRegister();
         initLogin();
-        login.setVisible(false);
-        register.setVisible(true);
+       // login.setVisible(false);
+        //register.setVisible(true);
     }
 
     private void initRegister() {
@@ -184,25 +196,10 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        login = new javax.swing.JPanel();
         register = new javax.swing.JPanel();
+        login = new javax.swing.JPanel();
 
         setLayout(new java.awt.CardLayout());
-
-        login.setBackground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout loginLayout = new javax.swing.GroupLayout(login);
-        login.setLayout(loginLayout);
-        loginLayout.setHorizontalGroup(
-            loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 327, Short.MAX_VALUE)
-        );
-        loginLayout.setVerticalGroup(
-            loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
-
-        add(login, "card3");
 
         register.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -218,6 +215,21 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         );
 
         add(register, "card2");
+
+        login.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout loginLayout = new javax.swing.GroupLayout(login);
+        login.setLayout(loginLayout);
+        loginLayout.setHorizontalGroup(
+            loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 327, Short.MAX_VALUE)
+        );
+        loginLayout.setVerticalGroup(
+            loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        add(login, "card3");
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

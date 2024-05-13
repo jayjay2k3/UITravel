@@ -19,12 +19,15 @@ public class PanelCover extends javax.swing.JPanel {
     private JLabel title;
     private JLabel description;
     private JLabel description1;
-    private boolean isLogin = false;
-
+    private boolean isLogin;
+    public void setLogin(boolean t){
+        this.isLogin =t;
+        init();
+    }
     public PanelCover() {
         initComponents();
         setOpaque(false);
-        init();
+
     }
     private void init() {
       if(isLogin){
