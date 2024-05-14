@@ -52,6 +52,7 @@ public class Header extends javax.swing.JPanel {
 
         myButton1 = new uitravel.Components.MyButton();
         myButton2 = new uitravel.Components.MyButton();
+        btnHelp = new javax.swing.JButton();
 
         myButton1.setForeground(new java.awt.Color(0, 51, 204));
         myButton1.setText("Đăng ký");
@@ -77,12 +78,21 @@ public class Header extends javax.swing.JPanel {
             }
         });
 
+        btnHelp.setText("jButton1");
+        btnHelp.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnHelpMouseEntered(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(211, Short.MAX_VALUE)
+                .addContainerGap(974, Short.MAX_VALUE)
+                .addComponent(btnHelp, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(58, 58, 58)
                 .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addComponent(myButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -94,7 +104,8 @@ public class Header extends javax.swing.JPanel {
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(myButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnHelp, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(33, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -108,14 +119,25 @@ public class Header extends javax.swing.JPanel {
          this.isLogin = true;
         eventLogin.actionPerformed(evt);
     }//GEN-LAST:event_myButton2ActionPerformed
+
+    private void btnHelpMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHelpMouseEntered
+        // TODO add your handling code here:
+       btnHelp.setOpaque(false);
+       btnHelp.setContentAreaFilled(false);
+       btnHelp.setBorderPainted(false);
+    }//GEN-LAST:event_btnHelpMouseEntered
     public void addEvent(ActionListener event) {
         this.eventLogin = event;
     }
     private void init() {
-     
+       btnHelp.setOpaque(false);
+       btnHelp.setContentAreaFilled(false);
+       btnHelp.setBorderPainted(false);
+       
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnHelp;
     private uitravel.Components.MyButton myButton1;
     private uitravel.Components.MyButton myButton2;
     // End of variables declaration//GEN-END:variables
