@@ -13,7 +13,10 @@ public final class MyButton extends JButton {
     public boolean isOver() {
         return over;
     }
-
+    public void setTransparent(boolean t){
+        setOpaque(t);
+        setContentAreaFilled(t);
+    }
     public void setOver(boolean over) {
         this.over = over;
     }
