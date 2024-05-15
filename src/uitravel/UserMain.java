@@ -11,17 +11,23 @@ import com.raven.datechooser.DateChooser;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import net.miginfocom.swing.MigLayout;
 import raven.datetime.component.date.DatePicker;
 import uitravel.Components.MainUI.Header;
+import uitravel.Components.MainUI.Hotel;
 import uitravel.Components.MyButton;
 import uitravel.Components.MyTextField;
+import uitravel.Components.RoundedPanel;
 
 /**
  *
@@ -52,8 +58,13 @@ public class UserMain extends javax.swing.JFrame {
         main = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1400, 800));
         setResizable(false);
+
+        main.setBackground(new java.awt.Color(255, 255, 255));
+        main.setBorder(null);
+        main.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        main.setAutoscrolls(true);
+        main.setOpaque(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -63,7 +74,7 @@ public class UserMain extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(main, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
+            .addComponent(main, javax.swing.GroupLayout.PREFERRED_SIZE, 810, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -114,10 +125,14 @@ public class UserMain extends javax.swing.JFrame {
     private MyButton btnSearch;
     private DateChooser selectDate;
     private javax.swing.JLayeredPane bg;
+    private RoundedPanel pnlHotel;
 
     private void init() {
+        
         bg = new JLayeredPane();
-        layout = new MigLayout("fill, insets 0");
+        //bg.setPreferredSize(new java.awt.Dimension(1400, 10000));
+
+        layout = new MigLayout("wrap, fill, insets 0","[]", "12[]12[]12");
         bg.setLayout(layout);
         header = new Header();
         bg.add(header,"dock north, width 100%,height 250");
@@ -130,6 +145,21 @@ public class UserMain extends javax.swing.JFrame {
         txtSearch = new uitravel.Components.MyTextField();
         txtSearch.setPrefixIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Pin - 1.png"))); // NOI18N
         txtSearch.setOpaque(false);
+        txtSearch.setText("Nhập tên khách sạn, địa điểm");
+        txtSearch.addFocusListener(new FocusAdapter(){
+              @Override
+              public void focusGained(FocusEvent e) {
+                  if("Nhập tên khách sạn, địa điểm".equals(txtSearch.getText())){
+                      txtSearch.setText("");
+                  }
+              }
+              @Override
+               public void focusLost(FocusEvent e) {
+                   if("".equals(txtSearch.getText())){
+                       txtSearch.setText("Nhập tên khách sạn, địa điểm");
+                   }
+               }
+        });
         txtDate = new MyTextField();
         txtDate.setPrefixIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Calendar.png"))); // NOI18N
 
@@ -149,13 +179,27 @@ public class UserMain extends javax.swing.JFrame {
         bg.add(txtDate,"cell 0 0,width 25%,height 50, align right,aligny top,gapleft 0, gapright 0");
         bg.add(txtRoom,"cell 0 0,width 25%,height 50, align right,aligny top,gapleft0");
         bg.add(btnSearch,"cell 0 0, align right,height 50,aligny top,gapleft0,gapright 0%");
-        
         selectDate = new DateChooser();
         selectDate.setTextField(txtDate);
         selectDate.setBetweenCharacter(" đến ");
         selectDate.setDateSelectionMode(DateChooser.DateSelectionMode.BETWEEN_DATE_SELECTED);
+       
+        //Hotel t = new Hotel();
+        //bg.add(t);
+        pnlHotel = new RoundedPanel();
+        pnlHotel.setPreferredSize(new Dimension(1400,1000));
+        pnlHotel.setBackground(Color.WHITE);
+        pnlHotel.setRadius(30);
+        pnlHotel.setOpaque(false);
         
+        Hotel t = new Hotel();
+        t.setPreferredSize(new Dimension(300,350));
+        pnlHotel.setLayout(new MigLayout("fill, insets 0","push[]push","[]push"));
+        pnlHotel.add(t);
+        bg.add(pnlHotel);
+
         main.setViewportView(bg);
+
         //jScrollPane1.getViewport().add(bg);
     }
     
