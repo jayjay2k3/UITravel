@@ -5,9 +5,14 @@
         <group>
             <file>file:/C:/UITravel/UITravel/src/uitravel/AdminPage.java</file>
             <file>file:/C:/UITravel/UITravel/src/uitravel/UITravel.java</file>
+            <file>file:/C:/UITravel/UITravel/src/uitravel/Components/MainUI/Header.java</file>
+            <file>file:/C:/UITravel/UITravel/src/uitravel/Components/TextField.java</file>
+            <file>file:/C:/UITravel/UITravel/src/uitravel/Components/MainUI/LeftBar.java</file>
             <file>file:/C:/UITravel/UITravel/src/uitravel/Components/PanelCover.java</file>
             <file>file:/C:/UITravel/UITravel/src/uitravel/LoginMain.java</file>
+            <file>file:/C:/UITravel/UITravel/src/uitravel/Components/PanelLoginAndRegister.java</file>
             <file>file:/C:/UITravel/UITravel/src/uitravel/UserMain.java</file>
+            <file>file:/C:/UITravel/UITravel/src/uitravel/Components/MainUI/ImageAvatar.java</file>
         </group>
     </open-files>
 </project-private>
