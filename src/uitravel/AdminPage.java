@@ -38,7 +38,10 @@ public class AdminPage extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextPane2 = new javax.swing.JTextPane();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextPane3 = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -46,6 +49,7 @@ public class AdminPage extends javax.swing.JFrame {
 
         TongQuanButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         TongQuanButton.setText("Tổng quan");
+        TongQuanButton.setBorder(null);
         TongQuanButton.setBorderPainted(false);
         TongQuanButton.setFocusPainted(false);
         TongQuanButton.addActionListener(new java.awt.event.ActionListener() {
@@ -55,7 +59,7 @@ public class AdminPage extends javax.swing.JFrame {
         });
 
         QuanLiPhongButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        QuanLiPhongButton.setText("Quản Lí Phòng");
+        QuanLiPhongButton.setText("Quản Lí Tour");
         QuanLiPhongButton.setBorderPainted(false);
         QuanLiPhongButton.setFocusPainted(false);
         QuanLiPhongButton.addActionListener(new java.awt.event.ActionListener() {
@@ -65,7 +69,7 @@ public class AdminPage extends javax.swing.JFrame {
         });
 
         ThongBaoButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        ThongBaoButton.setText("Thông Báo");
+        ThongBaoButton.setText("Yêu Cầu Đặt Tour");
         ThongBaoButton.setBorderPainted(false);
         ThongBaoButton.setFocusPainted(false);
         ThongBaoButton.addActionListener(new java.awt.event.ActionListener() {
@@ -120,27 +124,37 @@ public class AdminPage extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
-        jLabel2.setText("Số Phòng Còn Trống");
-        jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
-        jLabel2.setPreferredSize(new java.awt.Dimension(200, 150));
-        jLabel2.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        jScrollPane2.setToolTipText("");
+
+        jTextPane2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jTextPane2.setText("Số Yêu Cầu Chưa Duyệt");
+        jScrollPane2.setViewportView(jTextPane2);
+
+        jScrollPane3.setToolTipText("");
+
+        jTextPane3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jTextPane3.setText("Số Tour Hiện Có");
+        jScrollPane3.setViewportView(jTextPane3);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(167, 167, 167)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(1000, Short.MAX_VALUE))
+                .addGap(114, 114, 114)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(81, 81, 81)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(658, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(169, 169, 169)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(139, 139, 139)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(539, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -216,7 +230,10 @@ public class AdminPage extends javax.swing.JFrame {
     private javax.swing.JButton TongQuanButton;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextPane jTextPane2;
+    private javax.swing.JTextPane jTextPane3;
     // End of variables declaration//GEN-END:variables
 }
