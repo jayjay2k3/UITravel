@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.ArrayList;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFormattedTextField;
@@ -28,6 +29,8 @@ import uitravel.Components.MainUI.Hotel;
 import uitravel.Components.MyButton;
 import uitravel.Components.MyTextField;
 import uitravel.Components.RoundedPanel;
+import java.util.List;
+
 
 /**
  *
@@ -41,6 +44,8 @@ public class UserMain extends javax.swing.JFrame {
 
     private MigLayout layout;
     private Header header;
+    private List<Hotel> allHotels;
+
     public UserMain() {
         initComponents();
         init();
@@ -184,25 +189,30 @@ public class UserMain extends javax.swing.JFrame {
         selectDate.setBetweenCharacter(" đến ");
         selectDate.setDateSelectionMode(DateChooser.DateSelectionMode.BETWEEN_DATE_SELECTED);
        
-        //Hotel t = new Hotel();
-        //bg.add(t);
         pnlHotel = new RoundedPanel();
         pnlHotel.setPreferredSize(new Dimension(1400,1000));
         pnlHotel.setBackground(Color.WHITE);
         pnlHotel.setRadius(30);
         pnlHotel.setOpaque(false);
         
-        Hotel t = new Hotel();
-        t.setPreferredSize(new Dimension(300,350));
-        pnlHotel.setLayout(new MigLayout("fill, insets 0","push[]push","[]push"));
-        pnlHotel.add(t);
-        bg.add(pnlHotel);
+        loadHotelData();
+     
 
         main.setViewportView(bg);
 
         //jScrollPane1.getViewport().add(bg);
     }
-    
+    private void loadHotelData(){
+        pnlHotel.setLayout(new MigLayout("wrap,fill, insets 0","push[]10[]10[]10[]push","[]10[]"));
 
+        allHotels = new ArrayList<>();
+        for(int i=0;i<100;i++){
+            Hotel t = new Hotel();
+            t.setPreferredSize(new Dimension(300,350));
+            pnlHotel.add(t);
+            allHotels.add(t);
+        }
+        bg.add(pnlHotel);
+    }
    
 }
