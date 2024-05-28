@@ -19,6 +19,8 @@ import net.miginfocom.swing.MigLayout;
 public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
 
     private boolean isLogin;
+    private ActionListener Loging;
+
     public void setLogin(boolean t){
         this.isLogin = t;
         if(t){
@@ -174,7 +176,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
                             JOptionPane.INFORMATION_MESSAGE);
                 }
                 else{
-                    System.out.println("OK");
+                            Loging.actionPerformed(e);
                 }
                 
             }
@@ -191,7 +193,9 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
             login.setVisible(true);
         }
     }
-
+    public void addEvent(ActionListener event) {
+        this.Loging = event;
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

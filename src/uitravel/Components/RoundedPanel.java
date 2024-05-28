@@ -15,7 +15,7 @@ import java.awt.geom.RoundRectangle2D;
  * @author ACER
  */
 public class RoundedPanel extends javax.swing.JPanel {
-    private int radius;
+    private int radius=30;
     private boolean withBorder;
     private Color borderColor;
 
@@ -24,6 +24,8 @@ public class RoundedPanel extends javax.swing.JPanel {
      */
     public RoundedPanel() {
         initComponents();
+        setOpaque(false);
+
     }
     
     public RoundedPanel(int radius) {

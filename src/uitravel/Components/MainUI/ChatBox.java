@@ -4,6 +4,7 @@
  */
 package uitravel.Components.MainUI;
 
+import javax.swing.JScrollBar;
 import net.miginfocom.swing.MigLayout;
 import uitravel.Components.MainUI.Chat.ChatLeft;
 import uitravel.Components.MainUI.Chat.ChatRight;
@@ -72,6 +73,7 @@ public final class ChatBox extends javax.swing.JPanel {
         bg.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         bg.setAutoscrolls(true);
         bg.setOpaque(false);
+        bg.setPreferredSize(new java.awt.Dimension(370, 331));
 
         box.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -79,15 +81,16 @@ public final class ChatBox extends javax.swing.JPanel {
         box.setLayout(boxLayout);
         boxLayout.setHorizontalGroup(
             boxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 371, Short.MAX_VALUE)
+            .addGap(0, 381, Short.MAX_VALUE)
         );
         boxLayout.setVerticalGroup(
             boxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 331, Short.MAX_VALUE)
+            .addGap(0, 311, Short.MAX_VALUE)
         );
 
         bg.setViewportView(box);
 
+        txtInput.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         txtInput.setText("Nhập tin nhắn của bạn ở đây");
         txtInput.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -98,6 +101,7 @@ public final class ChatBox extends javax.swing.JPanel {
             }
         });
 
+        btnSubmit.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         btnSubmit.setText("Gửi");
         btnSubmit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -148,8 +152,8 @@ public final class ChatBox extends javax.swing.JPanel {
                     .addComponent(jLabel1)
                     .addComponent(jLabel2))
                 .addGap(18, 18, 18)
-                .addComponent(bg, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(bg, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtInput)
                     .addComponent(btnSubmit, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE))
@@ -188,6 +192,8 @@ public final class ChatBox extends javax.swing.JPanel {
         if(!("Nhập tin nhắn của bạn ở đây".equals(txtInput.getText())||"".equals(txtInput.getText()))){
             addRight(txtInput.getText());
             txtInput.setText("");
+            JScrollBar verticalBar = bg.getVerticalScrollBar();
+            verticalBar.setValue(verticalBar.getMaximum());
         }
     }//GEN-LAST:event_btnSubmitActionPerformed
 
