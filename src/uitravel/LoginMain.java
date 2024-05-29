@@ -1,5 +1,6 @@
 package uitravel;
 
+import com.formdev.flatlaf.FlatIntelliJLaf;
 import uitravel.Components.PanelCover;
 import uitravel.Components.PanelLoginAndRegister;
 import java.awt.event.ActionEvent;
@@ -187,7 +188,8 @@ public class LoginMain extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(LoginMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
+        
+        FlatIntelliJLaf.setup();
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

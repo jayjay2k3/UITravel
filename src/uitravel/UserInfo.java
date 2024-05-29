@@ -9,9 +9,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import net.miginfocom.swing.MigLayout;
-import uitravel.Components.UserInfo.AccountInfo;
-import uitravel.Components.UserInfo.Balances;
-import uitravel.Components.UserInfo.BookingHistory;
+import uitravel.User.UserInfo.AccountInfo;
+import uitravel.User.UserInfo.Balances;
+import uitravel.User.UserInfo.BookingHistory;
 
 /**
  *
@@ -39,6 +39,11 @@ public class UserInfo extends javax.swing.JFrame {
                 um.setVisible(true);
                 dispose();
         });
+        header.addChatBoxEvent((ActionEvent e) -> {
+            chatBox.setVisible(true);
+
+        });
+        chatBox.setVisible(false);
     }
 
     /**
@@ -52,20 +57,20 @@ public class UserInfo extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         bg = new javax.swing.JLayeredPane();
-        header = new uitravel.Components.UserInfo.Header();
         roundedPanel1 = new uitravel.Components.RoundedPanel();
         roundedImage1 = new uitravel.Components.RoundedImage();
         txtName = new javax.swing.JLabel();
-        item2 = new uitravel.Components.UserInfo.Component.Item();
-        item3 = new uitravel.Components.UserInfo.Component.Item();
-        item4 = new uitravel.Components.UserInfo.Component.Item();
-        item5 = new uitravel.Components.UserInfo.Component.Item();
-        item6 = new uitravel.Components.UserInfo.Component.Item();
+        item2 = new uitravel.User.UserInfo.Component.Item();
+        item3 = new uitravel.User.UserInfo.Component.Item();
+        item4 = new uitravel.User.UserInfo.Component.Item();
+        item5 = new uitravel.User.UserInfo.Component.Item();
+        item6 = new uitravel.User.UserInfo.Component.Item();
         cover = new javax.swing.JLayeredPane();
+        header = new uitravel.User.UserInfo.Header();
+        chatBox = new uitravel.User.MainUI.ChatBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
-        setPreferredSize(new java.awt.Dimension(1400, 800));
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -76,8 +81,6 @@ public class UserInfo extends javax.swing.JFrame {
 
         roundedPanel1.setBackground(new java.awt.Color(255, 255, 255));
         roundedPanel1.setBorderColor(new java.awt.Color(204, 204, 204));
-        roundedPanel1.setOpaque(false);
-        roundedPanel1.setRadius(30);
         roundedPanel1.setWithBorder(true);
 
         roundedImage1.setOpaque(false);
@@ -113,11 +116,16 @@ public class UserInfo extends javax.swing.JFrame {
         });
 
         item4.setText("Chuyến đi hiện tại");
+        item4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                item4MousePressed(evt);
+            }
+        });
 
         item5.setText("Cài đặt");
-        item5.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                item5MousePressed(evt);
+        item5.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                item5KeyPressed(evt);
             }
         });
 
@@ -133,19 +141,27 @@ public class UserInfo extends javax.swing.JFrame {
         roundedPanel1Layout.setHorizontalGroup(
             roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(roundedPanel1Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(roundedImage1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, roundedPanel1Layout.createSequentialGroup()
-                .addGap(1, 1, 1)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(item3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(item2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(item4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(item5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(item6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(roundedPanel1Layout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addComponent(roundedImage1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(roundedPanel1Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(item2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(roundedPanel1Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(item3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(roundedPanel1Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(item4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(roundedPanel1Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(item5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(roundedPanel1Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(item6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(1, 1, 1))
         );
         roundedPanel1Layout.setVerticalGroup(
@@ -158,7 +174,7 @@ public class UserInfo extends javax.swing.JFrame {
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
                         .addGap(28, 28, 28)
                         .addComponent(txtName)))
-                .addGap(30, 30, 30)
+                .addGap(18, 18, 18)
                 .addComponent(item2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(item3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -168,7 +184,7 @@ public class UserInfo extends javax.swing.JFrame {
                 .addComponent(item5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(item6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
 
         cover.setPreferredSize(new java.awt.Dimension(850, 532));
@@ -181,36 +197,49 @@ public class UserInfo extends javax.swing.JFrame {
         );
         coverLayout.setVerticalGroup(
             coverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 532, Short.MAX_VALUE)
+            .addGap(0, 744, Short.MAX_VALUE)
         );
 
-        bg.setLayer(header, javax.swing.JLayeredPane.DEFAULT_LAYER);
         bg.setLayer(roundedPanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         bg.setLayer(cover, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        bg.setLayer(header, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        bg.setLayer(chatBox, javax.swing.JLayeredPane.POPUP_LAYER);
 
         javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
         bg.setLayout(bgLayout);
         bgLayout.setHorizontalGroup(
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(header, javax.swing.GroupLayout.PREFERRED_SIZE, 1401, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(bgLayout.createSequentialGroup()
                 .addGap(152, 152, 152)
                 .addComponent(roundedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
+                .addGap(40, 40, 40)
                 .addComponent(cover, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(500, Short.MAX_VALUE))
+            .addGroup(bgLayout.createSequentialGroup()
+                .addComponent(header, javax.swing.GroupLayout.PREFERRED_SIZE, 1401, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(bgLayout.createSequentialGroup()
+                    .addGap(960, 960, 960)
+                    .addComponent(chatBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(504, Short.MAX_VALUE)))
         );
         bgLayout.setVerticalGroup(
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bgLayout.createSequentialGroup()
                 .addComponent(header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(56, 56, 56)
+                .addGap(44, 44, 44)
                 .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(roundedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cover, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 122, Short.MAX_VALUE))
+                    .addComponent(cover, javax.swing.GroupLayout.DEFAULT_SIZE, 744, Short.MAX_VALUE)
+                    .addGroup(bgLayout.createSequentialGroup()
+                        .addComponent(roundedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(116, 116, 116)))
+                .addGap(104, 104, 104))
+            .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(bgLayout.createSequentialGroup()
+                    .addGap(350, 350, 350)
+                    .addComponent(chatBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(196, Short.MAX_VALUE)))
         );
 
         jScrollPane1.setViewportView(bg);
@@ -266,6 +295,14 @@ public class UserInfo extends javax.swing.JFrame {
         cover.revalidate();
     }//GEN-LAST:event_item2MousePressed
 
+    private void item4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_item4MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_item4MousePressed
+
+    private void item5KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_item5KeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_item5KeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -304,13 +341,14 @@ public class UserInfo extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLayeredPane bg;
+    private uitravel.User.MainUI.ChatBox chatBox;
     private javax.swing.JLayeredPane cover;
-    private uitravel.Components.UserInfo.Header header;
-    private uitravel.Components.UserInfo.Component.Item item2;
-    private uitravel.Components.UserInfo.Component.Item item3;
-    private uitravel.Components.UserInfo.Component.Item item4;
-    private uitravel.Components.UserInfo.Component.Item item5;
-    private uitravel.Components.UserInfo.Component.Item item6;
+    private uitravel.User.UserInfo.Header header;
+    private uitravel.User.UserInfo.Component.Item item2;
+    private uitravel.User.UserInfo.Component.Item item3;
+    private uitravel.User.UserInfo.Component.Item item4;
+    private uitravel.User.UserInfo.Component.Item item5;
+    private uitravel.User.UserInfo.Component.Item item6;
     private javax.swing.JScrollPane jScrollPane1;
     private uitravel.Components.RoundedImage roundedImage1;
     private uitravel.Components.RoundedPanel roundedPanel1;

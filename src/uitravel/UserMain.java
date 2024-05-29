@@ -5,40 +5,26 @@
 package uitravel;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.raven.datechooser.DateChooser;
-import com.raven.glasspanepopup.DefaultLayoutCallBack;
-import com.raven.glasspanepopup.DefaultOption;
 import com.raven.glasspanepopup.GlassPanePopup;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import net.miginfocom.swing.MigLayout;
-import raven.datetime.component.date.DatePicker;
-import uitravel.Components.MainUI.NoLoggedHeader;
-import uitravel.Components.MainUI.Hotel;
+import uitravel.User.MainUI.NoLoggedHeader;
+import uitravel.User.MainUI.Tour;
 import uitravel.Components.MyButton;
 import uitravel.Components.MyTextField;
 import uitravel.Components.RoundedPanel;
 import java.util.List;
-import net.miginfocom.layout.ComponentWrapper;
-import net.miginfocom.layout.LayoutCallback;
-import uitravel.Components.MainUI.ChatBox;
-import uitravel.Components.MainUI.LoggedHeader;
+import uitravel.User.MainUI.LoggedHeader;
 
 
 /**
@@ -55,7 +41,7 @@ public class UserMain extends javax.swing.JFrame {
     private NoLoggedHeader header1;
     private LoggedHeader header2;
 
-    private List<Hotel> allHotels;
+    private List<Tour> allHotels;
 
     public UserMain() {
         initComponents();
@@ -77,17 +63,18 @@ public class UserMain extends javax.swing.JFrame {
     private void initComponents() {
 
         jLayeredPane1 = new javax.swing.JLayeredPane();
+        chatBox = new uitravel.User.MainUI.ChatBox();
         main = new javax.swing.JScrollPane();
         bg = new javax.swing.JLayeredPane();
-        chatBox = new uitravel.Components.MainUI.ChatBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1400, 800));
         setResizable(false);
+        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
 
         main.setBackground(new java.awt.Color(255, 255, 255));
         main.setBorder(null);
         main.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        main.setAutoscrolls(true);
         main.setOpaque(false);
 
         javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
@@ -103,46 +90,31 @@ public class UserMain extends javax.swing.JFrame {
 
         main.setViewportView(bg);
 
-        jLayeredPane1.setLayer(main, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(chatBox, javax.swing.JLayeredPane.POPUP_LAYER);
+        jLayeredPane1.setLayer(main, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
         jLayeredPane1Layout.setHorizontalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
-                .addContainerGap(1013, Short.MAX_VALUE)
-                .addComponent(chatBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addComponent(main)
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(main, javax.swing.GroupLayout.DEFAULT_SIZE, 1412, Short.MAX_VALUE))
+                .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(chatBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
-                .addContainerGap(364, Short.MAX_VALUE)
-                .addComponent(chatBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addComponent(main)
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(main, javax.swing.GroupLayout.DEFAULT_SIZE, 812, Short.MAX_VALUE))
+                .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(chatBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
+        getContentPane().add(jLayeredPane1);
 
         pack();
         setLocationRelativeTo(null);
@@ -185,7 +157,7 @@ public class UserMain extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLayeredPane bg;
-    private uitravel.Components.MainUI.ChatBox chatBox;
+    private uitravel.User.MainUI.ChatBox chatBox;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JScrollPane main;
     // End of variables declaration//GEN-END:variables
@@ -198,6 +170,7 @@ public class UserMain extends javax.swing.JFrame {
     private RoundedPanel pnlHotel;
 
     private void init() {
+
         GlassPanePopup.install(this);
 
         bg = new JLayeredPane();
@@ -312,8 +285,33 @@ public class UserMain extends javax.swing.JFrame {
         loadHotelData();
 
         main.setViewportView(bg);
+        addChatBox();
+  
+    }
+    private void addChatBox(){
+        javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
+        jLayeredPane1.setLayout(jLayeredPane1Layout);
+
+        jLayeredPane1Layout.setHorizontalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
+                .addContainerGap(1013, Short.MAX_VALUE)
+                .addComponent(chatBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(main, javax.swing.GroupLayout.DEFAULT_SIZE, 1412, Short.MAX_VALUE))
+        );
+        jLayeredPane1Layout.setVerticalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
+                .addContainerGap(364, Short.MAX_VALUE)
+                .addComponent(chatBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(main, javax.swing.GroupLayout.DEFAULT_SIZE, 812, Short.MAX_VALUE))
+        );
         chatBox.setVisible(false);
-      
+
     }
     
 
@@ -322,7 +320,7 @@ public class UserMain extends javax.swing.JFrame {
 
         allHotels = new ArrayList<>();
         for(int i=0;i<100;i++){
-            Hotel t = new Hotel();
+            Tour t = new Tour();
             t.setPreferredSize(new Dimension(300,350));
             pnlHotel.add(t);
             allHotels.add(t);

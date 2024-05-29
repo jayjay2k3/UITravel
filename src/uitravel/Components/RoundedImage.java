@@ -26,24 +26,24 @@ public class RoundedImage extends javax.swing.JPanel {
         setImage("/resources/backimg.jpg");
 
     }
- @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        if (image != null) {
-            //setOpaque(false);
-            java.awt.Graphics2D g2 = (java.awt.Graphics2D) g;
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    @Override
+       protected void paintComponent(Graphics g) {
+           super.paintComponent(g);
+           if (image != null) {
+               //setOpaque(false);
+               java.awt.Graphics2D g2 = (java.awt.Graphics2D) g;
+               g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            // Create a rounded rectangle shape for clipping
-            RoundRectangle2D roundedRectangle = new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), radius, radius);
-            g2.setClip(roundedRectangle);
+               // Create a rounded rectangle shape for clipping
+               RoundRectangle2D roundedRectangle = new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), radius, radius);
+               g2.setClip(roundedRectangle);
 
-            // Draw the image
-            g2.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+               // Draw the image
+               g2.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 
-            g2.dispose();
-        }
-    }
+               g2.dispose();
+           }
+       }
 
     public void setImage(String imagePath) {
         ImageIcon icon = new ImageIcon(getClass().getResource(imagePath));
