@@ -1,0 +1,22 @@
+[33m47d0fa3[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mBao[m[33m)[m HEAD@{0}: reset: moving to 47d0fa33769a3cffd9f14695052849e17185c77b
+[33m47d0fa3[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mBao[m[33m)[m HEAD@{1}: reset: moving to 47d0fa33769a3cffd9f14695052849e17185c77b
+[33m47d0fa3[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mBao[m[33m)[m HEAD@{2}: reset: moving to 47d0fa33769a3cffd9f14695052849e17185c77b
+[33m04f6817[m[33m ([m[1;31morigin/Bao[m[33m)[m HEAD@{3}: reset: moving to 04f68176d40e1ebca0eda98213f1855ee9223ebf
+[33m04f6817[m[33m ([m[1;31morigin/Bao[m[33m)[m HEAD@{4}: checkout: moving from main to Bao
+[33m3eb00e6[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{5}: checkout: moving from Bao to main
+[33m04f6817[m[33m ([m[1;31morigin/Bao[m[33m)[m HEAD@{6}: reset: moving to HEAD
+[33m04f6817[m[33m ([m[1;31morigin/Bao[m[33m)[m HEAD@{7}: commit (amend): Merge branch 'Bao' of https://github.com/jayjay2k3/UITravel into Bao
+[33m96be780[m HEAD@{8}: pull: Merge made by the 'ort' strategy.
+[33m47d0fa3[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mBao[m[33m)[m HEAD@{9}: commit: a
+[33ma53efbc[m HEAD@{10}: commit (amend): 
+[33m218f55f[m HEAD@{11}: checkout: moving from Tins to Bao
+[33m096aac1[m HEAD@{12}: checkout: moving from Bao to Tins
+[33m218f55f[m HEAD@{13}: reset: moving to HEAD
+[33m218f55f[m HEAD@{14}: commit: 
+[33m3eb00e6[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{15}: checkout: moving from main to Bao
+[33m3fbdf84[m HEAD@{16}: reset: moving to HEAD
+[33m3fbdf84[m HEAD@{17}: commit: 
+[33m4e4a335[m HEAD@{18}: commit: 
+[33me6cd085[m HEAD@{19}: commit: 
+[33m290632e[m HEAD@{20}: commit: 
+[33m516a901[m HEAD@{21}: clone: from https://github.com/jayjay2k3/UITravel.git
