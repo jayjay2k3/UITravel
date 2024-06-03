@@ -53,6 +53,7 @@ public class Balances extends javax.swing.JPanel {
         cover = new javax.swing.JLayeredPane();
 
         setBackground(new java.awt.Color(255, 255, 255));
+        setOpaque(false);
         setPreferredSize(new java.awt.Dimension(850, 500));
 
         txtHeader.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N

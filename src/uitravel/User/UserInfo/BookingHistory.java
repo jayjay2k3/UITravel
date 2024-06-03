@@ -48,6 +48,7 @@ public class BookingHistory extends javax.swing.JPanel {
         cover = new javax.swing.JLayeredPane();
 
         setBackground(new java.awt.Color(255, 255, 255));
+        setOpaque(false);
         setPreferredSize(new java.awt.Dimension(850, 1000));
 
         txtName.setBackground(new java.awt.Color(255, 255, 255));

@@ -10,6 +10,7 @@ import com.raven.glasspanepopup.DefaultOption;
 import com.raven.glasspanepopup.GlassPanePopup;
 import java.awt.Component;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.SwingUtilities;
@@ -17,6 +18,7 @@ import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
 import net.miginfocom.swing.MigLayout;
 import uitravel.Admin.TourInfo.ADShortTourInfo;
+import uitravel.Admin.TourInfo.TourBookingData;
 import uitravel.Admin.component.UserBar;
 
 /**
@@ -43,6 +45,9 @@ public class AdminMain extends javax.swing.JFrame {
         allTour = new ArrayList<>();
         for(int i=0;i<20;i++){
             ADShortTourInfo t = new ADShortTourInfo();
+            t.addEventGetTourInfo((ActionEvent e) -> {
+               GlassPanePopup.showPopup(new TourBookingData());
+            });
             allTour.add(t);
             cover.add(t);
         }

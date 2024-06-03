@@ -27,28 +27,33 @@ public class MyTextField extends JTextField {
         this.suffixIcon = suffixIcon;
         initBorder();
     }
-
+    public void setWithBorder(boolean withBorder){
+        this.withBorder = withBorder;
+    }
+    public boolean setWithBorder(){
+        return withBorder;
+    }
     private Icon prefixIcon;
     private Icon suffixIcon;
-
+    private boolean withBorder = true;
     public MyTextField() {
         setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
     }
-
+    
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         paintIcon(g);
         //  paint border
-        if (isFocusOwner()) {
+       if(withBorder){
+            if (isFocusOwner()) {
             g.setColor(new Color(4, 88, 167));
-            g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
             g.drawRect(1, 1, getWidth() - 3, getHeight() - 3);
         } else {
             g.setColor(new Color(142, 142, 142));
             g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
-            g.drawRect(1, 1, getWidth() - 3, getHeight() - 3);
         }
+       }
     }
 
     private void paintIcon(Graphics g) {

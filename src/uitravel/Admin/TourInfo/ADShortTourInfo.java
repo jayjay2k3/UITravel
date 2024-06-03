@@ -6,6 +6,7 @@ package uitravel.Admin.TourInfo;
 
 import uitravel.Components.TourInfo.Component.*;
 import java.awt.Color;
+import java.awt.event.ActionListener;
 
 /**
  *
@@ -13,9 +14,10 @@ import java.awt.Color;
  */
 public class ADShortTourInfo extends javax.swing.JPanel {
 
-    /**
-     * Creates new form ADShortTourInfo
-     */
+    private ActionListener eventGetFullTourInfo;
+    public void addEventGetTourInfo(ActionListener event) {
+        this.eventGetFullTourInfo = event;
+    }
     private String id;
     public ADShortTourInfo() {
         initComponents();
@@ -102,16 +104,27 @@ public class ADShortTourInfo extends javax.swing.JPanel {
         txtDescription.setEnabled(false);
         txtDescription.setOpaque(false);
 
-        myButton1.setForeground(new java.awt.Color(0, 102, 204));
-        myButton1.setText("Chỉnh sửa");
-        myButton1.setBorderColor(new java.awt.Color(0, 153, 204));
+        myButton1.setBackground(new java.awt.Color(0, 0, 255));
+        myButton1.setForeground(new java.awt.Color(255, 255, 255));
+        myButton1.setText("Xem thông tin ");
+        myButton1.setBorderColor(new java.awt.Color(0, 0, 255));
+        myButton1.setColor(new java.awt.Color(0, 0, 255));
+        myButton1.setColorClick(new java.awt.Color(0, 150, 255));
+        myButton1.setColorOver(new java.awt.Color(0, 100, 255));
+        myButton1.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         myButton1.setRadius(10);
+        myButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                myButton1ActionPerformed(evt);
+            }
+        });
 
         txtPlace.setFont(new java.awt.Font("Times New Roman", 2, 14)); // NOI18N
         txtPlace.setText("TP HCM");
 
-        txtScore.setFont(new java.awt.Font("Times New Roman", 2, 14)); // NOI18N
-        txtScore.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Star.png"))); // NOI18N
+        txtScore.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        txtScore.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Star1.png"))); // NOI18N
+        txtScore.setText("1");
 
         javax.swing.GroupLayout roundedPanel1Layout = new javax.swing.GroupLayout(roundedPanel1);
         roundedPanel1.setLayout(roundedPanel1Layout);
@@ -123,25 +136,28 @@ public class ADShortTourInfo extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
-                        .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtName)
-                            .addComponent(txtPlace))
+                        .addComponent(txtName)
                         .addGap(285, 285, 285))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, roundedPanel1Layout.createSequentialGroup()
-                            .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(roundedPanel1Layout.createSequentialGroup()
+                            .addComponent(txtPlace)
+                            .addGap(284, 284, 284)
+                            .addComponent(txtScore))
+                        .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, roundedPanel1Layout.createSequentialGroup()
                                 .addComponent(txtTime)
-                                .addComponent(txtScore))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(txtDescription, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtDescription, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(0, 1, Short.MAX_VALUE))
         );
         roundedPanel1Layout.setVerticalGroup(
             roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(roundedPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(txtPlace)
+                .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtPlace)
+                    .addComponent(txtScore))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtName)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -149,10 +165,8 @@ public class ADShortTourInfo extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtTime)
-                    .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(txtScore)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(10, Short.MAX_VALUE))
             .addGroup(roundedPanel1Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -172,6 +186,10 @@ public class ADShortTourInfo extends javax.swing.JPanel {
                  repaint();
 
     }//GEN-LAST:event_formMouseExited
+
+    private void myButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myButton1ActionPerformed
+        eventGetFullTourInfo.actionPerformed(evt);
+    }//GEN-LAST:event_myButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

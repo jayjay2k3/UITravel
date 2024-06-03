@@ -37,9 +37,10 @@ public class SettingTourInfo extends javax.swing.JFrame {
         customLineComponent1 = new uitravel.Components.CustomLineComponent();
         user3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
+        txtTourID = new javax.swing.JLabel();
+        txtTourID1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1400, 800));
         setResizable(false);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
 
@@ -78,7 +79,7 @@ public class SettingTourInfo extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(12, 12, 12)
                 .addComponent(txtEmail)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         customLineComponent1.setLineColor(new java.awt.Color(102, 153, 255));
@@ -112,6 +113,14 @@ public class SettingTourInfo extends javax.swing.JFrame {
                 .addGap(18, 18, 18))
         );
 
+        txtTourID.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
+        txtTourID.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        txtTourID.setText("21521857");
+
+        txtTourID1.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
+        txtTourID1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        txtTourID1.setText("ID:");
+
         javax.swing.GroupLayout headerLayout = new javax.swing.GroupLayout(header);
         header.setLayout(headerLayout);
         headerLayout.setHorizontalGroup(
@@ -121,7 +130,11 @@ public class SettingTourInfo extends javax.swing.JFrame {
                 .addComponent(user3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(245, 245, 245)
                 .addComponent(user, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(649, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 457, Short.MAX_VALUE)
+                .addComponent(txtTourID1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtTourID)
+                .addGap(101, 101, 101))
             .addGroup(headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(headerLayout.createSequentialGroup()
                     .addGap(0, 0, 0)
@@ -130,14 +143,20 @@ public class SettingTourInfo extends javax.swing.JFrame {
         );
         headerLayout.setVerticalGroup(
             headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(headerLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(user, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(17, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, headerLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(user3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(headerLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(user, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(7, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, headerLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtTourID)
+                    .addComponent(txtTourID1))
+                .addGap(34, 34, 34))
             .addGroup(headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, headerLayout.createSequentialGroup()
                     .addContainerGap(90, Short.MAX_VALUE)
@@ -224,6 +243,8 @@ public class SettingTourInfo extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane main;
     private javax.swing.JLabel txtEmail;
+    private javax.swing.JLabel txtTourID;
+    private javax.swing.JLabel txtTourID1;
     private javax.swing.JPanel user;
     private javax.swing.JPanel user3;
     // End of variables declaration//GEN-END:variables

@@ -69,7 +69,7 @@ public class RoundedPanel extends javax.swing.JPanel {
         
         if(withBorder){
             g2.setColor(borderColor);
-            g2.drawRoundRect(0, 0,getWidth()-1, getHeight()-1, radius, radius);
+            g2.drawRoundRect(0, 0,getWidth()-2, getHeight()-2, radius, radius);
         }
     }
 

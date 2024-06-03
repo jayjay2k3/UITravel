@@ -13,6 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import uitravel.Admin.AdminLogin;
 import uitravel.Admin.AdminRegister;
+import uitravel.User.UserInfo.Component.ChangePass;
 
 /**
  *
@@ -45,11 +46,8 @@ public class AdminWelcome extends javax.swing.JFrame {
         btnRegister = new uitravel.Components.MyButton();
         jTextArea1 = new javax.swing.JTextArea();
         jTextArea2 = new javax.swing.JTextArea();
-        jLabel1 = new javax.swing.JLabel();
-        lblLogin = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1400, 800));
         setResizable(false);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
 
@@ -59,7 +57,7 @@ public class AdminWelcome extends javax.swing.JFrame {
 
         btnRegister.setBackground(new java.awt.Color(255, 102, 0));
         btnRegister.setForeground(new java.awt.Color(255, 255, 255));
-        btnRegister.setText("Đăng ký");
+        btnRegister.setText("Đăng nhập");
         btnRegister.setBorderColor(new java.awt.Color(255, 102, 0));
         btnRegister.setBorderPainted(false);
         btnRegister.setColor(new java.awt.Color(255, 102, 0));
@@ -97,29 +95,9 @@ public class AdminWelcome extends javax.swing.JFrame {
         jTextArea2.setEnabled(false);
         jTextArea2.setOpaque(false);
 
-        jLabel1.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
-        jLabel1.setText("Đã có tài khoản? ");
-
-        lblLogin.setFont(new java.awt.Font("Times New Roman", 2, 16)); // NOI18N
-        lblLogin.setForeground(new java.awt.Color(0, 102, 204));
-        lblLogin.setText("Đăng nhập tại đây!");
-        lblLogin.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                lblLoginMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                lblLoginMouseExited(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                lblLoginMousePressed(evt);
-            }
-        });
-
         imagePanel1.setLayer(btnRegister, javax.swing.JLayeredPane.DEFAULT_LAYER);
         imagePanel1.setLayer(jTextArea1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         imagePanel1.setLayer(jTextArea2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        imagePanel1.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        imagePanel1.setLayer(lblLogin, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout imagePanel1Layout = new javax.swing.GroupLayout(imagePanel1);
         imagePanel1.setLayout(imagePanel1Layout);
@@ -133,11 +111,7 @@ public class AdminWelcome extends javax.swing.JFrame {
                         .addGap(6, 6, 6)
                         .addGroup(imagePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextArea2, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(imagePanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblLogin)))))
+                            .addComponent(jTextArea2, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(955, Short.MAX_VALUE))
         );
         imagePanel1Layout.setVerticalGroup(
@@ -149,11 +123,7 @@ public class AdminWelcome extends javax.swing.JFrame {
                 .addComponent(jTextArea2, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(51, 51, 51)
                 .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
-                .addGroup(imagePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(lblLogin))
-                .addContainerGap(265, Short.MAX_VALUE))
+                .addContainerGap(313, Short.MAX_VALUE))
         );
 
         bg.setViewportView(imagePanel1);
@@ -165,29 +135,18 @@ public class AdminWelcome extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
-       addRegister();
+       addLogin();
     }//GEN-LAST:event_btnRegisterActionPerformed
-
-    private void lblLoginMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLoginMouseEntered
-        lblLogin.setForeground(new Color(0,0,150));
-    }//GEN-LAST:event_lblLoginMouseEntered
-
-    private void lblLoginMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLoginMouseExited
-        lblLogin.setForeground(new Color(0,102,204));
-    }//GEN-LAST:event_lblLoginMouseExited
-
-    private void lblLoginMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLoginMousePressed
-      addLogin();
-    }//GEN-LAST:event_lblLoginMousePressed
     private void addLogin(){
         GlassPanePopup.closePopupAll();
         adminLogin = new AdminLogin();
         adminLogin.addRegister(new MouseAdapter(){
                 @Override
                     public void mousePressed(MouseEvent e) {
-                   addRegister();
+                        //addRegister();
                 }
             });
+        
         GlassPanePopup.showPopup(adminLogin);
     }
       private void addRegister(){
@@ -239,14 +198,14 @@ public class AdminWelcome extends javax.swing.JFrame {
     private javax.swing.JScrollPane bg;
     private uitravel.Components.MyButton btnRegister;
     private uitravel.Components.ImagePanel imagePanel1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JLabel lblLogin;
     // End of variables declaration//GEN-END:variables
 
     public void adminLoging() {
-         GlassPanePopup.closePopupAll();
-         System.out.println("âs");
+        GlassPanePopup.closePopupAll();
+        AdminMain am = new  AdminMain();
+        am.setVisible(true);
+        dispose();
     }
 }

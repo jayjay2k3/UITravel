@@ -60,8 +60,10 @@ public class AdminLogin extends javax.swing.JPanel {
         roundedPanel1.setBorderColor(new java.awt.Color(204, 204, 204));
         roundedPanel1.setWithBorder(true);
 
+        txtEmail.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         txtEmail.setLabelText("Địa chỉ Email:");
 
+        txtPass.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         txtPass.setLabelText("Mật khẩu");
         txtPass.setShowAndHide(true);
 
@@ -156,7 +158,7 @@ public class AdminLogin extends javax.swing.JPanel {
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(lblRegister))
-                .addContainerGap(110, Short.MAX_VALUE))
+                .addContainerGap(108, Short.MAX_VALUE))
         );
 
         add(roundedPanel1);

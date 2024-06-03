@@ -52,8 +52,9 @@ public class PanelCover extends javax.swing.JPanel {
         myButton1.setColor(new java.awt.Color(0, 51, 153));
         myButton1.setColorClick(new java.awt.Color(51, 204, 255));
         myButton1.setColorOver(new java.awt.Color(0, 51, 204));
+        myButton1.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
         myButton1.setPreferredSize(new java.awt.Dimension(100, 23));
-        myButton1.setRadius(60);
+        myButton1.setRadius(15);
         myButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 myButton1ActionPerformed(evt);

@@ -30,145 +30,69 @@ public class Tour extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        roundedPanel2 = new uitravel.Components.RoundedPanel();
-        imgHotel = new uitravel.Components.RoundedImage();
-        txtName = new javax.swing.JLabel();
-        txtLocation = new javax.swing.JLabel();
-        txtPrice = new javax.swing.JLabel();
-        txtPrice1 = new javax.swing.JLabel();
-        txtLocation1 = new javax.swing.JLabel();
+        jLayeredPane1 = new javax.swing.JLayeredPane();
+        imagePanel1 = new uitravel.Components.ImagePanel();
+        txtPlace = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setOpaque(false);
-        setPreferredSize(new java.awt.Dimension(300, 250));
+        setPreferredSize(new java.awt.Dimension(350, 200));
+        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
 
-        roundedPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        roundedPanel2.setBorderColor(new java.awt.Color(204, 204, 204));
-        roundedPanel2.setRadius(40);
-        roundedPanel2.setWithBorder(true);
-        roundedPanel2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                roundedPanel2MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                roundedPanel2MouseExited(evt);
-            }
-        });
+        imagePanel1.setBackground(new java.awt.Color(0, 0, 0));
+        imagePanel1.setbackgroundImage(new javax.swing.ImageIcon(getClass().getResource("/resources/backimg.jpg"))); // NOI18N
+        imagePanel1.setisTransparent(false);
+        imagePanel1.setRadius(20);
+        imagePanel1.setwithBlack(true);
 
-        imgHotel.setOpaque(false);
-        imgHotel.setRadius(40);
-
-        javax.swing.GroupLayout imgHotelLayout = new javax.swing.GroupLayout(imgHotel);
-        imgHotel.setLayout(imgHotelLayout);
-        imgHotelLayout.setHorizontalGroup(
-            imgHotelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+        javax.swing.GroupLayout imagePanel1Layout = new javax.swing.GroupLayout(imagePanel1);
+        imagePanel1.setLayout(imagePanel1Layout);
+        imagePanel1Layout.setHorizontalGroup(
+            imagePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 350, Short.MAX_VALUE)
         );
-        imgHotelLayout.setVerticalGroup(
-            imgHotelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 243, Short.MAX_VALUE)
+        imagePanel1Layout.setVerticalGroup(
+            imagePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 200, Short.MAX_VALUE)
         );
 
-        txtName.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
-        txtName.setText("Khách sạn ABC");
+        txtPlace.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        txtPlace.setForeground(new java.awt.Color(255, 255, 255));
+        txtPlace.setText("TP.HCM");
 
-        txtLocation.setFont(new java.awt.Font("Times New Roman", 2, 12)); // NOI18N
-        txtLocation.setText("Thủ Đức, TP HCM");
+        jLayeredPane1.setLayer(imagePanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(txtPlace, javax.swing.JLayeredPane.POPUP_LAYER);
 
-        txtPrice.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        txtPrice.setForeground(new java.awt.Color(255, 0, 51));
-        txtPrice.setText("VND1.004.722");
-
-        txtPrice1.setBackground(new java.awt.Color(0, 102, 255));
-        txtPrice1.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        txtPrice1.setForeground(new java.awt.Color(255, 255, 255));
-        txtPrice1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        txtPrice1.setText("10.0");
-        txtPrice1.setOpaque(true);
-        txtPrice1.setPreferredSize(new java.awt.Dimension(32, 32));
-
-        txtLocation1.setFont(new java.awt.Font("Times New Roman", 2, 12)); // NOI18N
-        txtLocation1.setForeground(new java.awt.Color(0, 51, 204));
-        txtLocation1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        txtLocation1.setText("Xem chi tiết");
-
-        javax.swing.GroupLayout roundedPanel2Layout = new javax.swing.GroupLayout(roundedPanel2);
-        roundedPanel2.setLayout(roundedPanel2Layout);
-        roundedPanel2Layout.setHorizontalGroup(
-            roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(roundedPanel2Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(roundedPanel2Layout.createSequentialGroup()
-                        .addComponent(txtLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(55, 168, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, roundedPanel2Layout.createSequentialGroup()
-                        .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(roundedPanel2Layout.createSequentialGroup()
-                                .addComponent(txtPrice)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtLocation1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(roundedPanel2Layout.createSequentialGroup()
-                                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtPrice1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(19, 19, 19))))
-            .addGroup(roundedPanel2Layout.createSequentialGroup()
-                .addGap(1, 1, 1)
-                .addComponent(imgHotel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(1, 1, 1))
+        javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
+        jLayeredPane1.setLayout(jLayeredPane1Layout);
+        jLayeredPane1Layout.setHorizontalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(imagePanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                    .addGap(40, 40, 40)
+                    .addComponent(txtPlace)
+                    .addContainerGap(235, Short.MAX_VALUE)))
         );
-        roundedPanel2Layout.setVerticalGroup(
-            roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(roundedPanel2Layout.createSequentialGroup()
-                .addGap(2, 2, 2)
-                .addComponent(imgHotel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPrice1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtName))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtLocation)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPrice)
-                    .addComponent(txtLocation1))
-                .addGap(21, 21, 21))
+        jLayeredPane1Layout.setVerticalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addComponent(imagePanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
+            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                    .addContainerGap(139, Short.MAX_VALUE)
+                    .addComponent(txtPlace)
+                    .addGap(40, 40, 40)))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(roundedPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(roundedPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        add(jLayeredPane1);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void roundedPanel2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_roundedPanel2MouseEntered
-        roundedPanel2.setBorderColor(new java.awt.Color(0, 204, 204));
-        roundedPanel2.repaint();
-    }//GEN-LAST:event_roundedPanel2MouseEntered
-
-    private void roundedPanel2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_roundedPanel2MouseExited
-        roundedPanel2.setBorderColor(new java.awt.Color(204, 204, 204));
-        roundedPanel2.repaint();
-
-    }//GEN-LAST:event_roundedPanel2MouseExited
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private uitravel.Components.RoundedImage imgHotel;
-    private uitravel.Components.RoundedPanel roundedPanel2;
-    private javax.swing.JLabel txtLocation;
-    private javax.swing.JLabel txtLocation1;
-    private javax.swing.JLabel txtName;
-    private javax.swing.JLabel txtPrice;
-    private javax.swing.JLabel txtPrice1;
+    private uitravel.Components.ImagePanel imagePanel1;
+    private javax.swing.JLayeredPane jLayeredPane1;
+    private javax.swing.JLabel txtPlace;
     // End of variables declaration//GEN-END:variables
 }

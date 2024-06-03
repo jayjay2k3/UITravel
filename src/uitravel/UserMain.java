@@ -24,6 +24,7 @@ import uitravel.Components.MyButton;
 import uitravel.Components.MyTextField;
 import uitravel.Components.RoundedPanel;
 import java.util.List;
+import javax.swing.JOptionPane;
 import uitravel.User.MainUI.LoggedHeader;
 
 
@@ -38,8 +39,6 @@ public class UserMain extends javax.swing.JFrame {
      */
     public boolean isLogged = false;
     private MigLayout layout;
-    private NoLoggedHeader header1;
-    private LoggedHeader header2;
 
     private List<Tour> allHotels;
 
@@ -50,7 +49,6 @@ public class UserMain extends javax.swing.JFrame {
     public void setIsLogged(boolean t){
         this.isLogged = t;
         init();
-        
     }
 
     /**
@@ -63,41 +61,167 @@ public class UserMain extends javax.swing.JFrame {
     private void initComponents() {
 
         jLayeredPane1 = new javax.swing.JLayeredPane();
-        chatBox = new uitravel.User.MainUI.ChatBox();
         main = new javax.swing.JScrollPane();
         bg = new javax.swing.JLayeredPane();
+        imagePanel1 = new uitravel.Components.ImagePanel();
+        txtSearch = new uitravel.Components.MyTextField();
+        btnSearch = new uitravel.Components.MyButton();
+        txtDate = new uitravel.Components.MyTextField();
+        jLabel1 = new javax.swing.JLabel();
+        header1 = new uitravel.User.MainUI.NoLoggedHeader();
+        header2 = new uitravel.User.MainUI.LoggedHeader();
+        pnlHotel = new uitravel.Components.RoundedPanel();
+        chatBox = new uitravel.User.MainUI.ChatBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1400, 800));
         setResizable(false);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
 
-        main.setBackground(new java.awt.Color(255, 255, 255));
-        main.setBorder(null);
         main.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        main.setOpaque(false);
+        main.setToolTipText("");
+
+        imagePanel1.setbackgroundImage(new javax.swing.ImageIcon(getClass().getResource("/resources/BigBeach_GettyImages-874980426-ezgif.com-webp-to-png-converter.png"))); // NOI18N
+        imagePanel1.setisTransparent(false);
+        imagePanel1.setPreferredSize(new java.awt.Dimension(1400, 800));
+
+        txtSearch.setText("Nhập nơi bạn muốn đi");
+        txtSearch.setPrefixIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Pin - 1.png"))); // NOI18N
+
+        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Loupe.png"))); // NOI18N
+        btnSearch.setBorderColor(new java.awt.Color(255, 128, 0));
+        btnSearch.setBorderPainted(false);
+        btnSearch.setColor(new java.awt.Color(255, 128, 0));
+        btnSearch.setColorClick(new java.awt.Color(255, 25, 20));
+        btnSearch.setColorOver(new java.awt.Color(255, 50, 20));
+        btnSearch.setContentAreaFilled(true);
+        btnSearch.setPreferredSize(new java.awt.Dimension(49, 49));
+        btnSearch.setRadius(90);
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
+
+        txtDate.setText("myTextField1");
+        txtDate.setPrefixIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Calendar.png"))); // NOI18N
+        txtDate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDateActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("All Tours are yours now!");
+
+        imagePanel1.setLayer(txtSearch, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        imagePanel1.setLayer(btnSearch, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        imagePanel1.setLayer(txtDate, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        imagePanel1.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout imagePanel1Layout = new javax.swing.GroupLayout(imagePanel1);
+        imagePanel1.setLayout(imagePanel1Layout);
+        imagePanel1Layout.setHorizontalGroup(
+            imagePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, imagePanel1Layout.createSequentialGroup()
+                .addContainerGap(217, Short.MAX_VALUE)
+                .addGroup(imagePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 946, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(imagePanel1Layout.createSequentialGroup()
+                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(237, 237, 237))
+        );
+        imagePanel1Layout.setVerticalGroup(
+            imagePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(imagePanel1Layout.createSequentialGroup()
+                .addGap(137, 137, 137)
+                .addComponent(jLabel1)
+                .addGap(70, 70, 70)
+                .addGroup(imagePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(imagePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(501, Short.MAX_VALUE))
+        );
+
+        pnlHotel.setBackground(new java.awt.Color(255, 255, 255));
+        pnlHotel.setPreferredSize(new java.awt.Dimension(1400, 795));
+
+        javax.swing.GroupLayout pnlHotelLayout = new javax.swing.GroupLayout(pnlHotel);
+        pnlHotel.setLayout(pnlHotelLayout);
+        pnlHotelLayout.setHorizontalGroup(
+            pnlHotelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1400, Short.MAX_VALUE)
+        );
+        pnlHotelLayout.setVerticalGroup(
+            pnlHotelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 795, Short.MAX_VALUE)
+        );
+
+        bg.setLayer(imagePanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        bg.setLayer(header1, javax.swing.JLayeredPane.PALETTE_LAYER);
+        bg.setLayer(header2, javax.swing.JLayeredPane.PALETTE_LAYER);
+        bg.setLayer(pnlHotel, javax.swing.JLayeredPane.PALETTE_LAYER);
 
         javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
         bg.setLayout(bgLayout);
         bgLayout.setHorizontalGroup(
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1412, Short.MAX_VALUE)
+            .addGroup(bgLayout.createSequentialGroup()
+                .addComponent(imagePanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(7, Short.MAX_VALUE))
+            .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(bgLayout.createSequentialGroup()
+                    .addGap(0, 0, 0)
+                    .addComponent(header1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(7, Short.MAX_VALUE)))
+            .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(bgLayout.createSequentialGroup()
+                    .addGap(0, 0, 0)
+                    .addComponent(header2, javax.swing.GroupLayout.PREFERRED_SIZE, 1401, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(bgLayout.createSequentialGroup()
+                    .addComponent(pnlHotel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 7, Short.MAX_VALUE)))
         );
         bgLayout.setVerticalGroup(
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 812, Short.MAX_VALUE)
+            .addGroup(bgLayout.createSequentialGroup()
+                .addComponent(imagePanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 327, Short.MAX_VALUE))
+            .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(bgLayout.createSequentialGroup()
+                    .addGap(0, 0, 0)
+                    .addComponent(header1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(876, Short.MAX_VALUE)))
+            .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(bgLayout.createSequentialGroup()
+                    .addGap(0, 0, 0)
+                    .addComponent(header2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(877, Short.MAX_VALUE)))
+            .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
+                    .addGap(0, 332, Short.MAX_VALUE)
+                    .addComponent(pnlHotel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         main.setViewportView(bg);
 
-        jLayeredPane1.setLayer(chatBox, javax.swing.JLayeredPane.POPUP_LAYER);
         jLayeredPane1.setLayer(main, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(chatBox, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
         jLayeredPane1Layout.setHorizontalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(main)
+            .addComponent(main, javax.swing.GroupLayout.PREFERRED_SIZE, 1400, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jLayeredPane1Layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -106,7 +230,7 @@ public class UserMain extends javax.swing.JFrame {
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(main)
+            .addComponent(main, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jLayeredPane1Layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -119,6 +243,27 @@ public class UserMain extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDateActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDateActionPerformed
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        if("".equals(txtSearch.getText())||"Nhập nơi bạn muốn đi".equals(txtSearch.getText())){
+             JOptionPane.showMessageDialog(null,
+                        "Vui lòng nhập địa điểm bạn muốn đi đến!",
+                        "Thông báo!",
+                        
+                        JOptionPane.INFORMATION_MESSAGE);
+        }
+        else{
+           UserSearch userSearch = new UserSearch();
+           userSearch.setIsLogged(isLogged);
+           userSearch.setSearchData(txtSearch.getText());
+           userSearch.setVisible(true);
+           dispose();
+        }
+    }//GEN-LAST:event_btnSearchActionPerformed
 
     /**
      * @param args the command line arguments
@@ -157,30 +302,33 @@ public class UserMain extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLayeredPane bg;
+    private uitravel.Components.MyButton btnSearch;
     private uitravel.User.MainUI.ChatBox chatBox;
+    private uitravel.User.MainUI.NoLoggedHeader header1;
+    private uitravel.User.MainUI.LoggedHeader header2;
+    private uitravel.Components.ImagePanel imagePanel1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JScrollPane main;
+    private uitravel.Components.RoundedPanel pnlHotel;
+    private uitravel.Components.MyTextField txtDate;
+    private uitravel.Components.MyTextField txtSearch;
     // End of variables declaration//GEN-END:variables
-    private MyTextField txtSearch;
-    private MyTextField txtDate;
-    private MyTextField txtRoom;
-    private MyButton btnSearch;
     private DateChooser selectDate;
    // private javax.swing.JLayeredPane bg;
-    private RoundedPanel pnlHotel;
 
     private void init() {
 
         GlassPanePopup.install(this);
 
-        bg = new JLayeredPane();
         //bg.setPreferredSize(new java.awt.Dimension(1400, 10000));
 
         layout = new MigLayout("wrap, fill, insets 0","[]", "12[]12[]12");
-        bg.setLayout(layout);
+        //bg.setLayout(layout);
        if(!isLogged){
-            header1 = new NoLoggedHeader();
-            bg.add(header1,"dock north, w 100%,height 250");
+            header1.setVisible(true);
+            header2.setVisible(false);
+
             header1.addEvent((ActionEvent e)->{
                 LoginMain lm = new LoginMain();
                 lm.setLogin(header1.isLogin);
@@ -217,8 +365,9 @@ public class UserMain extends javax.swing.JFrame {
             });
        }
        else{
-           header2 = new LoggedHeader();
-            bg.add(header2,"dock north, width 1400,height 250");
+            header2.setVisible(true);
+            header1.setVisible(false);
+
 
             header2.addEvent(new MouseAdapter(){
                 @Override
@@ -234,9 +383,6 @@ public class UserMain extends javax.swing.JFrame {
 
             });
        }
-        txtSearch = new uitravel.Components.MyTextField();
-        txtSearch.setPrefixIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Pin - 1.png"))); // NOI18N
-        txtSearch.setOpaque(false);
         txtSearch.setText("Nhập nơi bạn muốn đi");
         txtSearch.addFocusListener(new FocusAdapter(){
               @Override
@@ -252,35 +398,17 @@ public class UserMain extends javax.swing.JFrame {
                    }
                }
         });
-        txtDate = new MyTextField();
-        txtDate.setPrefixIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Calendar.png"))); // NOI18N
 
-        txtDate.setOpaque(false);
-        txtRoom = new MyTextField();
-        txtRoom.setPrefixIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/House.png"))); // NOI18N
-        txtRoom.setOpaque(false);
 
-        Icon icon = new ImageIcon(getClass().getResource("/resources/Loupe.PNG"));
-        btnSearch = new MyButton();
-        btnSearch.setIcon(icon);
-        btnSearch.setText("");
+
         //btnSearch.setBackground(new Color(255,128,0));
-        btnSearch.setColor(new Color(255,128,0));
-        btnSearch.setColorOver(new Color(255,153,0));
-        bg.add(txtSearch,"cell 0 0, width 28%,height 50, align left,aligny top,gapleft 10%,gapright 0");
-        bg.add(txtDate,"cell 0 0,width 25%,height 50, align right,aligny top,gapleft 0, gapright 0");
-        bg.add(txtRoom,"cell 0 0,width 25%,height 50, align right,aligny top,gapleft0");
-        bg.add(btnSearch,"cell 0 0, align right,height 50,aligny top,gapleft0,gapright 0%");
+     
         selectDate = new DateChooser();
         selectDate.setTextField(txtDate);
         selectDate.setBetweenCharacter(" đến ");
         selectDate.setDateSelectionMode(DateChooser.DateSelectionMode.BETWEEN_DATE_SELECTED);
        
-        pnlHotel = new RoundedPanel();
-        pnlHotel.setPreferredSize(new Dimension(1400,500));
-        pnlHotel.setBackground(Color.WHITE);
-        pnlHotel.setRadius(30);
-        pnlHotel.setOpaque(false);
+      
         
         loadHotelData();
 
@@ -316,16 +444,15 @@ public class UserMain extends javax.swing.JFrame {
     
 
     private void loadHotelData(){
-        pnlHotel.setLayout(new MigLayout("wrap,fill, insets 0","push[]10[]10[]10[]push","[]10[]"));
+        pnlHotel.setLayout(new MigLayout("wrap,fill, insets 0","push[]20[]20[]push","10[]20[]"));
 
         allHotels = new ArrayList<>();
         for(int i=0;i<100;i++){
             Tour t = new Tour();
-            t.setPreferredSize(new Dimension(300,350));
+            t.setPreferredSize(new Dimension(350,200));
             pnlHotel.add(t);
             allHotels.add(t);
         }
-        bg.add(pnlHotel);
     }
    
 }
