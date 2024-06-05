@@ -335,6 +335,11 @@ public class UserMain extends javax.swing.JFrame {
                 lm.setVisible(true);
                 dispose();
             });
+            header1.addAminUIEvent((ActionEvent e)->{
+                AdminWelcome am = new AdminWelcome();
+                am.setVisible(true);
+                dispose();
+            });
             header1.addChatEvent((ActionEvent e)->{
                 chatBox.setVisible(true);
 
@@ -368,7 +373,11 @@ public class UserMain extends javax.swing.JFrame {
             header2.setVisible(true);
             header1.setVisible(false);
 
-
+            header2.addAminUIEvent((ActionEvent e)->{
+                AdminWelcome am = new AdminWelcome();
+                am.setVisible(true);
+                dispose();
+            });
             header2.addEvent(new MouseAdapter(){
                 @Override
                     public void mousePressed(MouseEvent e) {

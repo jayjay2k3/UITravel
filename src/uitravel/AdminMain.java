@@ -19,6 +19,7 @@ import net.miginfocom.layout.LayoutCallback;
 import net.miginfocom.swing.MigLayout;
 import uitravel.Admin.TourInfo.ADShortTourInfo;
 import uitravel.Admin.TourInfo.TourBookingData;
+import uitravel.Admin.component.ChooseTime;
 import uitravel.Admin.component.UserBar;
 
 /**
@@ -353,4 +354,16 @@ public class AdminMain extends javax.swing.JFrame {
     private javax.swing.JPanel user;
     private uitravel.Admin.component.UserBar userBar;
     // End of variables declaration//GEN-END:variables
+
+    public void adminAddTour() {
+       // 
+    }
+
+    public void adminColumnTable() {
+        
+    }
+
+    public void adminAddShortTour() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

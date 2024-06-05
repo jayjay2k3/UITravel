@@ -27,6 +27,7 @@ import java.util.List;
 import uitravel.Components.TourInfo.Component.FullTourInfo;
 import uitravel.Components.TourInfo.Component.ShortTourInfo;
 import uitravel.User.MainUI.LoggedHeader;
+import uitravel.User.UserPayment;
 
 
 /**
@@ -177,6 +178,11 @@ public class UserSearch extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 102, 255));
         jLabel1.setText("Quay về trang chủ");
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLabel1MousePressed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 26)); // NOI18N
         jLabel2.setText("Điểm tham quan ở");
@@ -304,6 +310,13 @@ public class UserSearch extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtDateActionPerformed
 
+    private void jLabel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MousePressed
+        UserMain um = new UserMain();
+        um.setIsLogged(isLogged);
+        um.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jLabel1MousePressed
+
     /**
      * @param args the command line arguments
      */
@@ -378,6 +391,11 @@ public class UserSearch extends javax.swing.JFrame {
                 lm.setVisible(true);
                 dispose();
             });
+            header1.addAminUIEvent((ActionEvent e)->{
+                AdminWelcome am = new AdminWelcome();
+                am.setVisible(true);
+                dispose();
+            });
             header1.addChatEvent((ActionEvent e)->{
                 chatBox.setVisible(true);
 
@@ -410,7 +428,11 @@ public class UserSearch extends javax.swing.JFrame {
        else{
             header2.setVisible(true);
             header1.setVisible(false);
-
+            header2.addAminUIEvent((ActionEvent e)->{
+                AdminWelcome am = new AdminWelcome();
+                am.setVisible(true);
+                dispose();
+            });
 
             header2.addEvent(new MouseAdapter(){
                 @Override
@@ -477,9 +499,22 @@ public class UserSearch extends javax.swing.JFrame {
         allTours = new ArrayList<>();
         for(int i=0;i<100;i++){
             ShortTourInfo t = new ShortTourInfo();
-            t.addEvent((ActionEvent e)->{
-                GlassPanePopup.showPopup(new FullTourInfo());
+            FullTourInfo fullTour = new FullTourInfo();
+            fullTour.addEvent((ActionEvent e) -> {
+                UserPayment up = new UserPayment();
+                 GlassPanePopup.showPopup(up,"up");
+                 up.eventCancel(new MouseAdapter(){
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        GlassPanePopup.closePopup("up");
+                            
+                }
             });
+            });
+            t.addEvent((ActionEvent e)->{
+                GlassPanePopup.showPopup(fullTour);
+            });
+            
             t.setPreferredSize(new Dimension(629, 179));
             coverTour.add(t);
             allTours.add(t);

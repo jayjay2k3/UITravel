@@ -4,7 +4,17 @@
  */
 package uitravel.Admin.TourInfo;
 
+import com.raven.glasspanepopup.GlassPanePopup;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.Vector;
+import javax.swing.JFrame;
+import javax.swing.table.DefaultTableModel;
+import org.apache.commons.lang3.RandomStringUtils;
 import uitravel.Admin.component.cell.TableActionCellRender;
+import uitravel.AdminMain;
 
 /**
  *
@@ -17,8 +27,22 @@ public class TourBookingData extends javax.swing.JPanel {
      */
     public TourBookingData() {
         initComponents();
-        table.getColumnModel().getColumn(5).setCellRenderer(new TableActionCellRender());
+        init();
     }
+    private void init(){
+        table.getColumnModel().getColumn(5).setCellRenderer(new TableActionCellRender());
+        chooseTime1.setVisible(false);
+        chooseTime1.AddTour((ActionEvent e) -> {
+               DefaultTableModel  model =  (DefaultTableModel)table.getModel();
+               Object []row = new Object[]{RandomStringUtils.randomAlphanumeric(10),chooseTime1.getDate(),chooseTime1.getNumber(), 0,"Chưa bắt đầu",""};
+                System.out.println(Arrays.toString(row));
+                model.addRow( row);
+
+                chooseTime1.setVisible(false);
+            });
+         
+        }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -41,6 +65,7 @@ public class TourBookingData extends javax.swing.JPanel {
         lblAdd = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
+        chooseTime1 = new uitravel.Admin.component.ChooseTime();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setOpaque(false);
@@ -119,7 +144,7 @@ public class TourBookingData extends javax.swing.JPanel {
                     .addComponent(lblEdit))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(485, Short.MAX_VALUE))
+                .addContainerGap(524, Short.MAX_VALUE))
         );
 
         lblBack.setFont(new java.awt.Font("Times New Roman", 2, 16)); // NOI18N
@@ -132,13 +157,16 @@ public class TourBookingData extends javax.swing.JPanel {
         lblAdd.setForeground(new java.awt.Color(0, 204, 0));
         lblAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Add.png"))); // NOI18N
         lblAdd.setText("Thêm chuyến đi");
+        lblAdd.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                lblAddMousePressed(evt);
+            }
+        });
 
         table.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "ID", "Ngày đi", "Số lượng khách", "Doanh thu", "Tình trạng", " "
@@ -179,6 +207,7 @@ public class TourBookingData extends javax.swing.JPanel {
         bg.setLayer(headerPic, javax.swing.JLayeredPane.DEFAULT_LAYER);
         bg.setLayer(lblBack, javax.swing.JLayeredPane.PALETTE_LAYER);
         bg.setLayer(roundedPanel1, javax.swing.JLayeredPane.PALETTE_LAYER);
+        bg.setLayer(chooseTime1, javax.swing.JLayeredPane.DRAG_LAYER);
 
         javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
         bg.setLayout(bgLayout);
@@ -195,22 +224,32 @@ public class TourBookingData extends javax.swing.JPanel {
                     .addGap(10, 10, 10)
                     .addComponent(roundedPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGap(10, 10, 10)))
+            .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(bgLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(chooseTime1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         bgLayout.setVerticalGroup(
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bgLayout.createSequentialGroup()
                 .addComponent(headerPic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 1, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(bgLayout.createSequentialGroup()
                     .addGap(40, 40, 40)
                     .addComponent(lblBack)
-                    .addContainerGap(640, Short.MAX_VALUE)))
+                    .addContainerGap(678, Short.MAX_VALUE)))
             .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
-                    .addContainerGap(237, Short.MAX_VALUE)
+                    .addContainerGap(275, Short.MAX_VALUE)
                     .addComponent(roundedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(10, 10, 10)))
+            .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(bgLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(chooseTime1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
         bbg.add(bg);
@@ -218,10 +257,30 @@ public class TourBookingData extends javax.swing.JPanel {
         add(bbg);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void lblAddMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblAddMousePressed
+       chooseTime1.setVisible(true);
+    }//GEN-LAST:event_lblAddMousePressed
+ private void callAddATour(Component component) {
+        JFrame frame = getFrame(component);
+        if (frame != null) {
+            ((AdminMain) frame).adminAddShortTour();
+        }
+    }
+     private JFrame getFrame(Component component) {
+        while (component != null) {
+            
+            if (component instanceof JFrame jFrame) {
+                return jFrame;
+            }
+            component = component.getParent();
+        }
+        return null;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private uitravel.Components.RoundedPanel bbg;
     private javax.swing.JLayeredPane bg;
+    private uitravel.Admin.component.ChooseTime chooseTime1;
     private uitravel.Components.ImagePanel headerPic;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;

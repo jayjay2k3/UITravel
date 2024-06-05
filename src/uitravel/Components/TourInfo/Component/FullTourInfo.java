@@ -5,6 +5,7 @@
 package uitravel.Components.TourInfo.Component;
 
 import com.raven.datechooser.DateChooser;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import net.miginfocom.swing.MigLayout;
@@ -14,6 +15,7 @@ import net.miginfocom.swing.MigLayout;
  * @author ACER
  */
 public class FullTourInfo extends javax.swing.JPanel {
+    private ActionListener event;
 
     List<Comment> tourComments;
     List<TourImage> tourImages;
@@ -250,6 +252,11 @@ public class FullTourInfo extends javax.swing.JPanel {
         myButton1.setColorOver(new java.awt.Color(0, 150, 255));
         myButton1.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         myButton1.setRadius(10);
+        myButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                myButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout roundedPanel1Layout = new javax.swing.GroupLayout(roundedPanel1);
         roundedPanel1.setLayout(roundedPanel1Layout);
@@ -515,6 +522,18 @@ public class FullTourInfo extends javax.swing.JPanel {
 
         add(main);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void myButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myButton1ActionPerformed
+        if(btnAdult.getNumber()==0&&btnChild.getNumber()==0&&btnInfant.getNumber()==0){
+            
+        }
+        else{
+            event.actionPerformed(evt);
+        }
+    }//GEN-LAST:event_myButton1ActionPerformed
+    public void addEvent(ActionListener event) {
+        this.event = event;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

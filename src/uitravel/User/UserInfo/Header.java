@@ -25,6 +25,7 @@ public class Header extends javax.swing.JPanel {
      */
     private ActionListener eventLogin;
     private ActionListener showChatBox;
+    private ActionListener eventAdmin;
 
     public boolean isLogin;
     public Header() {
@@ -57,6 +58,7 @@ public class Header extends javax.swing.JPanel {
         setOpaque(false);
 
         btnHelp.setText("Hỗ trợ");
+        btnHelp.setFocusPainted(false);
         btnHelp.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnHelpMouseEntered(evt);
@@ -72,6 +74,7 @@ public class Header extends javax.swing.JPanel {
         });
 
         btnDiscount.setText("Khuyến mãi");
+        btnDiscount.setFocusPainted(false);
         btnDiscount.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnDiscountMouseEntered(evt);
@@ -87,6 +90,7 @@ public class Header extends javax.swing.JPanel {
         });
 
         btnRoom.setText("Phòng đã đặt");
+        btnRoom.setFocusPainted(false);
         btnRoom.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnRoomMouseEntered(evt);
@@ -149,6 +153,7 @@ public class Header extends javax.swing.JPanel {
         );
 
         btnMain.setText("Trang chủ");
+        btnMain.setFocusPainted(false);
         btnMain.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnMainMouseEntered(evt);
@@ -163,7 +168,8 @@ public class Header extends javax.swing.JPanel {
             }
         });
 
-        btnPartner.setText("Đăng ký đối tác");
+        btnPartner.setText("Trang quản trị");
+        btnPartner.setFocusPainted(false);
         btnPartner.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnPartnerMouseEntered(evt);
@@ -303,7 +309,8 @@ public class Header extends javax.swing.JPanel {
     }//GEN-LAST:event_btnPartnerMouseExited
 
     private void btnPartnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPartnerActionPerformed
-        // TODO add your handling code here:
+        eventAdmin.actionPerformed(evt);
+
     }//GEN-LAST:event_btnPartnerActionPerformed
 
     private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHelpActionPerformed
@@ -311,6 +318,9 @@ public class Header extends javax.swing.JPanel {
     }//GEN-LAST:event_btnHelpActionPerformed
     public void addChatBoxEvent(ActionListener event) {
         this.showChatBox = event;
+    }
+    public void addAminUIEvent(ActionListener event){
+        this.eventAdmin = event;
     }
     private void init() {
         

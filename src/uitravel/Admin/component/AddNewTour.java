@@ -4,6 +4,11 @@
  */
 package uitravel.Admin.component;
 
+import java.awt.Component;
+import javax.swing.JFrame;
+import uitravel.AdminMain;
+import uitravel.AdminWelcome;
+
 /**
  *
  * @author ACER
@@ -64,6 +69,11 @@ public class AddNewTour extends javax.swing.JPanel {
         myButton1.setColorClick(new java.awt.Color(0, 0, 255));
         myButton1.setColorOver(new java.awt.Color(0, 150, 255));
         myButton1.setRadius(10);
+        myButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                myButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout roundedPanel1Layout = new javax.swing.GroupLayout(roundedPanel1);
         roundedPanel1.setLayout(roundedPanel1Layout);
@@ -93,6 +103,25 @@ public class AddNewTour extends javax.swing.JPanel {
         add(roundedPanel1);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void myButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myButton1ActionPerformed
+        callAddTour(this);
+    }//GEN-LAST:event_myButton1ActionPerformed
+    private void callAddTour(Component component) {
+        JFrame frame = getFrame(component);
+        if (frame != null) {
+            ((AdminMain) frame).adminAddTour();
+        }
+    }
+     private JFrame getFrame(Component component) {
+        while (component != null) {
+            
+            if (component instanceof JFrame jFrame) {
+                return jFrame;
+            }
+            component = component.getParent();
+        }
+        return null;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

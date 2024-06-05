@@ -116,6 +116,7 @@
     <Component class="javax.swing.JButton" name="btnHelp">
       <Properties>
         <Property name="text" type="java.lang.String" value="H&#x1ed7; tr&#x1ee3;"/>
+        <Property name="focusPainted" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnHelpMouseEntered"/>
@@ -126,6 +127,7 @@
     <Component class="javax.swing.JButton" name="btnDiscount">
       <Properties>
         <Property name="text" type="java.lang.String" value="Khuy&#x1ebf;n m&#xe3;i"/>
+        <Property name="focusPainted" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnDiscountMouseEntered"/>
@@ -136,6 +138,7 @@
     <Component class="javax.swing.JButton" name="btnRoom">
       <Properties>
         <Property name="text" type="java.lang.String" value="L&#x1ecb;ch s&#x1eed;"/>
+        <Property name="focusPainted" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnRoomMouseEntered"/>
@@ -144,7 +147,8 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnPartner">
       <Properties>
-        <Property name="text" type="java.lang.String" value="&#x110;&#x103;ng k&#xfd; &#x111;&#x1ed1;i t&#xe1;c"/>
+        <Property name="text" type="java.lang.String" value="Trang qu&#x1ea3;n tr&#x1ecb;"/>
+        <Property name="focusPainted" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnPartnerMouseEntered"/>

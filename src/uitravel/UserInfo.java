@@ -50,6 +50,11 @@ public class UserInfo extends javax.swing.JFrame {
                 um.setVisible(true);
                 dispose();
         });
+        header.addAminUIEvent((ActionEvent e)->{
+                AdminWelcome am = new AdminWelcome();
+                am.setVisible(true);
+                dispose();
+            });
         header.addChatBoxEvent((ActionEvent e) -> {
             chatBox.setVisible(true);
 

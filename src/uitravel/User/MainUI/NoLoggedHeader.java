@@ -23,6 +23,7 @@ public class NoLoggedHeader extends javax.swing.JPanel {
      */
     private ActionListener eventLogin;
     private ActionListener eventChatBox;
+    private ActionListener eventAdmin;
 
     public boolean isLogin;
     public NoLoggedHeader() {
@@ -81,6 +82,7 @@ public class NoLoggedHeader extends javax.swing.JPanel {
         });
 
         btnHelp.setText("Hỗ trợ");
+        btnHelp.setFocusPainted(false);
         btnHelp.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnHelpMouseEntered(evt);
@@ -96,6 +98,7 @@ public class NoLoggedHeader extends javax.swing.JPanel {
         });
 
         btnDiscount.setText("Khuyến mãi");
+        btnDiscount.setFocusPainted(false);
         btnDiscount.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnDiscountMouseEntered(evt);
@@ -111,6 +114,7 @@ public class NoLoggedHeader extends javax.swing.JPanel {
         });
 
         btnRoom.setText("Lịch sử");
+        btnRoom.setFocusPainted(false);
         btnRoom.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnRoomMouseEntered(evt);
@@ -120,7 +124,8 @@ public class NoLoggedHeader extends javax.swing.JPanel {
             }
         });
 
-        btnPartner.setText("Đăng ký đối tác");
+        btnPartner.setText("Trang quản trị");
+        btnPartner.setFocusPainted(false);
         btnPartner.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnPartnerMouseEntered(evt);
@@ -247,10 +252,13 @@ public class NoLoggedHeader extends javax.swing.JPanel {
     private void btnPartnerMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPartnerMouseExited
         btnPartner.setContentAreaFilled(false); // Fill content area to show background color
     }//GEN-LAST:event_btnPartnerMouseExited
-
+    
     private void btnPartnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPartnerActionPerformed
-        // TODO add your handling code here:
+        eventAdmin.actionPerformed(evt);
     }//GEN-LAST:event_btnPartnerActionPerformed
+    public void addAminUIEvent(ActionListener event){
+        this.eventAdmin = event;
+    }
     public void addChatEvent(ActionListener event){
         this.eventChatBox = event;
     }
