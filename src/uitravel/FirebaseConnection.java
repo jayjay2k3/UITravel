@@ -11,6 +11,7 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.cloud.FirestoreClient;
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -18,7 +19,7 @@ import java.util.concurrent.ExecutionException;
  * @author ACER
  */
 public class FirebaseConnection {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         FirebaseInitializer.initialize();
         Firestore db = FirestoreClient.getFirestore();
         CollectionReference collection = db.collection("admin");

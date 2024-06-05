@@ -4,10 +4,23 @@
  */
 package uitravel.Admin;
 
+import FireBase.FirebaseInitializer;
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
+import com.google.firebase.cloud.FirestoreClient;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import uitravel.AdminWelcome;
@@ -205,9 +218,50 @@ public class AdminLogin extends javax.swing.JPanel {
                         JOptionPane.INFORMATION_MESSAGE);
             }
             else{
-                callLoging(txtPass);
+                try {
+                    if(checkLoginData()) {
+                        callLoging(txtPass);
+                    } 
+                } catch (IOException | InterruptedException ex) {
+                    Logger.getLogger(AdminLogin.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
     }//GEN-LAST:event_btnSubmitActionPerformed
+    @SuppressWarnings("empty-statement")
+    public boolean checkLoginData() throws IOException, InterruptedException{
+        try {
+            FirebaseInitializer.initialize();
+            Firestore db = FirestoreClient.getFirestore();
+            DocumentReference docRef  = db.collection("admin").document("info");
+            ApiFuture<DocumentSnapshot> future = docRef.get();
+            // Block on response
+            DocumentSnapshot document = future.get();    
+            if (document.exists()) {
+                // Document exists
+                System.out.println("Document data: " + document.getData());
+                if(!txtEmail.getText().equals(document.getString("email"))){
+                    JOptionPane.showMessageDialog(null, "Không tìm thấy tài khoản!", "Thông báo!", JOptionPane.INFORMATION_MESSAGE);
+                    return false;
+
+                }
+                else  if(!txtPass.getText().equals(document.getString("Pass"))){
+                    JOptionPane.showMessageDialog(null, "Mật khẩu không chính xác!", "Thông báo!", JOptionPane.INFORMATION_MESSAGE);
+                    return false;
+
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "Đăng nhập thành công!", "Thông báo!", JOptionPane.INFORMATION_MESSAGE);
+                    return true;
+                }
+
+            } else {
+                return false;
+
+            }
+         } catch (ExecutionException ex) {
+           return false;
+        }
+    }
     public void addRegister(MouseListener event) {
         this.eventRegister = event;
     }

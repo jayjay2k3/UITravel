@@ -1,5 +1,12 @@
 package uitravel.Components;
 
+import FireBase.FirebaseInitializer;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.Firestore;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.UserRecord;
+import com.google.firebase.cloud.FirestoreClient;
 import uitravel.Components.MyPassword;
 import uitravel.Components.MyTextField;
 import java.awt.Color;
@@ -9,12 +16,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
 
@@ -42,6 +62,8 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     }
 
     private void initRegister() {
+        //register = new JPanel();
+        register.removeAll();
         register.setLayout(new MigLayout("wrap", "push[center]push", "push[]25[]10[]10[]10[]10[]15[]25[]push"));
         JLabel label = new JLabel("Tạo tài khoản");
         label.setFont(new Font("Times new romans", 1, 30));
@@ -50,27 +72,34 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         
         TextField txtName = new uitravel.Components.TextField();
         txtName.setLabelText("Họ và tên:");
+        txtName.setFont(new Font("Times new romans", 1, 14));
+
         register.add(txtName,"w 60%");
         
                 
         TextField txtEmail = new uitravel.Components.TextField();
         txtEmail.setLabelText("Email:");
+        txtEmail.setFont(new Font("Times new romans", 1, 14));
         register.add(txtEmail,"w 60%");
                 
         TextField txtPhone = new uitravel.Components.TextField();
         txtPhone.setLabelText("Số điện thoại:");
+        txtPhone.setFont(new Font("Times new romans", 1, 14));
+
         register.add(txtPhone,"w 60%");
                 
-        TextField txtAccount = new uitravel.Components.TextField();
-        txtAccount.setLabelText("Tên tài khoản:");
-        register.add(txtAccount,"w 60%");
-                
-        TextField txtPass = new uitravel.Components.TextField();
+       
+        PasswordField txtPass = new uitravel.Components.PasswordField();
         txtPass.setLabelText("Mật khẩu:");
+        txtPass.setFont(new Font("Times new romans", 1, 14));
+
+        txtPass.setShowAndHide(true);
         register.add(txtPass,"w 60%");
                 
-        TextField txtPassConfirm = new uitravel.Components.TextField();
+        PasswordField txtPassConfirm = new uitravel.Components.PasswordField();
         txtPassConfirm.setLabelText("Xác nhận mật khẩu:");
+        txtPassConfirm.setFont(new Font("Times new romans", 1, 14));
+        txtPassConfirm.setShowAndHide(true);
         register.add(txtPassConfirm,"w 60%");
                 
         MyButton btn = new MyButton();
@@ -82,9 +111,150 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         btn.setColorClick(new java.awt.Color(0, 102, 255));
         btn.setColorOver(new java.awt.Color(0, 51, 204));
         btn.setForeground(new java.awt.Color(255, 255, 255));
+        
+        //Đăng ký user
+        btn.addActionListener((ActionEvent e) -> {
+          if("".equals(txtName.getText())){
+               JOptionPane.showMessageDialog(null,
+                        "Vui lòng nhập họ và tên!",
+                        "Thông báo!",
+                        
+                        JOptionPane.INFORMATION_MESSAGE);
+          }
+          else if("".equals(txtEmail.getText())){
+               JOptionPane.showMessageDialog(null,
+                        "Không được để Email nhập trống!",
+                        "Thông báo!",
+                        
+                        JOptionPane.INFORMATION_MESSAGE);
+          }
+          else if("".equals(txtPhone.getText())){
+               JOptionPane.showMessageDialog(null,
+                        "Không được để số điện thoại trống!",
+                        "Thông báo!",
+                        
+                        JOptionPane.INFORMATION_MESSAGE);
+          }
+          else if("".equals(txtPass.getText())){
+               JOptionPane.showMessageDialog(null,
+                        "Không được để mật khẩu trống!",
+                        "Thông báo!",
+                        
+                        JOptionPane.INFORMATION_MESSAGE);
+          }
+          else if("".equals(txtPassConfirm.getText())){
+               JOptionPane.showMessageDialog(null,
+                        "Vui lòng xác nhận mật khẩu!",
+                        "Thông báo!",
+                        
+                        JOptionPane.INFORMATION_MESSAGE);
+          } else if(!txtPassConfirm.getText().equals(txtPass.getText())){
+               JOptionPane.showMessageDialog(null,
+                        "Mật khẩu xác nhận không trùng khớp!",
+                        "Thông báo!",
+                        
+                        JOptionPane.INFORMATION_MESSAGE);
+          }else{
+              try {
+                  FirebaseInitializer.initialize();
+              } catch (IOException ex) {
+                  Logger.getLogger(PanelLoginAndRegister.class.getName()).log(Level.SEVERE, null, ex);
+              }
+              //Đăng ký Authentication FireBase
+                String uid = registerUser(txtEmail.getText(),txtPass.getText());
+               // Lưu data đăng ký vào Firestore
+                Firestore db = FirestoreClient.getFirestore();
+                Map<String, Object> UserData = new HashMap<>();
+                UserData.put("FullName:", txtName.getText());
+                UserData.put("Email:", txtEmail.getText());
+                UserData.put("PhoneNumber:", txtPhone.getText());
+                db.collection("user").document(uid).set(UserData);
+                initRegister();
+                 JOptionPane.showMessageDialog(null,
+                        "Đăng ký thành công, vui lòng đang nhập lại!",
+                        "Thông báo!",
+                        JOptionPane.INFORMATION_MESSAGE);
+          }
+        });
         register.add(btn,"w 25%,h 50");
     }
+        
+        public String registerUser(String email, String password) {
+        UserRecord.CreateRequest request = new UserRecord.CreateRequest()
+                .setEmail(email)
+                .setPassword(password);
 
+        try {
+            UserRecord userRecord = FirebaseAuth.getInstance().createUser(request);
+            return userRecord.getUid();
+        } catch (FirebaseAuthException e) {
+            return null;
+        }
+    }
+        public String  loginUser(String email, String password) {
+        try {
+            String url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + "AIzaSyCGYnqZl2CkCfgJZXj8M_O_CFPOoy2Mdi0";
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json");
+
+            JSONObject jsonInput = new JSONObject();
+            jsonInput.put("email", email);
+            jsonInput.put("password", password);
+            jsonInput.put("returnSecureToken", true);
+
+            con.setDoOutput(true);
+            try (OutputStream os = con.getOutputStream()) {
+                os.write(jsonInput.toString().getBytes());
+                os.flush();
+            }
+
+            int responseCode = con.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                StringBuilder response;
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+                    String inputLine;
+                    response = new StringBuilder();
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
+                }
+
+                JSONObject jsonResponse = new JSONObject(response.toString());
+                String idToken = jsonResponse.getString("idToken");
+                // You can use idToken for authenticated requests to your Firebase backend
+                return "Đăng nhập thành công";
+
+            } else {
+                StringBuilder response;
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getErrorStream()))) {
+                String inputLine;
+                response = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+            }
+            JSONObject errorResponse = new JSONObject(response.toString());
+            String errorMessage = errorResponse.getJSONObject("error").getString("message");
+            System.out.println("Login failed1: " + response.toString());
+
+            System.out.println("Login failed2: " +errorMessage);
+            return switch (errorMessage) {
+                case "INVALID_EMAIL" -> "Email không đúng định dạng";
+                case "EMAIL_NOT_FOUND" -> "Email không tồn tại";
+                case "INVALID_PASSWORD" -> "Mật khẩu không đúng";
+                case "USER_DISABLED" -> "Tài khoản đã bị vô hiệu hóa";
+                case "INVALID_LOGIN_CREDENTIALS" -> "Thông tin đăng nhập không chính xác";
+                case "TOO_MANY_ATTEMPTS_TRY_LATER : Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later." -> "Nhập sai thông tin đăng nhập quá nhiều lần, tài khoản sẽ tạm thời bị vô hiệu hóa.";
+                default -> "Đăng nhập thất bại: " + errorMessage;
+            };
+            }
+        } catch (IOException | JSONException e) {
+            return "Đăng nhập thất bại: " + e.getMessage();
+
+        }
+    }
     private void initLogin() {
         login.setLayout(new MigLayout("wrap", "push[center]push", "push[]25[]20[]10[]10[]25[]push"));
         JLabel label = new JLabel("Đăng nhập");
@@ -92,45 +262,21 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         label.setForeground(new Color(15, 104, 242));
         login.add(label);
         
-        MyTextField txtAccount = new uitravel.Components.MyTextField();
-        txtAccount.setText("Tên đăng nhập");
-        txtAccount.setPreferredSize(new java.awt.Dimension(80, 30));
-        txtAccount.setPrefixIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/user.png")));
+        TextField txtAccount = new uitravel.Components.TextField();
+        txtAccount.setLabelText("Email:");
+        txtAccount.setFont(new Font("Times new romans", 0, 14));
         login.add(txtAccount,"w 60%");
-        
-        txtAccount.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                txtAccountFocusGained(evt);
-            }
-            @Override
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtAccountFocusLost(evt);
-            }
-            private void txtAccountFocusGained(FocusEvent evt) {
-                     if("Tên đăng nhập".equals(txtAccount.getText())){
-                       txtAccount.setText("");
-                   }
-                       }
 
-               private void txtAccountFocusLost(FocusEvent evt) {
-                     if("".equals(txtAccount.getText())){
-                       txtAccount.setText("Tên đăng nhập");
-                   }
-               }
-        });
-     
-        MyPassword txtPass = new uitravel.Components.MyPassword();
-        txtPass.setPrefixIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/password-148-16.png")));
+        PasswordField txtPass = new uitravel.Components.PasswordField();
+        txtPass.setLabelText("Mật khẩu:");
+        txtPass.setFont(new Font("Times new romans", 0, 14));
+        txtPass.setShowAndHide(true);
         login.add(txtPass,"w 60%");
         
         JCheckBox savePass = new JCheckBox();
         savePass.setText("Lưu mật khẩu");
         login.add(savePass,"align left, cell 0 3");
-        JCheckBox showPass = new JCheckBox();
-        showPass.setText("Hiện mật khẩu");
-        login.add(showPass,"align right,gapleft push, cell 0 3");
-
+      
         savePass.addActionListener((ActionEvent e) -> {
             if(savePass.isSelected()){
                 
@@ -138,16 +284,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
                 
             }
         });
-         showPass.addActionListener((ActionEvent e) -> {
-             if(showPass.isSelected()){
-                 txtPass.setEchoChar((char)0);
-                 
-             }else{
-                 txtPass.setEchoChar('*');
-                 
-             }
-             txtPass.requestFocus();
-        });
+       
         MyButton btn = new MyButton();
         btn.setPreferredSize(new java.awt.Dimension(192, 23));
         btn.setRadius(60);       
@@ -176,7 +313,14 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
                             JOptionPane.INFORMATION_MESSAGE);
                 }
                 else{
-                            Loging.actionPerformed(e);
+                    String loginResult  =loginUser(txtAccount.getText(),txtPass.getText());
+                     if (loginResult.equals("Đăng nhập thành công")) {
+                        JOptionPane.showMessageDialog(null, loginResult);
+                        Loging.actionPerformed(e);
+                    } else {
+                        JOptionPane.showMessageDialog(null, loginResult, "Thông báo!", JOptionPane.INFORMATION_MESSAGE);
+                    }
+
                 }
                 
             }
