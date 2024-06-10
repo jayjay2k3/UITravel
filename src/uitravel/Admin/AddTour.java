@@ -51,6 +51,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import net.miginfocom.swing.MigLayout;
+import uitravel.AdminMain;
 import uitravel.Components.SettingActivities;
 import uitravel.Components.AddActivities;
 import uitravel.Components.Loading;
@@ -888,6 +889,13 @@ public class AddTour extends javax.swing.JFrame {
         System.out.println("Uploading tour data: " + tourData.get("TourLength"));
 
     collection.document(tourID).set(tourData);
+    JOptionPane.showMessageDialog(null,
+                "Tạo chuyến đi mới thành công!",
+                "Thông báo!",
+                JOptionPane.INFORMATION_MESSAGE);
+    AdminMain am = new  AdminMain();
+    am.setVisible(true);
+    dispose();
 }
 
  
