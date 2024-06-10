@@ -4,11 +4,29 @@
  */
 package uitravel.Components.TourInfo.Component;
 
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QuerySnapshot;
+import com.google.firebase.cloud.FirestoreClient;
 import com.raven.datechooser.DateChooser;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import net.miginfocom.swing.MigLayout;
+import uitravel.Components.Activity;
+import uitravel.UserMain;
 
 /**
  *
@@ -20,12 +38,94 @@ public class FullTourInfo extends javax.swing.JPanel {
     List<Comment> tourComments;
     List<TourImage> tourImages;
     private DateChooser selectDate;
+    private String tourID;
+    Firestore firestore = FirestoreClient.getFirestore();
+    DefaultListModel<String> listModel = new DefaultListModel<>();
+    private double price;
 
     public FullTourInfo() {
         initComponents();
         init();
         loadIMG();
         loadCMT();
+    }
+    public void setTourID(String tourID){
+        this.tourID = tourID;
+        loadDataFromFireStore();
+    }
+    public void setPrice(String prices){
+        this.price= Double.parseDouble(prices);
+        Locale vn = new Locale("vi","VN");
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(vn);
+
+        txtAdultPrice.setText(currencyFormatter.format(price));
+        txtChildrenPrice.setText(currencyFormatter.format(price*0.7));
+        txtInfantPrice.setText(currencyFormatter.format(0));
+
+        
+    }
+    public int[] getTicketData(){
+        int[] ticketData = new int[4];
+        ticketData[0] = btnAdult.getNumber() + btnChild.getNumber()  +btnInfant.getNumber();
+        ticketData[1] = btnAdult.getNumber();
+        ticketData[2] = btnChild.getNumber();
+        ticketData[3] = btnInfant.getNumber();
+        return ticketData;
+    }
+    public double getPrices(){
+        return  price*btnAdult.getNumber()+ 0.7*price*btnChild.getNumber();
+
+    }
+     private void loadDataFromFireStore(){
+        try {
+            pnlAcc.setLayout(new MigLayout("fillx"));
+            DocumentReference docRef = firestore.collection("admin").document("AllTours").collection("TourInfo").document(tourID);
+            // Block on response
+            ApiFuture<DocumentSnapshot> future = docRef.get();
+            // Block on response
+            DocumentSnapshot document;  
+            document = future.get();
+            if(document.exists()){
+                
+                txtName.setText(document.getString("TourName"));
+                List<String> tourIncludes = (List<String>) document.get("TourIncludes");
+                tourIncludes.forEach(item -> {
+                    listModel.addElement(item);
+                });
+                List<Map<String, Object>>Acctivities = (List<Map<String, Object>>) document.get("TourActivities");
+                    int index = 0;
+                    for (Map<String, Object> tourActivity : Acctivities){
+                        System.out.println(tourActivity);
+                        String temp =(String) tourActivity.get("Length");
+                        Activity t2 = new Activity();
+                        t2.setAccName((String) tourActivity.get("Name"));
+                        t2.setDescription((String) tourActivity.get("Description"));
+                        t2.setDuriation(temp);
+                        pnlAcc.add(t2,"wrap, w 95%");
+                    }
+                btnTime.setText(document.getString("TourTime"));
+                this.setPrice((String) document.get("TourPrice"));
+                listItem.setModel(listModel);
+                txtTime.setText(document.getString("TourLength"));
+                txtInfo.setText(document.getString("TourDescription"));
+                
+               
+            docRef.addSnapshotListener((snapshot, e) -> {
+                if (e != null) {
+                    System.err.println("Listen failed: " + e);
+                    return;
+                }
+                if (snapshot != null && snapshot.exists()) {
+                  
+                } else {
+                    System.out.print("Current data: null");
+                }
+                });
+            }
+        }
+        catch (ExecutionException | InterruptedException ex) {
+            Logger.getLogger(UserMain.class.getName()).log(Level.SEVERE, null, ex);
+        } 
     }
     private void init(){
         imgCover.setLayout(new MigLayout(" fillx, insets 0","[]30[]","[]"));
@@ -34,6 +134,15 @@ public class FullTourInfo extends javax.swing.JPanel {
         selectDate.setTextField(txtChooseTime);
         selectDate.setBetweenCharacter(" đến ");
         selectDate.setDateSelectionMode(DateChooser.DateSelectionMode.SINGLE_DATE_SELECTED);
+        btnAdult.addEvent((ActionEvent e) -> {
+            calculateTheCost();
+        });
+        btnChild.addEvent((ActionEvent e) -> {
+            calculateTheCost();
+        });
+         btnInfant.addEvent((ActionEvent e) -> {
+            calculateTheCost();
+        });
     }
     private void loadIMG(){
         tourImages = new ArrayList<>();
@@ -69,9 +178,7 @@ public class FullTourInfo extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         txtInfo = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
-        txtInclude = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
-        txtDescription = new javax.swing.JTextArea();
         jLabel5 = new javax.swing.JLabel();
         txtTime = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -96,11 +203,17 @@ public class FullTourInfo extends javax.swing.JPanel {
         txtChooseTime = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        btnTime = new uitravel.Components.MyButton();
+        jLabel14 = new javax.swing.JLabel();
         txtScore = new javax.swing.JLabel();
         jProgressBar1 = new javax.swing.JProgressBar();
         txtScore1 = new javax.swing.JLabel();
         txtScore2 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        listItem = new javax.swing.JList<>();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        pnlAcc = new javax.swing.JPanel();
 
         setOpaque(false);
         setPreferredSize(new java.awt.Dimension(1300, 750));
@@ -112,7 +225,7 @@ public class FullTourInfo extends javax.swing.JPanel {
         txtNumberComments.setBackground(new java.awt.Color(255, 255, 255));
         txtNumberComments.setAutoscrolls(true);
         txtNumberComments.setOpaque(true);
-        txtNumberComments.setPreferredSize(new java.awt.Dimension(1431, 2200));
+        txtNumberComments.setPreferredSize(new java.awt.Dimension(1300, 2200));
 
         txtName.setEditable(false);
         txtName.setColumns(20);
@@ -148,35 +261,24 @@ public class FullTourInfo extends javax.swing.JPanel {
         jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 20)); // NOI18N
         jLabel2.setText("Mô tả chuyến đi:");
 
+        txtInfo.setEditable(false);
         txtInfo.setColumns(20);
         txtInfo.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
         txtInfo.setLineWrap(true);
         txtInfo.setRows(5);
-        txtInfo.setText("Hoi An Basket Boat Tour Hoi An Basket Boat Tour Hoi An Basket Boat Tour Hoi An Basket Boat Tour Hoi An Basket Boat Tour Hoi An Basket Boat Tour ");
+        txtInfo.setText("ádadasdas\nadasdas\nádasdas");
         txtInfo.setWrapStyleWord(true);
-        txtInfo.setPreferredSize(new java.awt.Dimension(800, 104));
+        txtInfo.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtInfo.setEnabled(false);
+        txtInfo.setMaximumSize(new java.awt.Dimension(691, 104));
+        txtInfo.setOpaque(false);
+        txtInfo.setPreferredSize(new java.awt.Dimension(691, 104));
 
         jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 20)); // NOI18N
         jLabel3.setText("Bao gồm:");
 
-        txtInclude.setColumns(20);
-        txtInclude.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
-        txtInclude.setLineWrap(true);
-        txtInclude.setRows(5);
-        txtInclude.setText("Ticket\nBottled water\nBasket boat\nVietnamese hat (Non La )\nAll Fees and Taxes\nLife jacket\nTour Guide\nGuide\nGuide\n");
-        txtInclude.setWrapStyleWord(true);
-        txtInclude.setPreferredSize(new java.awt.Dimension(800, 144));
-
         jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 20)); // NOI18N
         jLabel4.setText("Thông tin hành trình");
-
-        txtDescription.setColumns(20);
-        txtDescription.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
-        txtDescription.setLineWrap(true);
-        txtDescription.setRows(5);
-        txtDescription.setText("Dừng tại: Hoi An\nVào cửa miễn phí\nArriving in Hoi An ancient town, you cannot miss visiting the seven – hectare water coconut woods with the unique ecosystem of water coconut trees. This place is a relic of the film revolutionary base during the war between US army and Hoi An people . Here , you will be enthusiastically welcomed by the local people, they will lead you to visit the creeks in the water coconut woods by basket boats, you will be intructed to fish crabs and you will see the performances of rowing basket boats by the local rower.\n\nInclusion: Entrance ticket\n\n- Visiting the historical and cultural relic of Cam Thanh Nipa palm Site and enjoying the eco logical scenery\n\n- Enjoying fishing net throw and others activities\n\n- Free pick up your hotel ( only 1 way)\n\n");
-        txtDescription.setWrapStyleWord(true);
-        txtDescription.setPreferredSize(new java.awt.Dimension(764, 224));
 
         jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Clock.png"))); // NOI18N
@@ -194,7 +296,7 @@ public class FullTourInfo extends javax.swing.JPanel {
         cmtCover.setLayout(cmtCoverLayout);
         cmtCoverLayout.setHorizontalGroup(
             cmtCoverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 798, Short.MAX_VALUE)
+            .addGap(0, 1016, Short.MAX_VALUE)
         );
         cmtCoverLayout.setVerticalGroup(
             cmtCoverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -242,7 +344,6 @@ public class FullTourInfo extends javax.swing.JPanel {
         txtAdultPrice1.setText("Tổng cộng");
 
         txtCost.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
-        txtCost.setText("Số lượng vé:");
 
         myButton1.setForeground(new java.awt.Color(255, 255, 255));
         myButton1.setText("Bước tiếp");
@@ -255,6 +356,18 @@ public class FullTourInfo extends javax.swing.JPanel {
         myButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 myButton1ActionPerformed(evt);
+            }
+        });
+
+        btnAdult.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnAdultMousePressed(evt);
+            }
+        });
+
+        btnChild.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnChildMousePressed(evt);
             }
         });
 
@@ -329,7 +442,7 @@ public class FullTourInfo extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, roundedPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         txtChooseTime.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
@@ -341,6 +454,16 @@ public class FullTourInfo extends javax.swing.JPanel {
 
         jLabel8.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel8.setText("Chọn ngày:");
+
+        btnTime.setForeground(new java.awt.Color(0, 0, 255));
+        btnTime.setBorderColor(new java.awt.Color(0, 0, 255));
+        btnTime.setColorClick(new java.awt.Color(255, 255, 255));
+        btnTime.setColorOver(new java.awt.Color(204, 255, 255));
+        btnTime.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        btnTime.setRadius(35);
+
+        jLabel14.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel14.setText("Giờ xuất phát:");
 
         javax.swing.GroupLayout bookingCoverLayout = new javax.swing.GroupLayout(bookingCover);
         bookingCover.setLayout(bookingCoverLayout);
@@ -361,7 +484,10 @@ public class FullTourInfo extends javax.swing.JPanel {
                                 .addComponent(jLabel7))
                             .addGroup(bookingCoverLayout.createSequentialGroup()
                                 .addGap(22, 22, 22)
-                                .addComponent(txtChooseTime, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(bookingCoverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtChooseTime, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel14)
+                                    .addComponent(btnTime, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -374,9 +500,13 @@ public class FullTourInfo extends javax.swing.JPanel {
                 .addComponent(jLabel8)
                 .addGap(18, 18, 18)
                 .addComponent(txtChooseTime, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(26, 26, 26)
+                .addComponent(jLabel14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addComponent(btnTime, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(roundedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(208, 208, 208))
+                .addContainerGap())
         );
 
         txtScore.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
@@ -402,15 +532,40 @@ public class FullTourInfo extends javax.swing.JPanel {
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel13.setText("(20 đánh giá)");
 
+        jScrollPane3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane3.setMaximumSize(new java.awt.Dimension(691, 200));
+
+        listItem.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        listItem.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jScrollPane3.setViewportView(listItem);
+
+        jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane4.setMaximumSize(new java.awt.Dimension(470, 209));
+        jScrollPane4.setPreferredSize(new java.awt.Dimension(470, 209));
+
+        pnlAcc.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout pnlAccLayout = new javax.swing.GroupLayout(pnlAcc);
+        pnlAcc.setLayout(pnlAccLayout);
+        pnlAccLayout.setHorizontalGroup(
+            pnlAccLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        pnlAccLayout.setVerticalGroup(
+            pnlAccLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        jScrollPane4.setViewportView(pnlAcc);
+
         txtNumberComments.setLayer(txtName, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtNumberComments.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtNumberComments.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtNumberComments.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtNumberComments.setLayer(txtInfo, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtNumberComments.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        txtNumberComments.setLayer(txtInclude, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtNumberComments.setLayer(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        txtNumberComments.setLayer(txtDescription, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtNumberComments.setLayer(jLabel5, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtNumberComments.setLayer(txtTime, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtNumberComments.setLayer(jLabel6, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -421,55 +576,59 @@ public class FullTourInfo extends javax.swing.JPanel {
         txtNumberComments.setLayer(txtScore1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtNumberComments.setLayer(txtScore2, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtNumberComments.setLayer(jLabel13, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        txtNumberComments.setLayer(jScrollPane3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        txtNumberComments.setLayer(jScrollPane4, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout txtNumberCommentsLayout = new javax.swing.GroupLayout(txtNumberComments);
         txtNumberComments.setLayout(txtNumberCommentsLayout);
         txtNumberCommentsLayout.setHorizontalGroup(
             txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(txtNumberCommentsLayout.createSequentialGroup()
+                .addGap(95, 95, 95)
+                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 892, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(313, 313, 313))
+            .addGroup(txtNumberCommentsLayout.createSequentialGroup()
+                .addGap(116, 116, 116)
                 .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(txtNumberCommentsLayout.createSequentialGroup()
-                        .addGap(95, 95, 95)
-                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 892, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 875, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(txtNumberCommentsLayout.createSequentialGroup()
-                        .addGap(116, 116, 116)
                         .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(txtNumberCommentsLayout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(txtNumberCommentsLayout.createSequentialGroup()
                                 .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(txtInclude, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel1)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(txtInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addGroup(txtNumberCommentsLayout.createSequentialGroup()
-                                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 764, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addGroup(txtNumberCommentsLayout.createSequentialGroup()
-                                                        .addComponent(jLabel5)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(txtTime))))))
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(bookingCover, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(txtNumberCommentsLayout.createSequentialGroup()
-                        .addGap(164, 164, 164)
-                        .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtScore)
-                            .addComponent(txtScore1))
-                        .addGap(143, 143, 143)
-                        .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtScore2))))
-                .addContainerGap(159, Short.MAX_VALUE))
+                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(txtNumberCommentsLayout.createSequentialGroup()
+                                                .addComponent(jLabel5)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(txtTime))
+                                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 654, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(txtNumberCommentsLayout.createSequentialGroup()
+                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(txtNumberCommentsLayout.createSequentialGroup()
+                                        .addGap(40, 40, 40)
+                                        .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtScore)
+                                            .addComponent(txtScore1))
+                                        .addGap(112, 112, 112)
+                                        .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtScore2))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(bookingCover, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(28, 28, 28))))
         );
         txtNumberCommentsLayout.setVerticalGroup(
             txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -478,44 +637,44 @@ public class FullTourInfo extends javax.swing.JPanel {
                 .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(20, 20, 20)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(txtNumberCommentsLayout.createSequentialGroup()
-                        .addGap(73, 73, 73)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(21, 21, 21)
-                        .addComponent(txtInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(45, 45, 45)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(txtInclude, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(38, 38, 38)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(txtTime))
-                        .addGap(20, 20, 20)
-                        .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(txtNumberCommentsLayout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(bookingCover, javax.swing.GroupLayout.PREFERRED_SIZE, 657, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(36, 36, 36)
-                .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtScore1)
-                    .addComponent(txtScore2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtScore)
-                    .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtNumberCommentsLayout.createSequentialGroup()
+                                .addComponent(txtScore1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtScore))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtNumberCommentsLayout.createSequentialGroup()
+                                .addComponent(txtScore2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(bookingCover, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(476, 476, 476))
+                .addContainerGap(450, Short.MAX_VALUE))
         );
 
         main.setViewportView(txtNumberComments);
@@ -531,6 +690,19 @@ public class FullTourInfo extends javax.swing.JPanel {
             event.actionPerformed(evt);
         }
     }//GEN-LAST:event_myButton1ActionPerformed
+
+    private void btnAdultMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAdultMousePressed
+    }//GEN-LAST:event_btnAdultMousePressed
+
+    private void btnChildMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnChildMousePressed
+ 
+    }//GEN-LAST:event_btnChildMousePressed
+    private void calculateTheCost() {
+        Locale vn = new Locale("vi","VN");
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(vn);
+        double total = price*btnAdult.getNumber()+ 0.7*price*btnChild.getNumber();
+        txtCost.setText(currencyFormatter.format(total));
+    }
     public void addEvent(ActionListener event) {
         this.event = event;
     }
@@ -541,6 +713,7 @@ public class FullTourInfo extends javax.swing.JPanel {
     private uitravel.User.UserInfo.Component.IncreaseButton btnAdult;
     private uitravel.User.UserInfo.Component.IncreaseButton btnChild;
     private uitravel.User.UserInfo.Component.IncreaseButton btnInfant;
+    private uitravel.Components.MyButton btnTime;
     private javax.swing.JLayeredPane cmtCover;
     private javax.swing.JLayeredPane imgCover;
     private javax.swing.JLabel jLabel1;
@@ -548,6 +721,7 @@ public class FullTourInfo extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -559,16 +733,18 @@ public class FullTourInfo extends javax.swing.JPanel {
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JList<String> listItem;
     private javax.swing.JScrollPane main;
     private uitravel.Components.MyButton myButton1;
+    private javax.swing.JPanel pnlAcc;
     private uitravel.Components.RoundedPanel roundedPanel1;
     private javax.swing.JLabel txtAdultPrice;
     private javax.swing.JLabel txtAdultPrice1;
     private javax.swing.JLabel txtChildrenPrice;
     private javax.swing.JTextField txtChooseTime;
     private javax.swing.JLabel txtCost;
-    private javax.swing.JTextArea txtDescription;
-    private javax.swing.JTextArea txtInclude;
     private javax.swing.JLabel txtInfantPrice;
     private javax.swing.JTextArea txtInfo;
     private javax.swing.JTextArea txtName;
@@ -579,4 +755,6 @@ public class FullTourInfo extends javax.swing.JPanel {
     private javax.swing.JLabel txtScore2;
     private javax.swing.JLabel txtTime;
     // End of variables declaration//GEN-END:variables
+
+
 }

@@ -5,7 +5,9 @@
  */
 package uitravel;
 
+import FireBase.FirebaseInitializer;
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import java.io.IOException;
 
 
 
@@ -17,9 +19,11 @@ public class UITravel {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         FlatIntelliJLaf.setup();
+        FirebaseInitializer.initialize();
 
         UserMain um = new UserMain();
         um.setVisible(true);

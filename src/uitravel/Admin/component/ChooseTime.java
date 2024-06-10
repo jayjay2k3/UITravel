@@ -9,6 +9,7 @@ import com.raven.datechooser.DateChooser;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
 import javax.swing.JFrame;
@@ -72,7 +73,6 @@ public class ChooseTime extends javax.swing.JPanel {
         jLabel2.setText("Vui lòng chọn số hành khách tối đa:");
 
         txtNumber.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
-        txtNumber.setText("jTextField1");
         txtNumber.setOpaque(true);
 
         myButton1.setForeground(new java.awt.Color(255, 255, 255));
@@ -158,8 +158,10 @@ public class ChooseTime extends javax.swing.JPanel {
     public void AddTour(ActionListener event) {
         this.eventAddTour = event;
     }
-    public Date getDate(){
-        return  date;
+    public String getDate(){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return sdf.format(date);
+     
     }
     public int getNumber(){
         return numbers;

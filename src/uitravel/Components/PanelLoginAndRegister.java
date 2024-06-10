@@ -40,6 +40,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
 
     private boolean isLogin;
     private ActionListener Loging;
+    private String uid;
 
     public void setLogin(boolean t){
         this.isLogin = t;
@@ -66,46 +67,48 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         register.removeAll();
         register.setLayout(new MigLayout("wrap", "push[center]push", "push[]25[]10[]10[]10[]10[]15[]25[]push"));
         JLabel label = new JLabel("Tạo tài khoản");
-        label.setFont(new Font("Times new romans", 1, 30));
+        label.setFont(new Font("Times new roman", 1, 30));
         label.setForeground(new Color(15, 104, 242));
         register.add(label);
         
         TextField txtName = new uitravel.Components.TextField();
         txtName.setLabelText("Họ và tên:");
-        txtName.setFont(new Font("Times new romans", 1, 14));
+        txtName.setFont(new Font("Times new roman", 0, 14));
 
         register.add(txtName,"w 60%");
         
                 
         TextField txtEmail = new uitravel.Components.TextField();
         txtEmail.setLabelText("Email:");
-        txtEmail.setFont(new Font("Times new romans", 1, 14));
+        txtEmail.setFont(new Font("Times new roman", 0, 14));
         register.add(txtEmail,"w 60%");
                 
         TextField txtPhone = new uitravel.Components.TextField();
         txtPhone.setLabelText("Số điện thoại:");
-        txtPhone.setFont(new Font("Times new romans", 1, 14));
+        txtPhone.setFont(new Font("Times new roman", 0, 14));
 
         register.add(txtPhone,"w 60%");
                 
        
         PasswordField txtPass = new uitravel.Components.PasswordField();
         txtPass.setLabelText("Mật khẩu:");
-        txtPass.setFont(new Font("Times new romans", 1, 14));
+        txtPass.setFont(new Font("Times new roman", 0, 14));
 
         txtPass.setShowAndHide(true);
         register.add(txtPass,"w 60%");
                 
         PasswordField txtPassConfirm = new uitravel.Components.PasswordField();
         txtPassConfirm.setLabelText("Xác nhận mật khẩu:");
-        txtPassConfirm.setFont(new Font("Times new romans", 1, 14));
+        txtPassConfirm.setFont(new Font("Times new roman", 0, 14));
         txtPassConfirm.setShowAndHide(true);
         register.add(txtPassConfirm,"w 60%");
                 
         MyButton btn = new MyButton();
         btn.setPreferredSize(new java.awt.Dimension(192, 23));
         btn.setRadius(60); 
-        btn.setText("Đăng ký!");
+        btn.setText("Đăng ký");
+        btn.setFont(new Font("Times new roman", 1, 16));
+
         btn.setBorderColor(new java.awt.Color(0, 51, 153));
         btn.setColor(new java.awt.Color(0, 51, 153));
         btn.setColorClick(new java.awt.Color(0, 102, 255));
@@ -165,15 +168,15 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
                // Lưu data đăng ký vào Firestore
                 Firestore db = FirestoreClient.getFirestore();
                 Map<String, Object> UserData = new HashMap<>();
-                UserData.put("FullName:", txtName.getText());
-                UserData.put("Email:", txtEmail.getText());
-                UserData.put("PhoneNumber:", txtPhone.getText());
+                UserData.put("FullName", txtName.getText());
+                UserData.put("Email", txtEmail.getText());
+                UserData.put("PhoneNumber", txtPhone.getText());
                 db.collection("user").document(uid).set(UserData);
                 initRegister();
-                 JOptionPane.showMessageDialog(null,
-                        "Đăng ký thành công, vui lòng đang nhập lại!",
-                        "Thông báo!",
-                        JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null,
+                    "Đăng ký thành công, vui lòng đang nhập lại!",
+                    "Thông báo!",
+                    JOptionPane.INFORMATION_MESSAGE);
           }
         });
         register.add(btn,"w 25%,h 50");
@@ -223,6 +226,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
 
                 JSONObject jsonResponse = new JSONObject(response.toString());
                 String idToken = jsonResponse.getString("idToken");
+                uid = jsonResponse.getString("localId"); // UID of the user
                 // You can use idToken for authenticated requests to your Firebase backend
                 return "Đăng nhập thành công";
 
@@ -258,33 +262,36 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     private void initLogin() {
         login.setLayout(new MigLayout("wrap", "push[center]push", "push[]25[]20[]10[]10[]25[]push"));
         JLabel label = new JLabel("Đăng nhập");
-        label.setFont(new Font("Times new romans", 1, 30));
+        label.setFont(new Font("Times new roman", Font.BOLD, 30));
         label.setForeground(new Color(15, 104, 242));
         login.add(label);
         
         TextField txtAccount = new uitravel.Components.TextField();
         txtAccount.setLabelText("Email:");
-        txtAccount.setFont(new Font("Times new romans", 0, 14));
+        txtAccount.setFont(new Font("Times new roman", Font.PLAIN, 14));
         login.add(txtAccount,"w 60%");
 
         PasswordField txtPass = new uitravel.Components.PasswordField();
         txtPass.setLabelText("Mật khẩu:");
-        txtPass.setFont(new Font("Times new romans", 0, 14));
+        txtPass.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         txtPass.setShowAndHide(true);
         login.add(txtPass,"w 60%");
         
-        JCheckBox savePass = new JCheckBox();
-        savePass.setText("Lưu mật khẩu");
-        login.add(savePass,"align left, cell 0 3");
-      
-        savePass.addActionListener((ActionEvent e) -> {
-            if(savePass.isSelected()){
-                
-            }else{
+        JLabel forgetPass = new JLabel();
+        forgetPass.setText("Quên mật khẩu?");
+        forgetPass.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+
+        login.add(forgetPass,"align left, cell 0 3");
+       forgetPass.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+               forgetPassMousePressed(evt);
+            }
+
+            private void forgetPassMousePressed(MouseEvent evt) {
                 
             }
         });
-       
         MyButton btn = new MyButton();
         btn.setPreferredSize(new java.awt.Dimension(192, 23));
         btn.setRadius(60);       
@@ -295,7 +302,8 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         btn.setColorOver(new java.awt.Color(0, 51, 204));
         btn.setForeground(new java.awt.Color(255, 255, 255));
         login.add(btn,"w 25%,h 50");
-        
+        btn.setFont(new Font("Times new roman", 1, 16));
+
         btn.addActionListener((ActionEvent e) -> {
             if("Tên đăng nhập".equals(txtAccount.getText())||"".equals(txtAccount.getText()))
             {
@@ -316,6 +324,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
                     String loginResult  =loginUser(txtAccount.getText(),txtPass.getText());
                      if (loginResult.equals("Đăng nhập thành công")) {
                         JOptionPane.showMessageDialog(null, loginResult);
+                        System.out.println(uid);
                         Loging.actionPerformed(e);
                     } else {
                         JOptionPane.showMessageDialog(null, loginResult, "Thông báo!", JOptionPane.INFORMATION_MESSAGE);
@@ -327,7 +336,9 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         });
 
     }
-   
+   public String getUID(){
+       return uid;
+   }
     public void showRegister(boolean show) {
         if (show) {
             register.setVisible(true);

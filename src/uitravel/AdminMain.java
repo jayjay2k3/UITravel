@@ -5,18 +5,37 @@
 package uitravel;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QuerySnapshot;
+import com.google.firebase.cloud.FirestoreClient;
 import com.raven.glasspanepopup.DefaultLayoutCallBack;
 import com.raven.glasspanepopup.DefaultOption;
 import com.raven.glasspanepopup.GlassPanePopup;
 import java.awt.Component;
+import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
 import net.miginfocom.swing.MigLayout;
+import uitravel.Admin.AddAPlace;
+import uitravel.Admin.AddTour;
 import uitravel.Admin.TourInfo.ADShortTourInfo;
 import uitravel.Admin.TourInfo.TourBookingData;
 import uitravel.Admin.component.ChooseTime;
@@ -27,40 +46,72 @@ import uitravel.Admin.component.UserBar;
  * @author ACER
  */
 public class AdminMain extends javax.swing.JFrame {
+    Firestore firestore = FirestoreClient.getFirestore();
 
     List <ADShortTourInfo> allTour;
     public AdminMain() {
         initComponents();
         init();
-        loadTour();
+        retrieveTourInfo();
     }
     private void init(){
         GlassPanePopup.install(this);
         userBar.setVisible(false);
-
-
     }
-  private void loadTour(){
-     //   bg.setLayout(new MigLayout("wrap, fill"));
+    private void retrieveTourInfo() {
         cover.setLayout( new MigLayout("wrap, fill, insets 50","[]10[]", "12[]12"));
-        allTour = new ArrayList<>();
-        for(int i=0;i<20;i++){
-            ADShortTourInfo t = new ADShortTourInfo();
-            t.addEventGetTourInfo((ActionEvent e) -> {
-               GlassPanePopup.showPopup(new TourBookingData());
-            });
-            allTour.add(t);
-            cover.add(t);
+        allTour = new ArrayList<>();    
+        try {
+            CollectionReference collection = firestore.collection("admin").document("AllTours").collection("TourInfo");
+            ApiFuture<QuerySnapshot> querySnapshot = collection.get();
+               
+            for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+                if (document.exists()) {
+                    ADShortTourInfo t = new ADShortTourInfo();
+                    t.addEventGetTourInfo((ActionEvent e) -> {
+                        TourBookingData t2 =new TourBookingData();
+                        t2.setTourID(t.getTourID());
+                       GlassPanePopup.showPopup(t2);
+                    });
+                    t.setTourID(document.getId());
+                    
+                    t.setPlace(document.getString("Place"));
+                    t.setTourName(document.getString("TourName"));
+                    t.setScore( Double.valueOf(document.getString("TourRating")));   
+                    List<String> tourImagesBase64 = (List<String>) document.get("TourImages");
+                    
+                    // Convert Base64 encoded images back to ImageIcon
+                    t.setPic( convertBase64ToImageIcon(tourImagesBase64));
+                    
+                    allTour.add(t);
+                    cover.add(t);
+                }
+                
+            }
+            cover.repaint();
+            cover.revalidate();
+        } catch (InterruptedException | ExecutionException ex) {
+            Logger.getLogger(AdminMain.class.getName()).log(Level.SEVERE, null, ex);
         }
-       // cover.setPreferredSize(new Dimension(1400,800));
-       
-        cover.repaint();
-        cover.revalidate();
+    }
+         private ImageIcon convertBase64ToImageIcon(List<String> base64Images) {
+        List<ImageIcon> imageIcons = new ArrayList<>();
+        for (String base64Image : base64Images) {
+            try {
+                byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+                ByteArrayInputStream bais = new ByteArrayInputStream(imageBytes);
+                BufferedImage bufferedImage = ImageIO.read(bais);
+                ImageIcon imageIcon = new ImageIcon(bufferedImage);
+                imageIcons.add(imageIcon);
+            } catch (IOException e) {
+            }
+        }
+        return imageIcons.get(0);
+    }
+
      
         //main.setViewportView(bg);
 
-        System.out.println(cover.getHeight());
-    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -355,8 +406,10 @@ public class AdminMain extends javax.swing.JFrame {
     private uitravel.Admin.component.UserBar userBar;
     // End of variables declaration//GEN-END:variables
 
-    public void adminAddTour() {
-       // 
+    public void adminAddTour() throws IOException {
+        AddTour ad = new AddTour();
+        ad.setVisible(true);
+        dispose();
     }
 
     public void adminColumnTable() {

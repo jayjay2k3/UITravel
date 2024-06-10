@@ -12,6 +12,7 @@ import java.awt.RenderingHints;
 import java.awt.Graphics2D;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -26,13 +27,19 @@ public class LoggedHeader extends javax.swing.JPanel {
     public boolean isLogin;
     private ActionListener eventChatBox;
     private ActionListener eventAdmin;
-
+        public void setUserAvatar(ImageIcon img){
+        avatar.setbackgroundImage(img);
+    }
     public LoggedHeader() {
         initComponents();
         setOpaque(false);
         init();
     }
+    public void setUserName(String name){
+        txtName.setText(name.split(" ")[name.split(" ").length-1]);
+        //txtName.setText(name);
 
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -47,8 +54,8 @@ public class LoggedHeader extends javax.swing.JPanel {
         btnDiscount = new javax.swing.JButton();
         btnRoom = new javax.swing.JButton();
         user = new javax.swing.JPanel();
-        avata = new uitravel.Components.RoundedImage();
         txtName = new javax.swing.JLabel();
+        avatar = new uitravel.Components.ImagePanel();
         btnPartner = new javax.swing.JButton();
         customLineComponent1 = new uitravel.Components.CustomLineComponent();
         customLineComponent2 = new uitravel.Components.CustomLineComponent();
@@ -120,46 +127,51 @@ public class LoggedHeader extends javax.swing.JPanel {
             }
         });
 
-        avata.setOpaque(false);
-        avata.setRadius(90);
-
-        javax.swing.GroupLayout avataLayout = new javax.swing.GroupLayout(avata);
-        avata.setLayout(avataLayout);
-        avataLayout.setHorizontalGroup(
-            avataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 29, Short.MAX_VALUE)
-        );
-        avataLayout.setVerticalGroup(
-            avataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
         txtName.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
         txtName.setForeground(new java.awt.Color(255, 255, 255));
         txtName.setText("Bao");
+
+        avatar.setbackgroundImage(new javax.swing.ImageIcon(getClass().getResource("/resources/backimg.jpg"))); // NOI18N
+        avatar.setisTransparent(false);
+        avatar.setPreferredSize(new java.awt.Dimension(29, 29));
+        avatar.setRadius(90);
+
+        javax.swing.GroupLayout avatarLayout = new javax.swing.GroupLayout(avatar);
+        avatar.setLayout(avatarLayout);
+        avatarLayout.setHorizontalGroup(
+            avatarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        avatarLayout.setVerticalGroup(
+            avatarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout userLayout = new javax.swing.GroupLayout(user);
         user.setLayout(userLayout);
         userLayout.setHorizontalGroup(
             userLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(userLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(avata, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
+                .addGap(45, 45, 45)
                 .addComponent(txtName)
                 .addContainerGap(34, Short.MAX_VALUE))
+            .addGroup(userLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(userLayout.createSequentialGroup()
+                    .addGap(10, 10, 10)
+                    .addComponent(avatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(38, Short.MAX_VALUE)))
         );
         userLayout.setVerticalGroup(
             userLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(userLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(userLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userLayout.createSequentialGroup()
-                        .addGap(0, 5, Short.MAX_VALUE)
-                        .addComponent(txtName)
-                        .addGap(0, 5, Short.MAX_VALUE))
-                    .addComponent(avata, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(11, Short.MAX_VALUE)
+                .addComponent(txtName)
+                .addContainerGap(11, Short.MAX_VALUE))
+            .addGroup(userLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(userLayout.createSequentialGroup()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(avatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         btnPartner.setText("Trang quản trị");
@@ -365,7 +377,7 @@ public class LoggedHeader extends javax.swing.JPanel {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private uitravel.Components.RoundedImage avata;
+    private uitravel.Components.ImagePanel avatar;
     private javax.swing.JButton btnDiscount;
     private javax.swing.JButton btnHelp;
     private javax.swing.JButton btnPartner;

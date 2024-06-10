@@ -24,6 +24,7 @@ public class ImagePanel extends javax.swing.JLayeredPane {
 
     private boolean isTransparent=true;
     private boolean withBlack=false;
+    private boolean hover=true;
 
     private int radius;
 
@@ -81,6 +82,12 @@ public class ImagePanel extends javax.swing.JLayeredPane {
     public boolean getwithBlack(){
         return withBlack;
     }
+        public void setHover(boolean hover){
+        this.hover= hover;
+    }
+    public boolean getHover(){
+        return hover;
+    }
     public void setOpcatity(float opcatity){
         this.opcatity= opcatity;
     }
@@ -113,14 +120,14 @@ public class ImagePanel extends javax.swing.JLayeredPane {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseEntered
-        if(withBlack){
+        if(withBlack&&hover){
             percent = 0.5;
             repaint();
         }
     }//GEN-LAST:event_formMouseEntered
 
     private void formMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseExited
-       if(withBlack){
+       if(withBlack&&hover){
             percent = 0.3;
             repaint();
 

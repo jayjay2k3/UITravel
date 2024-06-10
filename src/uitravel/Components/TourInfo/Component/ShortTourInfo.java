@@ -6,6 +6,7 @@ package uitravel.Components.TourInfo.Component;
 
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -22,6 +23,12 @@ public class ShortTourInfo extends javax.swing.JPanel {
     public void setTourName(String name){
         txtName.setText(name);
     }
+    public void setTourID(String name){
+        this.id = name;
+    }
+    public String getTourID(){
+        return id;
+    }
     public void setPlace(String place){
         txtPlace.setText(place);
     }
@@ -31,8 +38,11 @@ public class ShortTourInfo extends javax.swing.JPanel {
     public void setTime(String place){
         txtTime.setText(place);
     }
-     public void setScore(Double score){
-        txtScore.setText(score.toString());
+    public void setScore(String t){
+        txtScore.setText(t);
+    }
+    public void setPic(ImageIcon t){
+        pic.setbackgroundImage(t);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -45,12 +55,12 @@ public class ShortTourInfo extends javax.swing.JPanel {
 
         roundedPanel1 = new uitravel.Components.RoundedPanel();
         txtName = new javax.swing.JLabel();
-        pic = new uitravel.Components.RoundedImage();
         txtTime = new javax.swing.JLabel();
         txtDescription = new javax.swing.JTextArea();
         myButton1 = new uitravel.Components.MyButton();
         txtPlace = new javax.swing.JLabel();
         txtScore = new javax.swing.JLabel();
+        pic = new uitravel.Components.ImagePanel();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         setOpaque(false);
@@ -72,20 +82,6 @@ public class ShortTourInfo extends javax.swing.JPanel {
 
         txtName.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         txtName.setText("Du lịch Dĩ An");
-
-        pic.setOpaque(false);
-        pic.setRadius(30);
-
-        javax.swing.GroupLayout picLayout = new javax.swing.GroupLayout(pic);
-        pic.setLayout(picLayout);
-        picLayout.setHorizontalGroup(
-            picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 130, Short.MAX_VALUE)
-        );
-        picLayout.setVerticalGroup(
-            picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 142, Short.MAX_VALUE)
-        );
 
         txtTime.setFont(new java.awt.Font("Times New Roman", 2, 14)); // NOI18N
         txtTime.setText("Thời gian: 2 ngày");
@@ -122,14 +118,28 @@ public class ShortTourInfo extends javax.swing.JPanel {
         txtScore.setFont(new java.awt.Font("Times New Roman", 2, 14)); // NOI18N
         txtScore.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Star.png"))); // NOI18N
 
+        pic.setbackgroundImage(new javax.swing.ImageIcon(getClass().getResource("/resources/BigBeach_GettyImages-874980426-ezgif.com-webp-to-png-converter.png"))); // NOI18N
+        pic.setisTransparent(false);
+        pic.setPreferredSize(new java.awt.Dimension(130, 142));
+        pic.setRadius(30);
+
+        javax.swing.GroupLayout picLayout = new javax.swing.GroupLayout(pic);
+        pic.setLayout(picLayout);
+        picLayout.setHorizontalGroup(
+            picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 130, Short.MAX_VALUE)
+        );
+        picLayout.setVerticalGroup(
+            picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 142, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout roundedPanel1Layout = new javax.swing.GroupLayout(roundedPanel1);
         roundedPanel1.setLayout(roundedPanel1Layout);
         roundedPanel1Layout.setHorizontalGroup(
             roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(roundedPanel1Layout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
-                .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(163, 163, 163)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
                         .addComponent(txtScore)
@@ -144,7 +154,12 @@ public class ShortTourInfo extends javax.swing.JPanel {
                                 .addComponent(txtName)
                                 .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(txtPlace)))
-                        .addGap(0, 10, Short.MAX_VALUE))))
+                        .addGap(10, 10, 10))))
+            .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(roundedPanel1Layout.createSequentialGroup()
+                    .addGap(16, 16, 16)
+                    .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         roundedPanel1Layout.setVerticalGroup(
             roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -162,10 +177,11 @@ public class ShortTourInfo extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(txtScore)
                 .addContainerGap())
-            .addGroup(roundedPanel1Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(roundedPanel1Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
         add(roundedPanel1);
@@ -191,7 +207,7 @@ public class ShortTourInfo extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private uitravel.Components.MyButton myButton1;
-    private uitravel.Components.RoundedImage pic;
+    private uitravel.Components.ImagePanel pic;
     private uitravel.Components.RoundedPanel roundedPanel1;
     private javax.swing.JTextArea txtDescription;
     private javax.swing.JLabel txtName;

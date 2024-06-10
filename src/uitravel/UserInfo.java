@@ -4,11 +4,38 @@
  */
 package uitravel;
 
+import FireBase.FirebaseInitializer;
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.WriteResult;
+import com.google.firebase.cloud.FirestoreClient;
+
 import com.raven.glasspanepopup.GlassPanePopup;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.EventListener;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import net.miginfocom.swing.MigLayout;
@@ -23,20 +50,69 @@ import uitravel.User.UserInfo.Component.ChangePass;
  */
 public class UserInfo extends javax.swing.JFrame {
 
-    /**
-     * Creates new form UserInfo
-     */
+
     private AccountInfo accountInfo;
     private BookingHistory bookingHistory;
     private Balances balances;
+    private String uid;
+
     public UserInfo() {
         initComponents();
         init();
     }
+    public void setUID(String uid) throws IOException{
+        this.uid = uid;
+        accountInfo.setUID(uid);
+        loadDataFromFireStore(uid);
+        }
+    private void loadDataFromFireStore(String uid){
+        try {
+            Firestore db = FirestoreClient.getFirestore();
+            DocumentReference docRef  = db.collection("user").document(uid);
+            ApiFuture<DocumentSnapshot> future = docRef.get();
+            // Block on response
+            DocumentSnapshot document;  
+            document = future.get();
+           // System.out.println((document.getData()));
+            // System.out.println(document.getString("FullName"));
+
+            if(document.exists()){
+                
+                header.setUserName(document.getString("FullName"));
+                txtName.setText(document.getString("FullName"));
+                ImageIcon temp =loadImage();
+                    if(temp!=null){
+                        UserPic.setbackgroundImage(temp);
+                        header.setUserAvatar(temp);
+                    }
+                }
+            docRef.addSnapshotListener((snapshot, e) -> {
+                if (e != null) {
+                    System.err.println("Listen failed: " + e);
+                    return;
+                }
+                if (snapshot != null && snapshot.exists()) {
+                    String fullName = snapshot.getString("FullName"); 
+                    header.setUserName(fullName);
+                    txtName.setText(fullName); 
+                    ImageIcon temp =loadImage();
+                    if(temp!=null){
+                        UserPic.setbackgroundImage(temp);
+                        header.setUserAvatar(temp);
+                    }
+                } else {
+                    System.out.print("Current data: null");
+                }
+        });
+        }
+        catch (ExecutionException | InterruptedException ex) {
+            Logger.getLogger(UserMain.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
     private void init(){
         GlassPanePopup.install(this);
         accountInfo = new AccountInfo();
-         accountInfo.addChangePass(new MouseAdapter(){
+        accountInfo.addChangePass(new MouseAdapter(){
                 @Override
                     public void mousePressed(MouseEvent e) {
                         GlassPanePopup.showPopup(new ChangePass());
@@ -46,6 +122,7 @@ public class UserInfo extends javax.swing.JFrame {
         cover.add(accountInfo);
         header.addEvent((ActionEvent e) -> {
                 UserMain um = new UserMain();
+                um.setUID(uid);
                 um.setIsLogged(true);
                 um.setVisible(true);
                 dispose();
@@ -74,8 +151,6 @@ public class UserInfo extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         bg = new javax.swing.JLayeredPane();
         roundedPanel1 = new uitravel.Components.RoundedPanel();
-        roundedImage1 = new uitravel.Components.RoundedImage();
-        txtName = new javax.swing.JLabel();
         item2 = new uitravel.User.UserInfo.Component.Item();
         item3 = new uitravel.User.UserInfo.Component.Item();
         item4 = new uitravel.User.UserInfo.Component.Item();
@@ -83,6 +158,8 @@ public class UserInfo extends javax.swing.JFrame {
         item6 = new uitravel.User.UserInfo.Component.Item();
         customLineComponent1 = new uitravel.Components.CustomLineComponent();
         customLineComponent2 = new uitravel.Components.CustomLineComponent();
+        UserPic = new uitravel.Components.ImagePanel();
+        txtName = new javax.swing.JTextArea();
         cover = new javax.swing.JLayeredPane();
         header = new uitravel.User.UserInfo.Header();
         chatBox = new uitravel.User.MainUI.ChatBox();
@@ -100,24 +177,6 @@ public class UserInfo extends javax.swing.JFrame {
         roundedPanel1.setBackground(new java.awt.Color(255, 255, 255));
         roundedPanel1.setBorderColor(new java.awt.Color(204, 204, 204));
         roundedPanel1.setWithBorder(true);
-
-        roundedImage1.setOpaque(false);
-        roundedImage1.setPreferredSize(new java.awt.Dimension(65, 65));
-        roundedImage1.setRadius(90);
-
-        javax.swing.GroupLayout roundedImage1Layout = new javax.swing.GroupLayout(roundedImage1);
-        roundedImage1.setLayout(roundedImage1Layout);
-        roundedImage1Layout.setHorizontalGroup(
-            roundedImage1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 65, Short.MAX_VALUE)
-        );
-        roundedImage1Layout.setVerticalGroup(
-            roundedImage1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 65, Short.MAX_VALUE)
-        );
-
-        txtName.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        txtName.setText("Bao Nguyen");
 
         item2.setText("Quản lí số dư");
         item2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -159,30 +218,60 @@ public class UserInfo extends javax.swing.JFrame {
             }
         });
 
+        UserPic.setbackgroundImage(new javax.swing.ImageIcon(getClass().getResource("/resources/BigBeach_GettyImages-874980426-ezgif.com-webp-to-png-converter.png"))); // NOI18N
+        UserPic.setisTransparent(false);
+        UserPic.setRadius(90);
+        UserPic.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                UserPicMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                UserPicMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                UserPicMousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout UserPicLayout = new javax.swing.GroupLayout(UserPic);
+        UserPic.setLayout(UserPicLayout);
+        UserPicLayout.setHorizontalGroup(
+            UserPicLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 75, Short.MAX_VALUE)
+        );
+        UserPicLayout.setVerticalGroup(
+            UserPicLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 75, Short.MAX_VALUE)
+        );
+
+        txtName.setColumns(20);
+        txtName.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
+        txtName.setLineWrap(true);
+        txtName.setRows(5);
+        txtName.setWrapStyleWord(true);
+
         javax.swing.GroupLayout roundedPanel1Layout = new javax.swing.GroupLayout(roundedPanel1);
         roundedPanel1.setLayout(roundedPanel1Layout);
         roundedPanel1Layout.setHorizontalGroup(
             roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(roundedPanel1Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(roundedImage1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(roundedPanel1Layout.createSequentialGroup()
                 .addGap(1, 1, 1)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
-                        .addComponent(customLineComponent1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addGap(1, 1, 1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, roundedPanel1Layout.createSequentialGroup()
-                        .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(item2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(item3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(item4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(customLineComponent2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(item6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(item5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addGap(10, 10, 10)
+                        .addComponent(UserPic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(16, Short.MAX_VALUE))
+                    .addGroup(roundedPanel1Layout.createSequentialGroup()
+                        .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(customLineComponent1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(item2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(item3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(item4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(customLineComponent2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(item6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(item5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                         .addContainerGap())))
         );
         roundedPanel1Layout.setVerticalGroup(
@@ -190,12 +279,12 @@ public class UserInfo extends javax.swing.JFrame {
             .addGroup(roundedPanel1Layout.createSequentialGroup()
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(roundedImage1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(7, 7, 7)
+                        .addComponent(UserPic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(txtName)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(16, 16, 16)
+                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(customLineComponent1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21)
                 .addComponent(item2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -242,7 +331,7 @@ public class UserInfo extends javax.swing.JFrame {
             .addGroup(bgLayout.createSequentialGroup()
                 .addGap(152, 152, 152)
                 .addComponent(roundedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(52, 52, 52)
+                .addGap(32, 32, 32)
                 .addComponent(cover, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -284,6 +373,7 @@ public class UserInfo extends javax.swing.JFrame {
         switch (res) {
             case JOptionPane.YES_OPTION -> {
                     UserMain um = new UserMain();
+                    um.setUID(uid);
                     um.setIsLogged(false);
                     um.setVisible(true);
                     dispose();
@@ -294,10 +384,15 @@ public class UserInfo extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_item6MousePressed
-
+    
     private void item5MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_item5MousePressed
         cover.removeAll();
         accountInfo = new AccountInfo();
+        try {
+            accountInfo.setUID(uid);
+        } catch (IOException ex) {
+            Logger.getLogger(UserInfo.class.getName()).log(Level.SEVERE, null, ex);
+        }
         accountInfo.addChangePass(new MouseAdapter(){
                 @Override
                     public void mousePressed(MouseEvent e) {
@@ -335,7 +430,104 @@ public class UserInfo extends javax.swing.JFrame {
     private void item5KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_item5KeyPressed
         // TODO add your handling code here:
     }//GEN-LAST:event_item5KeyPressed
+    private void UserPicMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_UserPicMouseEntered
+        UserPic.setwithBlack(true);
 
+    }//GEN-LAST:event_UserPicMouseEntered
+
+    private void UserPicMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_UserPicMouseExited
+        UserPic.setwithBlack(false);
+
+    }//GEN-LAST:event_UserPicMouseExited
+    public void uploadImage(ImageIcon imageIcon ) {
+         try {
+        BufferedImage bufferedImage = new BufferedImage(
+                imageIcon.getIconWidth(), imageIcon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
+        imageIcon.paintIcon(null, bufferedImage.getGraphics(), 0, 0);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(bufferedImage, "jpg", baos);
+        byte[] imageData = baos.toByteArray();
+
+        // Convert byte array to Base64 string
+        String imageDataString = Base64.getEncoder().encodeToString(imageData);
+
+        Firestore firestore = FirestoreClient.getFirestore();
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("Avatar", imageDataString);
+        DocumentReference docRef = firestore.collection("user").document(uid);
+        docRef.update(userData);
+
+        JOptionPane.showMessageDialog(null,
+                "Thay đổi ảnh đại diện thành công!",
+                "Thông báo!",
+                JOptionPane.INFORMATION_MESSAGE);
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(null,
+                "Lỗi khi tải lên ảnh!",
+                "Thông báo!",
+                JOptionPane.ERROR_MESSAGE);
+    }
+    }
+    public ImageIcon loadImage() {
+     try {
+        Firestore firestore = FirestoreClient.getFirestore();
+        DocumentReference docRef = firestore.collection("user").document(uid);
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+        DocumentSnapshot document = future.get();
+
+        if (document.exists()) {
+            String imageDataString = document.getString("Avatar");
+            if (imageDataString != null) {
+                // Convert Base64 string back to byte array
+                byte[] imageData = Base64.getDecoder().decode(imageDataString);
+
+                ByteArrayInputStream bais = new ByteArrayInputStream(imageData);
+                BufferedImage bufferedImage = ImageIO.read(bais);
+                return new ImageIcon(bufferedImage);
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "Không tìm thấy dữ liệu ảnh!",
+                        "Thông báo!",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Không tìm thấy người dùng!",
+                    "Thông báo!",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (HeadlessException | IOException | InterruptedException | ExecutionException e) {
+        JOptionPane.showMessageDialog(null,
+                "Lỗi khi tải ảnh!",
+                "Thông báo!",
+                JOptionPane.ERROR_MESSAGE);
+    }
+    return null;
+}
+    private void UserPicMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_UserPicMousePressed
+        ImageIcon img = chooseImages();
+        if(img!=null){
+            uploadImage(img);
+        }
+    }//GEN-LAST:event_UserPicMousePressed
+    private ImageIcon chooseImages() {
+
+       JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Choose image file");
+        fileChooser.setMultiSelectionEnabled(false);
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Image files", "jpg", "jpeg", "png", "gif"));
+
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+                ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
+                return imageIcon;
+            
+          
+        }
+        else
+            return null;
+    };
     /**
      * @param args the command line arguments
      */
@@ -373,6 +565,7 @@ public class UserInfo extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private uitravel.Components.ImagePanel UserPic;
     private javax.swing.JLayeredPane bg;
     private uitravel.User.MainUI.ChatBox chatBox;
     private javax.swing.JLayeredPane cover;
@@ -385,8 +578,7 @@ public class UserInfo extends javax.swing.JFrame {
     private uitravel.User.UserInfo.Component.Item item5;
     private uitravel.User.UserInfo.Component.Item item6;
     private javax.swing.JScrollPane jScrollPane1;
-    private uitravel.Components.RoundedImage roundedImage1;
     private uitravel.Components.RoundedPanel roundedPanel1;
-    private javax.swing.JLabel txtName;
+    private javax.swing.JTextArea txtName;
     // End of variables declaration//GEN-END:variables
 }

@@ -4,16 +4,30 @@
  */
 package uitravel.User;
 
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.Firestore;
+import com.google.firebase.cloud.FirestoreClient;
 import java.awt.event.MouseListener;
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import uitravel.UserMain;
 
 /**
  *
  * @author ACER
  */
 public class UserPayment extends javax.swing.JPanel {
-
+    private String userID;
     private MouseListener eventCancel;
-
+    private Double prices;
+    Firestore firestore = FirestoreClient.getFirestore();
     public UserPayment() {
         initComponents();
         init();
@@ -21,7 +35,43 @@ public class UserPayment extends javax.swing.JPanel {
     private void init(){
         pay.setVisible(false);
         info.setVisible(true);
+        
     }
+    public void setUID(String UID){
+        this.userID = UID;
+        loadUserData();
+    }
+    private void loadUserData() {
+         try {
+            DocumentReference docRef  = firestore.collection("user").document(userID);
+            ApiFuture<DocumentSnapshot> future = docRef.get();
+            // Block on response
+            DocumentSnapshot document;  
+            document = future.get();
+            System.out.println(document.getString("FullName"));
+            if(document.exists()){
+                txtName.setText(document.getString("FullName"));
+                txtEmail.setText(document.getString("Email"));
+                txtPhoneNum.setText(document.getString("PhoneNumber"));
+            }
+        }
+        catch (ExecutionException | InterruptedException ex) {
+            Logger.getLogger(UserMain.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
+    public void setTicketData(int[] tickets){
+        txtTickets.setText(" x " +String.valueOf(tickets[0]));
+        txtAdultNum.setText(" x " +String.valueOf(tickets[1]));
+        txtChildrenNum.setText(" x " +String.valueOf(tickets[2]));
+        txtInfantNum.setText(" x " +String.valueOf(tickets[3]));
+    }
+    public void setPrices(Double price){
+        this.prices = price;
+        Locale vn = new Locale("vi","VN");
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(vn);
+        txtCost.setText(currencyFormatter.format(prices));
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -37,9 +87,9 @@ public class UserPayment extends javax.swing.JPanel {
         info = new javax.swing.JPanel();
         txtName3 = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
-        textField1 = new uitravel.Components.TextField();
-        textField2 = new uitravel.Components.TextField();
-        textField3 = new uitravel.Components.TextField();
+        txtName = new uitravel.Components.TextField();
+        txtEmail = new uitravel.Components.TextField();
+        txtPhoneNum = new uitravel.Components.TextField();
         btnNext = new uitravel.Components.MyButton();
         roundedPanel2 = new uitravel.Components.RoundedPanel();
         txtName2 = new javax.swing.JTextArea();
@@ -47,13 +97,14 @@ public class UserPayment extends javax.swing.JPanel {
         txtAdultNum1 = new javax.swing.JLabel();
         txtChildrenNum1 = new javax.swing.JLabel();
         txtInfantNum1 = new javax.swing.JLabel();
-        txtCost1 = new javax.swing.JLabel();
+        txtCost = new javax.swing.JLabel();
         ttxLabl1 = new javax.swing.JLabel();
-        txtInfantPrice4 = new javax.swing.JLabel();
-        txtInfantPrice5 = new javax.swing.JLabel();
-        txtInfantPrice6 = new javax.swing.JLabel();
+        txtInfantNum = new javax.swing.JLabel();
+        txtChildrenNum = new javax.swing.JLabel();
+        txtAdultNum = new javax.swing.JLabel();
         pic = new uitravel.Components.RoundedImage();
         txtTime = new javax.swing.JLabel();
+        txtTickets = new javax.swing.JLabel();
         pay = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         txtCardName = new uitravel.Components.TextField();
@@ -81,14 +132,14 @@ public class UserPayment extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel1.setText("Thông tin của bạn ");
 
-        textField1.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        textField1.setLabelText("Tên:");
+        txtName.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        txtName.setLabelText("Tên:");
 
-        textField2.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        textField2.setLabelText("Địa chỉ Email:");
+        txtEmail.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        txtEmail.setLabelText("Địa chỉ Email:");
 
-        textField3.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        textField3.setLabelText("Số điện thoại:");
+        txtPhoneNum.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        txtPhoneNum.setLabelText("Số điện thoại:");
 
         btnNext.setForeground(new java.awt.Color(255, 255, 255));
         btnNext.setText("Tiếp tục thanh toán");
@@ -114,14 +165,13 @@ public class UserPayment extends javax.swing.JPanel {
                     .addGroup(infoLayout.createSequentialGroup()
                         .addGap(43, 43, 43)
                         .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(infoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(infoLayout.createSequentialGroup()
-                            .addGap(35, 35, 35)
-                            .addGroup(infoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(textField3, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(textField1, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(textField2, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addComponent(jLabel1)))
+                    .addGroup(infoLayout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addGroup(infoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtPhoneNum, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel1))
                 .addContainerGap(356, Short.MAX_VALUE))
             .addGroup(infoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(infoLayout.createSequentialGroup()
@@ -135,11 +185,11 @@ public class UserPayment extends javax.swing.JPanel {
                 .addContainerGap(117, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(textField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(36, 36, 36)
-                .addComponent(textField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(41, 41, 41)
-                .addComponent(textField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtPhoneNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23))
@@ -173,24 +223,24 @@ public class UserPayment extends javax.swing.JPanel {
         txtInfantNum1.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
         txtInfantNum1.setText("Trẻ sơ sinh");
 
-        txtCost1.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
-        txtCost1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        txtCost1.setText("Tổng cộng");
+        txtCost.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
+        txtCost.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        txtCost.setText("Tổng cộng");
 
         ttxLabl1.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
         ttxLabl1.setText("Tổng giá:");
 
-        txtInfantPrice4.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
-        txtInfantPrice4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        txtInfantPrice4.setText("Trẻ sơ sinh");
+        txtInfantNum.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
+        txtInfantNum.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        txtInfantNum.setText("Trẻ sơ sinh");
 
-        txtInfantPrice5.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
-        txtInfantPrice5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        txtInfantPrice5.setText("Trẻ sơ sinh");
+        txtChildrenNum.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
+        txtChildrenNum.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        txtChildrenNum.setText("Trẻ sơ sinh");
 
-        txtInfantPrice6.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
-        txtInfantPrice6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        txtInfantPrice6.setText("Trẻ sơ sinh");
+        txtAdultNum.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
+        txtAdultNum.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        txtAdultNum.setText("Trẻ sơ sinh");
 
         pic.setRadius(30);
 
@@ -208,6 +258,10 @@ public class UserPayment extends javax.swing.JPanel {
         txtTime.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
         txtTime.setText("Th 5, 6 thg 6 08:00");
 
+        txtTickets.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
+        txtTickets.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        txtTickets.setText("Số lượng vé:");
+
         javax.swing.GroupLayout roundedPanel2Layout = new javax.swing.GroupLayout(roundedPanel2);
         roundedPanel2.setLayout(roundedPanel2Layout);
         roundedPanel2Layout.setHorizontalGroup(
@@ -224,14 +278,18 @@ public class UserPayment extends javax.swing.JPanel {
                                     .addComponent(txtInfantNum1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, Short.MAX_VALUE)
                                 .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtInfantPrice4, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtInfantPrice5, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtInfantPrice6, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jLabel10)
+                                    .addComponent(txtInfantNum, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtChildrenNum, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtAdultNum, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(roundedPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtTickets))
                             .addGroup(roundedPanel2Layout.createSequentialGroup()
                                 .addComponent(ttxLabl1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(61, 61, 61)
-                                .addComponent(txtCost1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(txtCost, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(roundedPanel2Layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -255,24 +313,26 @@ public class UserPayment extends javax.swing.JPanel {
                     .addGroup(roundedPanel2Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel10)
+                .addGap(21, 21, 21)
+                .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(txtTickets))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtAdultNum1)
-                    .addComponent(txtInfantPrice6))
+                    .addComponent(txtAdultNum))
                 .addGap(18, 18, 18)
                 .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtChildrenNum1)
-                    .addComponent(txtInfantPrice5))
+                    .addComponent(txtChildrenNum))
                 .addGap(18, 18, 18)
                 .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtInfantNum1)
-                    .addComponent(txtInfantPrice4))
+                    .addComponent(txtInfantNum))
                 .addGap(18, 18, 18)
                 .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ttxLabl1)
-                    .addComponent(txtCost1))
+                    .addComponent(txtCost))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
 
@@ -304,9 +364,23 @@ public class UserPayment extends javax.swing.JPanel {
         btnsubmit.setColorOver(new java.awt.Color(51, 0, 255));
         btnsubmit.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
         btnsubmit.setRadius(10);
+        btnsubmit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnsubmitActionPerformed(evt);
+            }
+        });
 
+        txtCardDate.setText("MM/YYYY");
         txtCardDate.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         txtCardDate.setLabelText("Ngày hết hạn:");
+        txtCardDate.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtCardDateFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtCardDateFocusLost(evt);
+            }
+        });
 
         javax.swing.GroupLayout payLayout = new javax.swing.GroupLayout(pay);
         pay.setLayout(payLayout);
@@ -375,7 +449,7 @@ public class UserPayment extends javax.swing.JPanel {
                     .addGroup(jLayeredPane1Layout.createSequentialGroup()
                         .addGap(58, 58, 58)
                         .addComponent(txtback)))
-                .addContainerGap(680, Short.MAX_VALUE))
+                .addContainerGap(309, Short.MAX_VALUE))
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jLayeredPane1Layout.createSequentialGroup()
                     .addContainerGap(1053, Short.MAX_VALUE)
@@ -426,9 +500,31 @@ public class UserPayment extends javax.swing.JPanel {
     }//GEN-LAST:event_txtCardNameActionPerformed
 
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
-        info.setVisible(false);
+        if(txtName.getText().equals("")){
+            JOptionPane.showMessageDialog(null,
+                        "Vui lòng nhập họ và tên!",
+                        "Thông báo!",
+                        
+                        JOptionPane.INFORMATION_MESSAGE);
+        }else if(txtEmail.getText().equals("")){
+             JOptionPane.showMessageDialog(null,
+                        "Vui lòng nhập địa chỉ email!",
+                        "Thông báo!",
+                        
+                        JOptionPane.INFORMATION_MESSAGE);
+        }
+        else if(txtPhoneNum.getText().equals("")){
+             JOptionPane.showMessageDialog(null,
+                        "Vui lòng nhập số điện thoại!",
+                        "Thông báo!",
+                        
+                        JOptionPane.INFORMATION_MESSAGE);
+        }
+        else{
+              info.setVisible(false);
         pay.setVisible(true);
         txtback.setText("< Thông tin của bạn");
+        }
     }//GEN-LAST:event_btnNextActionPerformed
     public void eventCancel(MouseListener event) {
         this.eventCancel = event;
@@ -444,6 +540,51 @@ public class UserPayment extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_txtbackMousePressed
 
+    private void btnsubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsubmitActionPerformed
+          if(txtCardName.getText().equals("")){
+            JOptionPane.showMessageDialog(null,
+                        "Vui lòng nhập tên của chủ thẻ!",
+                        "Thông báo!",
+                        
+                        JOptionPane.INFORMATION_MESSAGE);
+        }else if(txtCardID.getText().equals("")){
+             JOptionPane.showMessageDialog(null,
+                        "Vui lòng nhập số thẻ!",
+                        "Thông báo!",
+                        
+                        JOptionPane.INFORMATION_MESSAGE);
+        }
+        else if(txtCardDate.getText().equals("")||txtCardDate.getText().equals("MM/YYYY")){
+             JOptionPane.showMessageDialog(null,
+                        "Vui lòng nhập hạn thẻ thoại!",
+                        "Thông báo!",
+                        
+                        JOptionPane.INFORMATION_MESSAGE);
+        }
+        else if(txtCardCVC.getText().equals("")){
+             JOptionPane.showMessageDialog(null,
+                        "Vui lòng nhập số điện thoại!",
+                        "Thông báo!",
+                        
+                        JOptionPane.INFORMATION_MESSAGE);
+        }
+        else{
+            // uploadBookingTicket
+        }
+    }//GEN-LAST:event_btnsubmitActionPerformed
+
+    private void txtCardDateFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCardDateFocusGained
+        if(txtCardDate.getText().equals("MM/YYYY")){
+            txtCardDate.setText("");
+        }
+    }//GEN-LAST:event_txtCardDateFocusGained
+
+    private void txtCardDateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCardDateFocusLost
+        if(txtCardDate.getText().equals("")){
+            txtCardDate.setText("MM/YYYY");
+        }
+    }//GEN-LAST:event_txtCardDateFocusLost
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private uitravel.Components.RoundedPanel bg;
@@ -453,16 +594,10 @@ public class UserPayment extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JPanel pay;
     private uitravel.Components.RoundedImage pic;
-    private uitravel.Components.RoundedPanel roundedPanel1;
     private uitravel.Components.RoundedPanel roundedPanel2;
-    private uitravel.Components.TextField textField1;
-    private uitravel.Components.TextField textField2;
-    private uitravel.Components.TextField textField3;
-    private javax.swing.JLabel ttxLabl;
     private javax.swing.JLabel ttxLabl1;
     private javax.swing.JLabel txtAdultNum;
     private javax.swing.JLabel txtAdultNum1;
@@ -473,19 +608,17 @@ public class UserPayment extends javax.swing.JPanel {
     private javax.swing.JLabel txtChildrenNum;
     private javax.swing.JLabel txtChildrenNum1;
     private javax.swing.JLabel txtCost;
-    private javax.swing.JLabel txtCost1;
+    private uitravel.Components.TextField txtEmail;
     private javax.swing.JLabel txtInfantNum;
     private javax.swing.JLabel txtInfantNum1;
-    private javax.swing.JLabel txtInfantPrice1;
-    private javax.swing.JLabel txtInfantPrice2;
-    private javax.swing.JLabel txtInfantPrice3;
-    private javax.swing.JLabel txtInfantPrice4;
-    private javax.swing.JLabel txtInfantPrice5;
-    private javax.swing.JLabel txtInfantPrice6;
-    private javax.swing.JTextArea txtName1;
+    private uitravel.Components.TextField txtName;
     private javax.swing.JTextArea txtName2;
     private javax.swing.JTextArea txtName3;
+    private uitravel.Components.TextField txtPhoneNum;
+    private javax.swing.JLabel txtTickets;
     private javax.swing.JLabel txtTime;
     private javax.swing.JLabel txtback;
     // End of variables declaration//GEN-END:variables
+
+
 }

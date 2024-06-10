@@ -31,7 +31,10 @@ public class FirebaseInitializer {
     
         private static boolean initialized = false;
 
-    public static void initialize() throws IOException{
+    /**
+     *
+     */
+    public static void initialize() throws java.io.IOException{
           if (!initialized) {
             synchronized (FirebaseInitializer.class) {
                 if (!initialized) {
@@ -46,7 +49,6 @@ public class FirebaseInitializer {
                     initialized = true;
                     System.out.println("Firebase Initialized");
                 } catch (IOException e) {
-                    e.printStackTrace();
                 }
                 }
             }

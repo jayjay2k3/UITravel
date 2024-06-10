@@ -1,6 +1,7 @@
 package uitravel;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.raven.glasspanepopup.GlassPanePopup;
 import uitravel.Components.PanelCover;
 import uitravel.Components.PanelLoginAndRegister;
 import java.awt.event.ActionEvent;
@@ -13,10 +14,13 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
+import uitravel.Components.Loading;
 
 /**
  *
@@ -24,17 +28,15 @@ import org.jdesktop.animation.timing.TimingTargetAdapter;
  */
 public class LoginMain extends javax.swing.JFrame {
 
-    /**
-     * Creates new form LoginMain
-     */
+    private final DecimalFormat df = new DecimalFormat("##0.###", DecimalFormatSymbols.getInstance(Locale.US));
     private JLabel exit;
     private MigLayout layout;
     private PanelCover cover;
     private PanelLoginAndRegister loginAndRegister;
     private boolean isLogin = false;
-    private final double addSize = 30;
-    private final double coverSize = 50;
-    private final double loginSize = 50;
+    private final double addSize = 20;
+    private final double coverSize = 40;
+    private final double loginSize = 60;
     public void setLogin(boolean t){
         this.isLogin = t;
         init();
@@ -45,6 +47,7 @@ public class LoginMain extends javax.swing.JFrame {
      
     }
     private void init(){
+        GlassPanePopup.install(this);
         layout = new MigLayout("fill, insets 0");
         cover = new PanelCover();
         cover.setLogin(isLogin);
@@ -65,40 +68,60 @@ public class LoginMain extends javax.swing.JFrame {
         if(isLogin){
             bg.add(cover,"width " + coverSize + "%, pos al 0 n 100%");
             bg.add(loginAndRegister,"width " + loginSize + "%, pos 0al 0 n 100%");
-           exit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Arrow - Left - blue.png")));
+            exit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Arrow - Left - blue.png")));
 
         }
         else{
             bg.add(cover,"width " + coverSize + "%, pos 0al 0 n 100%");
             bg.add(loginAndRegister,"width " + loginSize + "%, pos 1al 0 n 100%");
-           exit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Arrow - Left.png")));
+            exit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Arrow - Left.png")));
         }
-
+        bg.moveToFront(cover);
+        bg.moveToFront(exit);
         TimingTarget target = new TimingTargetAdapter(){
             @Override
             public void timingEvent(float faction){
                 double fractionCover;
                 double fractionLogin;
-
+                double size = coverSize;
+                if(faction<=0.5f){
+                    size +=faction*addSize;
+                }
+                else{
+                    size +=addSize - faction*addSize;
+                }
                 if(isLogin){
                     
                     fractionCover = 1f-faction;
                     fractionLogin = faction;
+                    if(faction>=0.5f){
+                        cover.registerRight(fractionCover * 100);
+                    }
+                    else{
+                         cover.loginRight(fractionLogin * 100);
+                        }
                     exit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Arrow - Left.png")));
 
                 }
                 else{
                     fractionCover = faction;
                     fractionLogin = 1-faction;
+                     if(faction<=0.5f){
+                        cover.registerLeft(faction * 100);
+                    }
+                    else{
+                        cover.loginLeft((1f - faction) * 100);
+                        }
                     exit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Arrow - Left - blue.png")));
 
                 }
                 if(faction>=0.5f){
                     loginAndRegister.showRegister(isLogin);
                 }
-                layout.setComponentConstraints(cover,"width " + coverSize + "%, pos " + fractionCover+"al 0 n 100%");
-                layout.setComponentConstraints(loginAndRegister,"width " + loginSize + "%, pos " + fractionLogin+"al 0 n 100%");
-
+                fractionCover = Double.parseDouble(df.format(fractionCover));
+                fractionLogin = Double.parseDouble(df.format(fractionLogin));
+                layout.setComponentConstraints(cover, "width " + size + "%, pos " + fractionCover + "al 0 n 100%");
+                layout.setComponentConstraints(loginAndRegister, "width " + loginSize + "%, pos " + fractionLogin + "al 0 n 100%");
                 bg.revalidate();
             }
             @Override
@@ -107,17 +130,44 @@ public class LoginMain extends javax.swing.JFrame {
               }
         };
         Animator ani = new Animator(1000,target);
+        ani.setAcceleration(0.5f);
+        ani.setDeceleration(0.5f);
+        ani.setResolution(0);
         cover.addEvent((ActionEvent e) -> {
             if(!ani.isRunning()){
                 ani.start();                
             }
         });
+        cover.login(isLogin);
         loginAndRegister.addEvent((ActionEvent e) -> {
-            UserMain um = new UserMain();
-            um.setIsLogged(true);
-            um.setVisible(true);
-            dispose();
+            
+           GlassPanePopup.showPopup(new Loading());
+            SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                // Thực hiện tác vụ nặng ở đây
+                UserMain um = new UserMain();
+                um.setUID(loginAndRegister.getUID());
+                um.setIsLogged(true);
+                
+                // Hiển thị kết quả sau khi tác vụ hoàn thành
+                SwingUtilities.invokeLater(() -> {
+                    um.setVisible(true);
+                });
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                // Ẩn màn hình loading sau khi tác vụ hoàn thành
+                GlassPanePopup.closePopupAll();
+                dispose();
+
+            }
+        };
+        worker.execute();
         });
+
     }
     /**
      * This method is called from within the constructor to initialize the form.

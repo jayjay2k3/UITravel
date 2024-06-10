@@ -7,6 +7,7 @@ package uitravel.Admin.TourInfo;
 import uitravel.Components.TourInfo.Component.*;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -22,20 +23,26 @@ public class ADShortTourInfo extends javax.swing.JPanel {
     public ADShortTourInfo() {
         initComponents();
     }
+    public void setTourID(String name){
+        this.id = name;
+        txtID.setText(name);
+    }
+    public String getTourID(){
+        return id;
+    }
     public void setTourName(String name){
         txtName.setText(name);
     }
     public void setPlace(String place){
         txtPlace.setText(place);
     }
-    public void setDescription(String place){
-        txtDescription.setText(place);
-    }
-    public void setTime(String place){
-        txtTime.setText(place);
-    }
+   
      public void setScore(Double score){
         txtScore.setText(score.toString());
+    }
+
+     public void setPic(ImageIcon pictrue){
+         pic.setbackgroundImage(pictrue);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -47,17 +54,17 @@ public class ADShortTourInfo extends javax.swing.JPanel {
     private void initComponents() {
 
         roundedPanel1 = new uitravel.Components.RoundedPanel();
-        txtName = new javax.swing.JLabel();
-        pic = new uitravel.Components.RoundedImage();
-        txtTime = new javax.swing.JLabel();
-        txtDescription = new javax.swing.JTextArea();
         myButton1 = new uitravel.Components.MyButton();
         txtPlace = new javax.swing.JLabel();
+        pic = new uitravel.Components.ImagePanel();
         txtScore = new javax.swing.JLabel();
+        txtName = new javax.swing.JLabel();
+        txtPlace1 = new javax.swing.JLabel();
+        txtID = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         setOpaque(false);
-        setPreferredSize(new java.awt.Dimension(550, 176));
+        setPreferredSize(new java.awt.Dimension(302, 202));
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 formMouseEntered(evt);
@@ -70,39 +77,8 @@ public class ADShortTourInfo extends javax.swing.JPanel {
 
         roundedPanel1.setBackground(new java.awt.Color(255, 255, 255));
         roundedPanel1.setBorderColor(new java.awt.Color(204, 204, 204));
+        roundedPanel1.setRadius(15);
         roundedPanel1.setWithBorder(true);
-
-        txtName.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        txtName.setText("Du lịch Dĩ An");
-
-        pic.setOpaque(false);
-        pic.setRadius(30);
-
-        javax.swing.GroupLayout picLayout = new javax.swing.GroupLayout(pic);
-        pic.setLayout(picLayout);
-        picLayout.setHorizontalGroup(
-            picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 130, Short.MAX_VALUE)
-        );
-        picLayout.setVerticalGroup(
-            picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 142, Short.MAX_VALUE)
-        );
-
-        txtTime.setFont(new java.awt.Font("Times New Roman", 2, 14)); // NOI18N
-        txtTime.setText("Thời gian: 2 ngày");
-
-        txtDescription.setEditable(false);
-        txtDescription.setBackground(new java.awt.Color(255, 255, 255));
-        txtDescription.setColumns(20);
-        txtDescription.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        txtDescription.setLineWrap(true);
-        txtDescription.setRows(5);
-        txtDescription.setText("Tour aTour aTour aTour aTour aTour aTour aTour aTour aTour aTour aTour aTour aTour aTour aTour aTour aTour aTour aTour aTour aTour aTour aTour aTour aTour aTour a\n\n");
-        txtDescription.setWrapStyleWord(true);
-        txtDescription.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtDescription.setEnabled(false);
-        txtDescription.setOpaque(false);
 
         myButton1.setBackground(new java.awt.Color(0, 0, 255));
         myButton1.setForeground(new java.awt.Color(255, 255, 255));
@@ -122,55 +98,92 @@ public class ADShortTourInfo extends javax.swing.JPanel {
         txtPlace.setFont(new java.awt.Font("Times New Roman", 2, 14)); // NOI18N
         txtPlace.setText("TP HCM");
 
+        pic.setbackgroundImage(new javax.swing.ImageIcon(getClass().getResource("/resources/BigBeach_GettyImages-874980426-ezgif.com-webp-to-png-converter.png"))); // NOI18N
+        pic.setisTransparent(false);
+        pic.setPreferredSize(new java.awt.Dimension(130, 142));
+        pic.setRadius(15);
+        pic.setwithBlack(true);
+
         txtScore.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        txtScore.setForeground(new java.awt.Color(255, 255, 255));
         txtScore.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Star1.png"))); // NOI18N
         txtScore.setText("1");
+
+        txtName.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        txtName.setForeground(new java.awt.Color(255, 255, 255));
+        txtName.setText("Du lịch Dĩ An");
+
+        txtPlace1.setFont(new java.awt.Font("Times New Roman", 2, 12)); // NOI18N
+        txtPlace1.setForeground(new java.awt.Color(255, 255, 255));
+        txtPlace1.setText("ID:");
+
+        txtID.setFont(new java.awt.Font("Times New Roman", 2, 12)); // NOI18N
+        txtID.setForeground(new java.awt.Color(255, 255, 255));
+        txtID.setText("TP HCM");
+
+        pic.setLayer(txtScore, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        pic.setLayer(txtName, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        pic.setLayer(txtPlace1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        pic.setLayer(txtID, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout picLayout = new javax.swing.GroupLayout(pic);
+        pic.setLayout(picLayout);
+        picLayout.setHorizontalGroup(
+            picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(picLayout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtName, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
+                    .addGroup(picLayout.createSequentialGroup()
+                        .addGroup(picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtScore)
+                            .addGroup(picLayout.createSequentialGroup()
+                                .addComponent(txtPlace1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtID)))
+                        .addGap(0, 0, 0)))
+                .addContainerGap())
+        );
+        picLayout.setVerticalGroup(
+            picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(picLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(txtScore)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addComponent(txtName)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtPlace1)
+                    .addComponent(txtID))
+                .addGap(12, 12, 12))
+        );
 
         javax.swing.GroupLayout roundedPanel1Layout = new javax.swing.GroupLayout(roundedPanel1);
         roundedPanel1.setLayout(roundedPanel1Layout);
         roundedPanel1Layout.setHorizontalGroup(
             roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(roundedPanel1Layout.createSequentialGroup()
-                .addContainerGap(13, Short.MAX_VALUE)
-                .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
-                        .addComponent(txtName)
-                        .addGap(285, 285, 285))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(roundedPanel1Layout.createSequentialGroup()
-                            .addComponent(txtPlace)
-                            .addGap(284, 284, 284)
-                            .addComponent(txtScore))
-                        .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, roundedPanel1Layout.createSequentialGroup()
-                                .addComponent(txtTime)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtDescription, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(0, 1, Short.MAX_VALUE))
+                        .addGap(3, 3, 3)
+                        .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(roundedPanel1Layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(txtPlace)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(3, 3, 3))
         );
         roundedPanel1Layout.setVerticalGroup(
             roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(roundedPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPlace)
-                    .addComponent(txtScore))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtName)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtTime)
-                    .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(10, Short.MAX_VALUE))
-            .addGroup(roundedPanel1Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addGap(2, 2, 2)
                 .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPlace))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         add(roundedPanel1);
@@ -194,12 +207,12 @@ public class ADShortTourInfo extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private uitravel.Components.MyButton myButton1;
-    private uitravel.Components.RoundedImage pic;
+    private uitravel.Components.ImagePanel pic;
     private uitravel.Components.RoundedPanel roundedPanel1;
-    private javax.swing.JTextArea txtDescription;
+    private javax.swing.JLabel txtID;
     private javax.swing.JLabel txtName;
     private javax.swing.JLabel txtPlace;
+    private javax.swing.JLabel txtPlace1;
     private javax.swing.JLabel txtScore;
-    private javax.swing.JLabel txtTime;
     // End of variables declaration//GEN-END:variables
 }

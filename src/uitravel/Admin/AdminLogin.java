@@ -56,14 +56,32 @@ public class AdminLogin extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel4 = new javax.swing.JLabel();
+        lblRegister = new javax.swing.JLabel();
         roundedPanel1 = new uitravel.Components.RoundedPanel();
         txtEmail = new uitravel.Components.TextField();
         txtPass = new uitravel.Components.PasswordField();
         forget = new javax.swing.JLabel();
         btnSubmit = new uitravel.Components.MyButton();
         jLabel2 = new javax.swing.JLabel();
-        lblRegister = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+
+        jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel4.setText("Chưa có tài khoản?");
+
+        lblRegister.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        lblRegister.setForeground(new java.awt.Color(76, 100, 255));
+        lblRegister.setText("Đăng ký tại đây");
+        lblRegister.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblRegisterMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblRegisterMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                lblRegisterMousePressed(evt);
+            }
+        });
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
         setOpaque(false);
@@ -114,24 +132,6 @@ public class AdminLogin extends javax.swing.JPanel {
         jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
         jLabel2.setText("Đăng nhập");
 
-        lblRegister.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        lblRegister.setForeground(new java.awt.Color(76, 100, 255));
-        lblRegister.setText("Đăng ký tại đây");
-        lblRegister.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                lblRegisterMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                lblRegisterMouseExited(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                lblRegisterMousePressed(evt);
-            }
-        });
-
-        jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jLabel4.setText("Chưa có tài khoản?");
-
         javax.swing.GroupLayout roundedPanel1Layout = new javax.swing.GroupLayout(roundedPanel1);
         roundedPanel1.setLayout(roundedPanel1Layout);
         roundedPanel1Layout.setHorizontalGroup(
@@ -144,10 +144,6 @@ public class AdminLogin extends javax.swing.JPanel {
                             .addComponent(forget)
                             .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtPass, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(roundedPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblRegister))
                             .addComponent(btnSubmit, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)))
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
                         .addGap(113, 113, 113)
@@ -163,15 +159,11 @@ public class AdminLogin extends javax.swing.JPanel {
                 .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34)
                 .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
+                .addGap(58, 58, 58)
                 .addComponent(forget)
-                .addGap(34, 34, 34)
+                .addGap(48, 48, 48)
                 .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(lblRegister))
-                .addContainerGap(108, Short.MAX_VALUE))
+                .addContainerGap(55, Short.MAX_VALUE))
         );
 
         add(roundedPanel1);
@@ -242,7 +234,6 @@ public class AdminLogin extends javax.swing.JPanel {
                 if(!txtEmail.getText().equals(document.getString("email"))){
                     JOptionPane.showMessageDialog(null, "Không tìm thấy tài khoản!", "Thông báo!", JOptionPane.INFORMATION_MESSAGE);
                     return false;
-
                 }
                 else  if(!txtPass.getText().equals(document.getString("Pass"))){
                     JOptionPane.showMessageDialog(null, "Mật khẩu không chính xác!", "Thông báo!", JOptionPane.INFORMATION_MESSAGE);

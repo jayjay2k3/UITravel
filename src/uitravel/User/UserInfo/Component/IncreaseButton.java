@@ -5,6 +5,7 @@
 package uitravel.User.UserInfo.Component;
 
 import java.awt.Color;
+import java.awt.event.ActionListener;
 
 /**
  *
@@ -12,12 +13,16 @@ import java.awt.Color;
  */
 public class IncreaseButton extends javax.swing.JPanel {
 
+    
     private int numberPassenger=0;
+    private ActionListener event;
     public IncreaseButton() {
         initComponents();
         btnIncrease.setForeground(new Color(51,153,255));
     }
-
+   public void addEvent(ActionListener event) {
+        this.event = event;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -107,7 +112,7 @@ public class IncreaseButton extends javax.swing.JPanel {
         numberPassenger +=1;
         txt.setText(String.valueOf(numberPassenger));
         btnDescrease.setForeground(new Color(51,153,255));
-
+        event.actionPerformed(evt);
     }//GEN-LAST:event_btnIncreaseActionPerformed
 
     private void btnDescreaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescreaseActionPerformed
@@ -118,6 +123,8 @@ public class IncreaseButton extends javax.swing.JPanel {
         if(numberPassenger==0){
             btnDescrease.setForeground(new Color(0,0,0));
         }
+        event.actionPerformed(evt);
+
     }//GEN-LAST:event_btnDescreaseActionPerformed
 
 

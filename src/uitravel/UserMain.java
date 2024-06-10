@@ -5,27 +5,40 @@
 package uitravel;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
+import com.google.firebase.cloud.FirestoreClient;
 import com.raven.datechooser.DateChooser;
 import com.raven.glasspanepopup.GlassPanePopup;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
-import javax.swing.Icon;
+import java.util.Base64;
+import java.util.HashMap;
 import javax.swing.ImageIcon;
-import javax.swing.JLayeredPane;
 import net.miginfocom.swing.MigLayout;
-import uitravel.User.MainUI.NoLoggedHeader;
-import uitravel.User.MainUI.Tour;
-import uitravel.Components.MyButton;
-import uitravel.Components.MyTextField;
-import uitravel.Components.RoundedPanel;
+import uitravel.User.MainUI.Place;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import uitravel.User.MainUI.LoggedHeader;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
+import uitravel.Components.Loading;
 
 
 /**
@@ -34,23 +47,81 @@ import uitravel.User.MainUI.LoggedHeader;
  */
 public class UserMain extends javax.swing.JFrame {
 
-    /**
-     * Creates new form UserMain
-     */
+    Map<String, String> placeData;
+
     public boolean isLogged = false;
     private MigLayout layout;
-
-    private List<Tour> allHotels;
+    private String uid;
+    private List<Place> allHotels;
+    Firestore firestore = FirestoreClient.getFirestore();
 
     public UserMain() {
         initComponents();
         init();
     }
+    private void loadDataFromFireStore(String uid){
+        try {
+            DocumentReference docRef  = firestore.collection("user").document(uid);
+            ApiFuture<DocumentSnapshot> future = docRef.get();
+            // Block on response
+            DocumentSnapshot document;  
+            document = future.get();
+            System.out.println(document.getString("FullName"));
+            if(document.exists()){
+                header2.setUserName(document.getString("FullName"));
+                 ImageIcon temp =loadImage();
+                    if(temp!=null){
+                        header2.setUserAvatar(temp);
+                    }
+                }
+        }
+        catch (ExecutionException | InterruptedException ex) {
+            Logger.getLogger(UserMain.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
+
+     public ImageIcon loadImage() {
+     try {
+        DocumentReference docRef = firestore.collection("user").document(uid);
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+        DocumentSnapshot document = future.get();
+
+        if (document.exists()) {
+            String imageDataString = document.getString("Avatar");
+            if (imageDataString != null) {
+                // Convert Base64 string back to byte array
+                byte[] imageData = Base64.getDecoder().decode(imageDataString);
+
+                ByteArrayInputStream bais = new ByteArrayInputStream(imageData);
+                BufferedImage bufferedImage = ImageIO.read(bais);
+                return new ImageIcon(bufferedImage);
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "Không tìm thấy dữ liệu ảnh!",
+                        "Thông báo!",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Không tìm thấy người dùng!",
+                    "Thông báo!",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (HeadlessException | IOException | InterruptedException | ExecutionException e) {
+        JOptionPane.showMessageDialog(null,
+                "Lỗi khi tải ảnh!",
+                "Thông báo!",
+                JOptionPane.ERROR_MESSAGE);
+    }
+    return null;
+}
     public void setIsLogged(boolean t){
         this.isLogged = t;
         init();
     }
-
+    public void setUID(String uid){
+        this.uid = uid;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -64,10 +135,10 @@ public class UserMain extends javax.swing.JFrame {
         main = new javax.swing.JScrollPane();
         bg = new javax.swing.JLayeredPane();
         imagePanel1 = new uitravel.Components.ImagePanel();
-        txtSearch = new uitravel.Components.MyTextField();
         btnSearch = new uitravel.Components.MyButton();
         txtDate = new uitravel.Components.MyTextField();
         jLabel1 = new javax.swing.JLabel();
+        txtSearch = new javax.swing.JComboBox<>();
         header1 = new uitravel.User.MainUI.NoLoggedHeader();
         header2 = new uitravel.User.MainUI.LoggedHeader();
         pnlHotel = new uitravel.Components.RoundedPanel();
@@ -81,11 +152,10 @@ public class UserMain extends javax.swing.JFrame {
         main.setToolTipText("");
 
         imagePanel1.setbackgroundImage(new javax.swing.ImageIcon(getClass().getResource("/resources/BigBeach_GettyImages-874980426-ezgif.com-webp-to-png-converter.png"))); // NOI18N
+        imagePanel1.setHover(false);
         imagePanel1.setisTransparent(false);
         imagePanel1.setPreferredSize(new java.awt.Dimension(1400, 800));
-
-        txtSearch.setText("Nhập nơi bạn muốn đi");
-        txtSearch.setPrefixIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Pin - 1.png"))); // NOI18N
+        imagePanel1.setwithBlack(true);
 
         btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Loupe.png"))); // NOI18N
         btnSearch.setBorderColor(new java.awt.Color(255, 128, 0));
@@ -103,6 +173,7 @@ public class UserMain extends javax.swing.JFrame {
         });
 
         txtDate.setText("myTextField1");
+        txtDate.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
         txtDate.setPrefixIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Calendar.png"))); // NOI18N
         txtDate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -115,10 +186,12 @@ public class UserMain extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("All Tours are yours now!");
 
-        imagePanel1.setLayer(txtSearch, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        txtSearch.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
+
         imagePanel1.setLayer(btnSearch, javax.swing.JLayeredPane.DEFAULT_LAYER);
         imagePanel1.setLayer(txtDate, javax.swing.JLayeredPane.DEFAULT_LAYER);
         imagePanel1.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        imagePanel1.setLayer(txtSearch, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout imagePanel1Layout = new javax.swing.GroupLayout(imagePanel1);
         imagePanel1.setLayout(imagePanel1Layout);
@@ -129,8 +202,8 @@ public class UserMain extends javax.swing.JFrame {
                 .addGroup(imagePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 946, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(imagePanel1Layout.createSequentialGroup()
-                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -142,16 +215,15 @@ public class UserMain extends javax.swing.JFrame {
                 .addGap(137, 137, 137)
                 .addComponent(jLabel1)
                 .addGap(70, 70, 70)
-                .addGroup(imagePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(imagePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(imagePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtSearch))
                 .addContainerGap(501, Short.MAX_VALUE))
         );
 
         pnlHotel.setBackground(new java.awt.Color(255, 255, 255));
-        pnlHotel.setPreferredSize(new java.awt.Dimension(1400, 795));
+        pnlHotel.setPreferredSize(new java.awt.Dimension(1400, 400));
 
         javax.swing.GroupLayout pnlHotelLayout = new javax.swing.GroupLayout(pnlHotel);
         pnlHotel.setLayout(pnlHotelLayout);
@@ -161,7 +233,7 @@ public class UserMain extends javax.swing.JFrame {
         );
         pnlHotelLayout.setVerticalGroup(
             pnlHotelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 795, Short.MAX_VALUE)
+            .addGap(0, 399, Short.MAX_VALUE)
         );
 
         bg.setLayer(imagePanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -193,23 +265,22 @@ public class UserMain extends javax.swing.JFrame {
         );
         bgLayout.setVerticalGroup(
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(bgLayout.createSequentialGroup()
-                .addComponent(imagePanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 327, Short.MAX_VALUE))
+            .addComponent(imagePanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(bgLayout.createSequentialGroup()
                     .addGap(0, 0, 0)
                     .addComponent(header1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(876, Short.MAX_VALUE)))
+                    .addContainerGap(549, Short.MAX_VALUE)))
             .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(bgLayout.createSequentialGroup()
                     .addGap(0, 0, 0)
                     .addComponent(header2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(877, Short.MAX_VALUE)))
+                    .addContainerGap(550, Short.MAX_VALUE)))
             .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
-                    .addGap(0, 332, Short.MAX_VALUE)
-                    .addComponent(pnlHotel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addContainerGap(351, Short.MAX_VALUE)
+                    .addComponent(pnlHotel, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+                    .addGap(50, 50, 50)))
         );
 
         main.setViewportView(bg);
@@ -230,12 +301,12 @@ public class UserMain extends javax.swing.JFrame {
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(main, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
+            .addComponent(main, javax.swing.GroupLayout.DEFAULT_SIZE, 798, Short.MAX_VALUE)
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jLayeredPane1Layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addGap(0, 178, Short.MAX_VALUE)
                     .addComponent(chatBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGap(0, 178, Short.MAX_VALUE)))
         );
 
         getContentPane().add(jLayeredPane1);
@@ -249,7 +320,7 @@ public class UserMain extends javax.swing.JFrame {
     }//GEN-LAST:event_txtDateActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        if("".equals(txtSearch.getText())||"Nhập nơi bạn muốn đi".equals(txtSearch.getText())){
+        if(txtSearch.getSelectedIndex()==0){
              JOptionPane.showMessageDialog(null,
                         "Vui lòng nhập địa điểm bạn muốn đi đến!",
                         "Thông báo!",
@@ -257,11 +328,37 @@ public class UserMain extends javax.swing.JFrame {
                         JOptionPane.INFORMATION_MESSAGE);
         }
         else{
-           UserSearch userSearch = new UserSearch();
-           userSearch.setIsLogged(isLogged);
-           userSearch.setSearchData(txtSearch.getText());
-           userSearch.setVisible(true);
-           dispose();
+            GlassPanePopup.showPopup(new Loading());
+            SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                // Thực hiện tác vụ nặng ở đây
+                UserSearch userSearch = new UserSearch();
+                userSearch.setIsLogged(isLogged);
+                userSearch.setUID(uid);
+                userSearch.setSearchData((String) txtSearch.getSelectedItem());
+                userSearch.setAllPlaces(placeData);
+                
+                // Hiển thị kết quả sau khi tác vụ hoàn thành
+                SwingUtilities.invokeLater(() -> {
+                    userSearch.setVisible(true);
+                });
+
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                // Ẩn màn hình loading sau khi tác vụ hoàn thành
+                GlassPanePopup.closePopupAll();
+                dispose();
+
+            }
+        };
+        worker.execute();
+ 
+            
+           
         }
     }//GEN-LAST:event_btnSearchActionPerformed
 
@@ -312,12 +409,12 @@ public class UserMain extends javax.swing.JFrame {
     private javax.swing.JScrollPane main;
     private uitravel.Components.RoundedPanel pnlHotel;
     private uitravel.Components.MyTextField txtDate;
-    private uitravel.Components.MyTextField txtSearch;
+    private javax.swing.JComboBox<String> txtSearch;
     // End of variables declaration//GEN-END:variables
     private DateChooser selectDate;
    // private javax.swing.JLayeredPane bg;
 
-    private void init() {
+    private void init()  {
 
         GlassPanePopup.install(this);
 
@@ -382,6 +479,11 @@ public class UserMain extends javax.swing.JFrame {
                 @Override
                     public void mousePressed(MouseEvent e) {
                     UserInfo ui = new UserInfo();
+                    try {
+                        ui.setUID(uid);
+                    } catch (IOException ex) {
+                        Logger.getLogger(UserMain.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     ui.setVisible(true);
                     dispose();
                 }
@@ -389,24 +491,11 @@ public class UserMain extends javax.swing.JFrame {
             
             header2.addChatEvent((ActionEvent e)->{
                chatBox.setVisible(true);
-
             });
+            loadDataFromFireStore(uid);
        }
-        txtSearch.setText("Nhập nơi bạn muốn đi");
-        txtSearch.addFocusListener(new FocusAdapter(){
-              @Override
-              public void focusGained(FocusEvent e) {
-                  if("Nhập nơi bạn muốn đi".equals(txtSearch.getText())){
-                      txtSearch.setText("");
-                  }
-              }
-              @Override
-               public void focusLost(FocusEvent e) {
-                   if("".equals(txtSearch.getText())){
-                       txtSearch.setText("Nhập nơi bạn muốn đi");
-                   }
-               }
-        });
+       
+       
 
 
 
@@ -421,8 +510,21 @@ public class UserMain extends javax.swing.JFrame {
         
         loadHotelData();
 
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+
+        model.addElement("Chọn nơi bạn muốn đến");
+        
+        for (Map.Entry<String, String> entry : placeData.entrySet()) {
+             model.addElement(entry.getKey());
+           
+        }
+        txtSearch.setModel(model);
+        txtSearch.setSelectedIndex(0);
+        
         main.setViewportView(bg);
         addChatBox();
+        
+        
   
     }
     private void addChatBox(){
@@ -451,17 +553,55 @@ public class UserMain extends javax.swing.JFrame {
 
     }
     
+    private Map<String, String> getTourData(){
+        Map<String, String>  placeData = new HashMap<>();
+        try {
+            CollectionReference userCollection = firestore.collection("Place");
+            ApiFuture<QuerySnapshot> querySnapshot = userCollection.get();
+            // Process the documents
+            List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+            for (DocumentSnapshot document : documents) {
+                String documentId = document.getId();
+                String background = document.getString("Background");
+                placeData.put(documentId, background);
+                System.out.println(background);
+            }
+        } catch (ExecutionException | InterruptedException e) {
+        }
+        return placeData;
+    }
 
     private void loadHotelData(){
-        pnlHotel.setLayout(new MigLayout("wrap,fill, insets 0","push[]20[]20[]push","10[]20[]"));
-
+        pnlHotel.removeAll();
+        pnlHotel.setLayout(new MigLayout("wrap,fill, insets 0","push[]20[]20[]push","30[]20[]push"));
+        placeData = getTourData();
         allHotels = new ArrayList<>();
-        for(int i=0;i<100;i++){
-            Tour t = new Tour();
+        for (Map.Entry<String, String> entry : placeData.entrySet()) {
+            Place t = new Place();
             t.setPreferredSize(new Dimension(350,200));
+            t.setBackGroundIMG(getImgFromBytes(entry.getValue()));
+            t.setTxtPlace(entry.getKey());
+            t.setID(entry.getKey());
             pnlHotel.add(t);
             allHotels.add(t);
         }
     }
+    private ImageIcon getImgFromBytes(String imageDataString){
+        try{  
+            byte[] imageData = Base64.getDecoder().decode(imageDataString);
+        
+
+            ByteArrayInputStream bais = new ByteArrayInputStream(imageData);
+            BufferedImage bufferedImage;
+        
+            bufferedImage = ImageIO.read(bais);
+            return new ImageIcon(bufferedImage);
+
+        }
+         catch (IOException ex) {
+            Logger.getLogger(UserMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    };
    
 }
