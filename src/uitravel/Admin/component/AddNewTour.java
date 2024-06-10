@@ -5,6 +5,9 @@
 package uitravel.Admin.component;
 
 import java.awt.Component;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import uitravel.AdminMain;
 import uitravel.AdminWelcome;
@@ -104,9 +107,13 @@ public class AddNewTour extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void myButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myButton1ActionPerformed
-        callAddTour(this);
+        try {
+            callAddTour(this);
+        } catch (IOException ex) {
+            Logger.getLogger(AddNewTour.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_myButton1ActionPerformed
-    private void callAddTour(Component component) {
+    private void callAddTour(Component component) throws IOException {
         JFrame frame = getFrame(component);
         if (frame != null) {
             ((AdminMain) frame).adminAddTour();
