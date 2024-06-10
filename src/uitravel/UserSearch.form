@@ -187,7 +187,7 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="txtPlace" min="-2" pref="65" max="-2" attributes="0"/>
+                                      <Component id="txtPlace" max="32767" attributes="0"/>
                                   </Group>
                                   <Component id="jLabel1" alignment="0" min="-2" pref="132" max="-2" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">

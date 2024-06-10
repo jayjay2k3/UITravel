@@ -194,12 +194,12 @@ public class AddAPlace extends javax.swing.JPanel {
                 "Thêm nơi đến mới thành công!",
                 "Thông báo!",
                 JOptionPane.INFORMATION_MESSAGE);
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(null,
-                "Lỗi khi tải lên ảnh!",
-                "Thông báo!",
-                JOptionPane.ERROR_MESSAGE);
-    }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null,
+                    "Lỗi khi tải lên ảnh!",
+                    "Thông báo!",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     } 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;

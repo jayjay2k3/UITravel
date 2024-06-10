@@ -9,13 +9,24 @@ import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.cloud.FirestoreClient;
+import com.raven.datechooser.DateSelectable;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -27,11 +38,32 @@ import javax.swing.JOptionPane;
  */
 public class test extends javax.swing.JFrame {
 
-    /**
-     * Creates new form test
-     */
+    DateSelectable dateSelectable ;
+
     public test() {
+        
         initComponents();
+        
+        List<String> selectableDateStrings = List.of(
+            "08-06-2024",
+            "10-06-2024",
+            "15-06-2024"
+        );
+
+        // Convert the list of date strings to a list of LocalDate objects
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        List<LocalDate> selectableDates = new ArrayList<>();
+        for (String dateString : selectableDateStrings) {
+            selectableDates.add(LocalDate.parse(dateString, formatter));
+        }
+
+        date.setDateSelectable(new DateSelectable() {
+            @Override
+            public boolean isDateSelectable(Date date) {
+                LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                return !localDate.isBefore(LocalDate.now())&&selectableDates.contains(localDate);
+            }
+        });
     }
 
     /**
@@ -44,8 +76,8 @@ public class test extends javax.swing.JFrame {
     private void initComponents() {
 
         jButton1 = new javax.swing.JButton();
-        loading1 = new uitravel.Components.Loading();
-        numericTextField1 = new uitravel.Components.NumericTextField();
+        date = new com.raven.datechooser.DateChooser();
+        loading11 = new uitravel.Components.Loading1();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -56,7 +88,7 @@ public class test extends javax.swing.JFrame {
             }
         });
 
-        numericTextField1.setText("numericTextField1");
+        date.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -68,25 +100,25 @@ public class test extends javax.swing.JFrame {
                         .addGap(407, 407, 407)
                         .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(104, 104, 104)
-                        .addComponent(numericTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(loading1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(224, Short.MAX_VALUE))
+                        .addGap(57, 57, 57)
+                        .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(207, 207, 207)
+                        .addComponent(loading11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(373, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(147, 147, 147)
+                .addComponent(jButton1)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(147, 147, 147)
-                        .addComponent(jButton1)
-                        .addGap(108, 108, 108)
-                        .addComponent(numericTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(4, 4, 4)
+                        .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(loading1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(431, Short.MAX_VALUE))
+                        .addGap(129, 129, 129)
+                        .addComponent(loading11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(413, Short.MAX_VALUE))
         );
 
         pack();
@@ -179,8 +211,8 @@ public class test extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.raven.datechooser.DateChooser date;
     private javax.swing.JButton jButton1;
-    private uitravel.Components.Loading loading1;
-    private uitravel.Components.NumericTextField numericTextField1;
+    private uitravel.Components.Loading1 loading11;
     // End of variables declaration//GEN-END:variables
 }

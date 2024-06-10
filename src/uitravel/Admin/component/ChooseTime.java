@@ -6,11 +6,14 @@ package uitravel.Admin.component;
 
 import com.adyen.constants.ApiConstants.Redirect.Data;
 import com.raven.datechooser.DateChooser;
+import com.raven.datechooser.DateSelectable;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import javax.swing.JFrame;
 import uitravel.AdminMain;
@@ -36,6 +39,13 @@ public class ChooseTime extends javax.swing.JPanel {
         selectDate.setTextField(txtChooseTime);
         selectDate.setBetweenCharacter(" đến ");
         selectDate.setDateSelectionMode(DateChooser.DateSelectionMode.SINGLE_DATE_SELECTED);
+        selectDate.setDateSelectable(new DateSelectable() {
+            @Override
+            public boolean isDateSelectable(Date date) {
+                LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                return !localDate.isBefore(LocalDate.now());
+            }
+        });
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -159,7 +169,7 @@ public class ChooseTime extends javax.swing.JPanel {
         this.eventAddTour = event;
     }
     public String getDate(){
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         return sdf.format(date);
      
     }

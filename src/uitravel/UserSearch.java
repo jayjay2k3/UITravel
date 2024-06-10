@@ -249,7 +249,7 @@ public class UserSearch extends javax.swing.JFrame {
                     .addGroup(coverMainLayout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtPlace, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtPlace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(coverMainLayout.createSequentialGroup()
                         .addComponent(roundedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -392,6 +392,7 @@ public class UserSearch extends javax.swing.JFrame {
         }
         else{
             loadHotelData((String) txtSearch.getSelectedItem());
+            txtPlace.setText((String) txtSearch.getSelectedItem());
         }
     }//GEN-LAST:event_myButton1ActionPerformed
 
@@ -552,7 +553,6 @@ public class UserSearch extends javax.swing.JFrame {
             allTours = new ArrayList<>();
             CollectionReference collection = firestore.collection("admin").document("AllTours").collection("TourInfo");
             ApiFuture<QuerySnapshot> querySnapshot = collection.get();
-               
             for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
                 if (document.exists()) {
                     System.out.println(document.getString("Place") + "   "+searchData);
@@ -573,6 +573,8 @@ public class UserSearch extends javax.swing.JFrame {
                             UserPayment up = new UserPayment();
                             up.setTicketData(fullTour.getTicketData());
                             up.setPrices(fullTour.getPrices());
+                            up.setChildTourID(fullTour.getChildID());
+                            up.setTourID(t.getTourID());
                             if(isLogged){
                                 up.setUID(uid);
                             }

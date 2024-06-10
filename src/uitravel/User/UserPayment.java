@@ -5,13 +5,17 @@
 package uitravel.User;
 
 import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.cloud.FirestoreClient;
 import java.awt.event.MouseListener;
 import java.text.NumberFormat;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,7 +28,10 @@ import uitravel.UserMain;
  * @author ACER
  */
 public class UserPayment extends javax.swing.JPanel {
-    private String userID;
+    private String userID  = null;
+    private String childTourID;
+    private String tourID;
+    private int[] tickets;
     private MouseListener eventCancel;
     private Double prices;
     Firestore firestore = FirestoreClient.getFirestore();
@@ -35,11 +42,16 @@ public class UserPayment extends javax.swing.JPanel {
     private void init(){
         pay.setVisible(false);
         info.setVisible(true);
-        
     }
     public void setUID(String UID){
         this.userID = UID;
         loadUserData();
+    }
+    public void setTourID(String UID){
+        this.tourID = UID;
+    }
+    public void setChildTourID(String UID){
+        this.childTourID = UID;
     }
     private void loadUserData() {
          try {
@@ -60,6 +72,7 @@ public class UserPayment extends javax.swing.JPanel {
         } 
     }
     public void setTicketData(int[] tickets){
+        this.tickets = tickets;
         txtTickets.setText(" x " +String.valueOf(tickets[0]));
         txtAdultNum.setText(" x " +String.valueOf(tickets[1]));
         txtChildrenNum.setText(" x " +String.valueOf(tickets[2]));
@@ -521,9 +534,9 @@ public class UserPayment extends javax.swing.JPanel {
                         JOptionPane.INFORMATION_MESSAGE);
         }
         else{
-              info.setVisible(false);
-        pay.setVisible(true);
-        txtback.setText("< Thông tin của bạn");
+            info.setVisible(false);
+            pay.setVisible(true);
+            txtback.setText("< Thông tin của bạn");
         }
     }//GEN-LAST:event_btnNextActionPerformed
     public void eventCancel(MouseListener event) {
@@ -569,10 +582,57 @@ public class UserPayment extends javax.swing.JPanel {
                         JOptionPane.INFORMATION_MESSAGE);
         }
         else{
-            // uploadBookingTicket
+            uploadBookingTicket();
         }
     }//GEN-LAST:event_btnsubmitActionPerformed
+    private void uploadBookingTicket(){
+        try {
+            CollectionReference collection = firestore.collection("history");
+            DocumentReference newHistoryDocRef = collection.document(tourID);
+            CollectionReference subCollectionRef = newHistoryDocRef.collection("History");
+            DocumentReference newDocRef = subCollectionRef.document(childTourID);
+            CollectionReference AttendandCollectionRef = newDocRef.collection("Attendants");
+            DocumentReference newUserRef ;
+            if(userID!=null){
+                newUserRef = AttendandCollectionRef.document(userID);
+            }
+            else{
+                newUserRef = AttendandCollectionRef.document();
+                
+            }
+            Map<String, Object> user = new HashMap<>();
+            user.put("Name", txtName.getText());
+            user.put("Email", txtEmail.getText());
+            user.put("PhoneNumber", txtPhoneNum.getText());
+            user.put("NumberOfAttendants", tickets[0]);
+            user.put("NumberOfAdult", tickets[1]);
+            user.put("NumberOfChild", tickets[2]);
+            user.put("NumberOfInfant", tickets[3]);
+            user.put("Prices", prices.toString());
+            newUserRef.set(user);
+            ApiFuture<DocumentSnapshot> future = newDocRef.get();
+            DocumentSnapshot document;
+            document = future.get(); 
+            if (document.exists()){       
+                    String temp = document.getString("TourNumberAttendants");
+                    String temp2 = document.getString("TourRevenue");
+                    System.out.println(temp + "   " + temp2);
+                    double all = Double.valueOf(temp2) + prices;
+                    int count = Integer.parseInt(temp) + tickets[0];
+                    newDocRef.update("TourNumberAttendants",String.valueOf(count));
+                    newDocRef.update("TourRevenue",String.valueOf(all));
+                    JOptionPane.showMessageDialog(null,
+                        "Đặt chuyến đi thành công!",
+                        "Thông báo!",
+                        
+                        JOptionPane.INFORMATION_MESSAGE);
+                }
+            
+        } catch (InterruptedException | ExecutionException ex) {
+            Logger.getLogger(UserPayment.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
+    }
     private void txtCardDateFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCardDateFocusGained
         if(txtCardDate.getText().equals("MM/YYYY")){
             txtCardDate.setText("");

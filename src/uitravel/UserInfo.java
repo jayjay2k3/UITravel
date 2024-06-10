@@ -38,7 +38,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import net.miginfocom.swing.MigLayout;
+import uitravel.Components.Loading;
 import uitravel.User.UserInfo.AccountInfo;
 import uitravel.User.UserInfo.Balances;
 import uitravel.User.UserInfo.BookingHistory;
@@ -372,11 +375,29 @@ public class UserInfo extends javax.swing.JFrame {
          new Object[] { "Có", "Không" }, JOptionPane.YES_OPTION);
         switch (res) {
             case JOptionPane.YES_OPTION -> {
-                    UserMain um = new UserMain();
-                    um.setUID(uid);
-                    um.setIsLogged(false);
-                    um.setVisible(true);
-                    dispose();
+                GlassPanePopup.showPopup(new Loading());
+                SwingWorker<Void, Void> worker = new SwingWorker<>() {
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                            // Thực hiện tác vụ nặng ở đây
+                            UserMain um = new UserMain();
+                            um.setIsLogged(false);
+
+                            // Hiển thị kết quả sau khi tác vụ hoàn thành
+                            SwingUtilities.invokeLater(() -> {
+                                um.setVisible(true);
+                            });
+                            return null;
+                    }
+                    @Override
+                    protected void done() {
+                        // Ẩn màn hình loading sau khi tác vụ hoàn thành
+                        GlassPanePopup.closePopupAll();
+                        dispose();
+
+                    }
+                };
+                 worker.execute();                    
                 }
             case JOptionPane.NO_OPTION -> {break;}
             case JOptionPane.CLOSED_OPTION -> {break;}

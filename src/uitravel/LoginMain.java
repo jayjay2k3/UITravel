@@ -141,7 +141,7 @@ public class LoginMain extends javax.swing.JFrame {
         cover.login(isLogin);
         loginAndRegister.addEvent((ActionEvent e) -> {
             
-           GlassPanePopup.showPopup(new Loading());
+            GlassPanePopup.showPopup(new Loading());
             SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() throws Exception {

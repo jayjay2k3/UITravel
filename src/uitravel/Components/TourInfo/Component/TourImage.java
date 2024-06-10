@@ -4,15 +4,17 @@
  */
 package uitravel.Components.TourInfo.Component;
 
+import javax.swing.ImageIcon;
+
 /**
  *
  * @author ACER
  */
 public class TourImage extends javax.swing.JPanel {
 
-    /**
-     * Creates new form TourImage
-     */
+    public void setBackgroundIcon(ImageIcon img){
+        bg.setbackgroundImage(img);
+    }
     public TourImage() {
         initComponents();
     }
@@ -26,40 +28,32 @@ public class TourImage extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        roundedImage1 = new uitravel.Components.RoundedImage();
+        bg = new uitravel.Components.ImagePanel();
 
         setOpaque(false);
         setPreferredSize(new java.awt.Dimension(490, 490));
+        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
 
-        roundedImage1.setOpaque(false);
-        roundedImage1.setPreferredSize(new java.awt.Dimension(390, 390));
-        roundedImage1.setRadius(30);
+        bg.setbackgroundImage(new javax.swing.ImageIcon(getClass().getResource("/resources/BigBeach_GettyImages-874980426-ezgif.com-webp-to-png-converter.png"))); // NOI18N
+        bg.setisTransparent(false);
+        bg.setRadius(30);
 
-        javax.swing.GroupLayout roundedImage1Layout = new javax.swing.GroupLayout(roundedImage1);
-        roundedImage1.setLayout(roundedImage1Layout);
-        roundedImage1Layout.setHorizontalGroup(
-            roundedImage1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 498, Short.MAX_VALUE)
+        javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
+        bg.setLayout(bgLayout);
+        bgLayout.setHorizontalGroup(
+            bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 490, Short.MAX_VALUE)
         );
-        roundedImage1Layout.setVerticalGroup(
-            roundedImage1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        bgLayout.setVerticalGroup(
+            bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 490, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(roundedImage1, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(roundedImage1, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE)
-        );
+        add(bg);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private uitravel.Components.RoundedImage roundedImage1;
+    private uitravel.Components.ImagePanel bg;
     // End of variables declaration//GEN-END:variables
 }

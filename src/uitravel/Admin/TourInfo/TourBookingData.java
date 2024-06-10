@@ -13,6 +13,7 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.cloud.FirestoreClient;
 import com.raven.glasspanepopup.GlassPanePopup;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
@@ -207,6 +208,17 @@ public class TourBookingData extends javax.swing.JPanel {
         lblEdit.setForeground(new java.awt.Color(255, 255, 255));
         lblEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Compose.png"))); // NOI18N
         lblEdit.setText("Chỉnh sửa");
+        lblEdit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblEditMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblEditMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                lblEditMousePressed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Times New Roman", 2, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -365,22 +377,35 @@ public class TourBookingData extends javax.swing.JPanel {
     private void lblAddMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblAddMousePressed
        chooseTime1.setVisible(true);
     }//GEN-LAST:event_lblAddMousePressed
- private void callAddATour(Component component) {
+
+    private void lblEditMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEditMouseEntered
+        lblEdit.setForeground(new Color(200,200,200));
+    }//GEN-LAST:event_lblEditMouseEntered
+
+    private void lblEditMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEditMouseExited
+        lblEdit.setForeground(new Color(255,255,255));
+
+    }//GEN-LAST:event_lblEditMouseExited
+
+    private void lblEditMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEditMousePressed
+        callAddATour(this);
+    }//GEN-LAST:event_lblEditMousePressed
+    private void callAddATour(Component component) {
         JFrame frame = getFrame(component);
         if (frame != null) {
-            ((AdminMain) frame).adminAddShortTour();
+            ((AdminMain) frame).EditTour(tourID);
         }
     }
-     private JFrame getFrame(Component component) {
-        while (component != null) {
-            
-            if (component instanceof JFrame jFrame) {
-                return jFrame;
-            }
-            component = component.getParent();
-        }
-        return null;
-    }
+    private JFrame getFrame(Component component) {
+       while (component != null) {
+
+           if (component instanceof JFrame jFrame) {
+               return jFrame;
+           }
+           component = component.getParent();
+       }
+       return null;
+   }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private uitravel.Components.RoundedPanel bbg;

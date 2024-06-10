@@ -37,6 +37,7 @@ public class Activity extends javax.swing.JPanel {
         txtDescription = new javax.swing.JTextArea();
         txtName = new javax.swing.JLabel();
         txtDuriation = new javax.swing.JLabel();
+        customLineComponent1 = new uitravel.Components.CustomLineComponent();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
 
@@ -48,7 +49,7 @@ public class Activity extends javax.swing.JPanel {
 
         txtDescription.setEditable(false);
         txtDescription.setColumns(20);
-        txtDescription.setFont(new java.awt.Font("Times New Roman", 0, 13)); // NOI18N
+        txtDescription.setFont(new java.awt.Font("Times New Roman", 0, 15)); // NOI18N
         txtDescription.setLineWrap(true);
         txtDescription.setRows(5);
         txtDescription.setWrapStyleWord(true);
@@ -59,12 +60,16 @@ public class Activity extends javax.swing.JPanel {
         txtName.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
         txtName.setText("Hoạt động: ");
 
+        txtDuriation.setFont(new java.awt.Font("Times New Roman", 2, 14)); // NOI18N
         txtDuriation.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/Clock gray.png"))); // NOI18N
+
+        customLineComponent1.setLineColor(new java.awt.Color(204, 204, 204));
 
         jLayeredPane1.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(txtDescription, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(txtName, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(txtDuriation, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(customLineComponent1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
@@ -85,6 +90,10 @@ public class Activity extends javax.swing.JPanel {
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(txtDescription))
                         .addGap(37, 37, 37))))
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(customLineComponent1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -94,10 +103,11 @@ public class Activity extends javax.swing.JPanel {
                     .addComponent(jLabel1)
                     .addComponent(txtName))
                 .addGap(18, 18, 18)
-                .addComponent(txtDescription, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
+                .addComponent(txtDescription, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtDuriation)
-                .addGap(15, 15, 15))
+                .addGap(14, 14, 14)
+                .addComponent(customLineComponent1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         add(jLayeredPane1);
@@ -105,6 +115,7 @@ public class Activity extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private uitravel.Components.CustomLineComponent customLineComponent1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JTextArea txtDescription;

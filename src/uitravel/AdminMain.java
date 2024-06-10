@@ -36,6 +36,7 @@ import net.miginfocom.layout.LayoutCallback;
 import net.miginfocom.swing.MigLayout;
 import uitravel.Admin.AddAPlace;
 import uitravel.Admin.AddTour;
+import uitravel.Admin.SettingTour;
 import uitravel.Admin.TourInfo.ADShortTourInfo;
 import uitravel.Admin.TourInfo.TourBookingData;
 import uitravel.Admin.component.ChooseTime;
@@ -59,7 +60,7 @@ public class AdminMain extends javax.swing.JFrame {
         userBar.setVisible(false);
     }
     private void retrieveTourInfo() {
-        cover.setLayout( new MigLayout("wrap, fill, insets 50","[]10[]", "12[]12"));
+        cover.setLayout( new MigLayout("wrap, fill, insets 50","[]10[]10[]10", "12[]12[]"));
         allTour = new ArrayList<>();    
         try {
             CollectionReference collection = firestore.collection("admin").document("AllTours").collection("TourInfo");
@@ -412,11 +413,10 @@ public class AdminMain extends javax.swing.JFrame {
         dispose();
     }
 
-    public void adminColumnTable() {
-        
-    }
-
-    public void adminAddShortTour() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void EditTour(String tourID) throws IOException {
+        SettingTour st = new SettingTour();
+        st.setTourID(tourID);
+        st.setVisible(true);
+        dispose();
     }
 }

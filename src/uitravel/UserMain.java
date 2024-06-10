@@ -478,15 +478,32 @@ public class UserMain extends javax.swing.JFrame {
             header2.addEvent(new MouseAdapter(){
                 @Override
                     public void mousePressed(MouseEvent e) {
-                    UserInfo ui = new UserInfo();
-                    try {
-                        ui.setUID(uid);
-                    } catch (IOException ex) {
-                        Logger.getLogger(UserMain.class.getName()).log(Level.SEVERE, null, ex);
+                    GlassPanePopup.showPopup(new Loading());
+                SwingWorker<Void, Void> worker = new SwingWorker<>() {
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                            UserInfo ui = new UserInfo();
+                            try {
+                                ui.setUID(uid);
+                            } catch (IOException ex) {
+                                Logger.getLogger(UserMain.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            // Hiển thị kết quả sau khi tác vụ hoàn thành
+                            SwingUtilities.invokeLater(() -> {
+                                ui.setVisible(true);
+                            });
+                            return null;
                     }
-                    ui.setVisible(true);
-                    dispose();
-                }
+                    @Override
+                    protected void done() {
+                        // Ẩn màn hình loading sau khi tác vụ hoàn thành
+                        GlassPanePopup.closePopupAll();
+                        dispose();
+
+                    }
+                };
+                 worker.execute();                    
+                    }
             });
             
             header2.addChatEvent((ActionEvent e)->{
@@ -582,6 +599,40 @@ public class UserMain extends javax.swing.JFrame {
             t.setBackGroundIMG(getImgFromBytes(entry.getValue()));
             t.setTxtPlace(entry.getKey());
             t.setID(entry.getKey());
+            t.getPlaceTour(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                System.out.println("Mouse pressed on: " + t.getTxtPlace());
+                GlassPanePopup.showPopup(new Loading());
+                SwingWorker<Void, Void> worker = new SwingWorker<>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    // Thực hiện tác vụ nặng ở đây
+                    UserSearch userSearch = new UserSearch();
+                    userSearch.setIsLogged(isLogged);
+                    userSearch.setUID(uid);
+                    userSearch.setSearchData(entry.getKey());
+                    userSearch.setAllPlaces(placeData);
+
+                    // Hiển thị kết quả sau khi tác vụ hoàn thành
+                    SwingUtilities.invokeLater(() -> {
+                        userSearch.setVisible(true);
+                    });
+
+                    return null;
+                }
+
+                @Override
+                protected void done() {
+                    // Ẩn màn hình loading sau khi tác vụ hoàn thành
+                    GlassPanePopup.closePopupAll();
+                    dispose();
+
+            }
+        };
+        worker.execute();
+            }
+        });
             pnlHotel.add(t);
             allHotels.add(t);
         }

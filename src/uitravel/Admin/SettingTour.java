@@ -52,6 +52,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import net.miginfocom.swing.MigLayout;
+import uitravel.AdminMain;
 import uitravel.Components.SettingActivities;
 import uitravel.Components.AddActivities;
 
@@ -105,7 +106,6 @@ public class SettingTour extends javax.swing.JFrame {
         AddItem.setVisible(true);
         AllPlaces = getTourData();
         GlassPanePopup.install(this);
-        setTourID("f36c7c74-cae7-4ce0-812b-6b79ba4c0992");
         txtTourID.setText(tourID);
         showIMG.setVisible(true);
         listItem.setModel(listModel);
@@ -118,7 +118,6 @@ public class SettingTour extends javax.swing.JFrame {
            
         }
         txtPlace.setModel(model);
-        txtPlace.setSelectedIndex(0);
           ((AbstractDocument) txtPrice.getDocument()).setDocumentFilter(new DocumentFilter() {
             @Override
             public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
@@ -128,37 +127,12 @@ public class SettingTour extends javax.swing.JFrame {
                 }
             }
         });
-        addCollectionListener();
+      //  addCollectionListener();
     }
-    private void addCollectionListener() {
-        CollectionReference userCollection = firestore.collection("Place");
-        userCollection.addSnapshotListener((snapshots, e) -> {
-            if (e != null) {
-                System.err.println("Listen failed: " + e);
-                return;
-            }
-
-        if (snapshots != null) {
-            // Clear the current model
-            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-            model.addElement("Chọn nơi bạn muốn đến");
-
-            // Update the model with new data
-            for (DocumentSnapshot document : snapshots.getDocuments()) {
-                String documentId = document.getId();
-                model.addElement(documentId);
-            }
-
-            // Update the ComboBox
-            txtPlace.setModel(model);
-            txtPlace.setSelectedIndex(0);
-
-
-        }
-    });
+  
       
-    }
-    private void setTourID(String id){
+    
+    public void setTourID(String id){
         this.tourID = id;
         retrieveTourInfo();
 
@@ -173,7 +147,9 @@ public class SettingTour extends javax.swing.JFrame {
             if (document.exists()) {
                 Map<String, Object> tourData = document.getData();
                 if (tourData != null) {
+                    txtTourID.setText(tourID);
                     String place = (String) tourData.get("Place");
+                    txtPlace.setSelectedItem(place);
                     txtTourName.setText((String) tourData.get("TourName"));
                     txtDescription.setText((String) tourData.get("TourDescription"));
                     txtChooseTime.setText((String) tourData.get("TourTime"));
@@ -369,6 +345,11 @@ public class SettingTour extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(0, 51, 204));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel4.setText("Quay về trang chủ");
+        jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLabel4MousePressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout user3Layout = new javax.swing.GroupLayout(user3);
         user3.setLayout(user3Layout);
@@ -978,6 +959,12 @@ public class SettingTour extends javax.swing.JFrame {
             UploadNewTourInfo();
         }
     }//GEN-LAST:event_btnSubmitActionPerformed
+
+    private void jLabel4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MousePressed
+        AdminMain am = new  AdminMain();
+        am.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jLabel4MousePressed
     private void UploadNewTourInfo() {
     firestore = FirestoreClient.getFirestore();
     CollectionReference collection = firestore.collection("admin").document("AllTours").collection("TourInfo");
@@ -1048,6 +1035,10 @@ public class SettingTour extends javax.swing.JFrame {
                     "Thêm chuyến đi thành công!.",
                     "Thông báo",
                     JOptionPane.INFORMATION_MESSAGE);
+        GlassPanePopup.closePopupAll();
+        AdminMain am = new  AdminMain();
+        am.setVisible(true);
+        dispose();
     }
     
     /**
@@ -1114,8 +1105,7 @@ public class SettingTour extends javax.swing.JFrame {
         }
     
     private void chooseImages() {
-        images = new ArrayList<>();
-
+       
        JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Choose image files");
         fileChooser.setMultiSelectionEnabled(true);

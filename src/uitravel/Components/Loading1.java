@@ -8,12 +8,12 @@ package uitravel.Components;
  *
  * @author ACER
  */
-public class Loading extends javax.swing.JPanel {
+public class Loading1 extends javax.swing.JPanel {
 
     /**
      * Creates new form Loading
      */
-    public Loading() {
+    public Loading1() {
         initComponents();
     }
 
@@ -31,7 +31,7 @@ public class Loading extends javax.swing.JPanel {
         setOpaque(false);
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/loading2.gif"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/ZKZx.gif"))); // NOI18N
         add(jLabel1);
     }// </editor-fold>//GEN-END:initComponents
 

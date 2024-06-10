@@ -12,20 +12,34 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.cloud.FirestoreClient;
 import com.raven.datechooser.DateChooser;
+import com.raven.datechooser.DateSelectable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import net.miginfocom.swing.MigLayout;
 import uitravel.Components.Activity;
+import uitravel.Components.SettingActivities;
 import uitravel.UserMain;
 
 /**
@@ -36,6 +50,8 @@ public class FullTourInfo extends javax.swing.JPanel {
     private ActionListener event;
 
     List<Comment> tourComments;
+    Map<String,String> childTourID;
+
     List<TourImage> tourImages;
     private DateChooser selectDate;
     private String tourID;
@@ -44,9 +60,9 @@ public class FullTourInfo extends javax.swing.JPanel {
     private double price;
 
     public FullTourInfo() {
+        this.childTourID = new HashMap<>();
         initComponents();
         init();
-        loadIMG();
         loadCMT();
     }
     public void setTourID(String tourID){
@@ -76,6 +92,47 @@ public class FullTourInfo extends javax.swing.JPanel {
         return  price*btnAdult.getNumber()+ 0.7*price*btnChild.getNumber();
 
     }
+    private void LoadDate(){
+        try {
+            childTourID.clear();
+            List<LocalDate> selectableDates = new ArrayList<>();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+            CollectionReference collection = firestore.collection("history");
+            DocumentReference newHistoryDocRef = collection.document(tourID);
+            CollectionReference subCollectionRef = newHistoryDocRef.collection("History");
+            ApiFuture<QuerySnapshot> querySnapshot = subCollectionRef.get();
+            for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+                if (document.exists()) {
+                    childTourID.put( document.getString("TourDateStart"),document.getId());
+                    int count = Integer.parseInt(document.getString("TourNumberAttendants"));
+                    int total = Integer.parseInt(document.getString("TourNumber"));
+                    if(count<total)
+                        selectableDates.add(LocalDate.parse(document.getString("TourDateStart"), formatter));
+                }
+                selectDate.setDateSelectable(new DateSelectable() {
+                @Override
+                public boolean isDateSelectable(Date date) {
+                    LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    return !localDate.isBefore(LocalDate.now())&&selectableDates.contains(localDate);
+                }
+            });
+                ZoneId defaultZoneId = ZoneId.systemDefault();
+                selectDate.setSelectedDate(Date.from(selectableDates.get(0).atStartOfDay(defaultZoneId).toInstant()));
+
+            }
+        } catch (InterruptedException | ExecutionException ex) {
+            Logger.getLogger(FullTourInfo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public String getChildID(){
+        Set<String> set = childTourID.keySet();
+        for (String key : set) {
+            if(key.equals(txtChooseTime.getText()))
+                return  childTourID.get(key);
+        }
+        return null;
+    }
      private void loadDataFromFireStore(){
         try {
             pnlAcc.setLayout(new MigLayout("fillx"));
@@ -86,12 +143,13 @@ public class FullTourInfo extends javax.swing.JPanel {
             DocumentSnapshot document;  
             document = future.get();
             if(document.exists()){
-                
+                LoadDate();
                 txtName.setText(document.getString("TourName"));
                 List<String> tourIncludes = (List<String>) document.get("TourIncludes");
                 tourIncludes.forEach(item -> {
                     listModel.addElement(item);
                 });
+                
                 List<Map<String, Object>>Acctivities = (List<Map<String, Object>>) document.get("TourActivities");
                     int index = 0;
                     for (Map<String, Object> tourActivity : Acctivities){
@@ -103,6 +161,11 @@ public class FullTourInfo extends javax.swing.JPanel {
                         t2.setDuriation(temp);
                         pnlAcc.add(t2,"wrap, w 95%");
                     }
+                    
+                List<String> images = (List<String>) document.get("TourImages");
+                List<ImageIcon> imageIcons =  new ArrayList<>();
+                imageIcons = convertBase64ToImageIcon(images);
+                loadIMG(imageIcons);
                 btnTime.setText(document.getString("TourTime"));
                 this.setPrice((String) document.get("TourPrice"));
                 listItem.setModel(listModel);
@@ -127,6 +190,20 @@ public class FullTourInfo extends javax.swing.JPanel {
             Logger.getLogger(UserMain.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
+      private List<ImageIcon> convertBase64ToImageIcon(List<String> base64Images) {
+        List<ImageIcon> imageIcons = new ArrayList<>();
+        for (String base64Image : base64Images) {
+            try {
+                byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+                ByteArrayInputStream bais = new ByteArrayInputStream(imageBytes);
+                BufferedImage bufferedImage = ImageIO.read(bais);
+                ImageIcon imageIcon = new ImageIcon(bufferedImage);
+                imageIcons.add(imageIcon);
+            } catch (IOException e) {
+            }
+        }
+        return imageIcons;
+    }   
     private void init(){
         imgCover.setLayout(new MigLayout(" fillx, insets 0","[]30[]","[]"));
         cmtCover.setLayout(new MigLayout(" wrap, fill, insets 10","[]","[]10[]"));
@@ -134,6 +211,13 @@ public class FullTourInfo extends javax.swing.JPanel {
         selectDate.setTextField(txtChooseTime);
         selectDate.setBetweenCharacter(" đến ");
         selectDate.setDateSelectionMode(DateChooser.DateSelectionMode.SINGLE_DATE_SELECTED);
+        selectDate.setDateSelectable(new DateSelectable() {
+            @Override
+            public boolean isDateSelectable(Date date) {
+                LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                return !localDate.isBefore(LocalDate.now());
+            }
+        });
         btnAdult.addEvent((ActionEvent e) -> {
             calculateTheCost();
         });
@@ -144,14 +228,16 @@ public class FullTourInfo extends javax.swing.JPanel {
             calculateTheCost();
         });
     }
-    private void loadIMG(){
+    private void loadIMG( List<ImageIcon> img){
         tourImages = new ArrayList<>();
-        for(int i = 0;i<10;i++){
+        for(int i = 0;i<img.size();i++){
             TourImage temp = new TourImage();
+            temp.setBackgroundIcon(img.get(i));
             imgCover.add(temp,"width 490!, height 483!");
             tourImages.add(temp);
         }
     }
+    
      private void loadCMT(){
         tourComments = new ArrayList<>();
         for(int i = 0;i<10;i++){
@@ -239,6 +325,7 @@ public class FullTourInfo extends javax.swing.JPanel {
         txtName.setOpaque(false);
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         jScrollPane1.setPreferredSize(new java.awt.Dimension(1025, 402));
 
@@ -502,11 +589,11 @@ public class FullTourInfo extends javax.swing.JPanel {
                 .addComponent(txtChooseTime, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
                 .addComponent(jLabel14)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(btnTime, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(roundedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         txtScore.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
@@ -537,9 +624,10 @@ public class FullTourInfo extends javax.swing.JPanel {
         jScrollPane3.setMaximumSize(new java.awt.Dimension(691, 200));
 
         listItem.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        listItem.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        listItem.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
         jScrollPane3.setViewportView(listItem);
 
+        jScrollPane4.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane4.setMaximumSize(new java.awt.Dimension(470, 209));
         jScrollPane4.setPreferredSize(new java.awt.Dimension(470, 209));
@@ -652,12 +740,12 @@ public class FullTourInfo extends javax.swing.JPanel {
                         .addGap(38, 38, 38)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addComponent(txtTime))
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(53, 53, 53)
                         .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -674,7 +762,7 @@ public class FullTourInfo extends javax.swing.JPanel {
                     .addComponent(bookingCover, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(450, Short.MAX_VALUE))
+                .addContainerGap(379, Short.MAX_VALUE))
         );
 
         main.setViewportView(txtNumberComments);
