@@ -253,22 +253,20 @@ public class FullTourInfo extends javax.swing.JPanel {
                 List<Map<String, Object>> Cmts = (List<Map<String, Object>>)document.get("Comments");
                 if(Cmts!=null){
                     for (Map<String, Object> cmt : Cmts){
-
                             CmtLeft t = new CmtLeft();
                             t.setAttitude((String) cmt.get("Attitude"));
                             t.setText((String) cmt.get("Content"));
                             t.setUserName((String) cmt.get("UserName"));
                             cmtCover.add(t,"wrap, w ::80%");
-
-
                     }
-                Map<String,String> Rating = (Map<String,String>) document.get("TourRating");
-            
+               
                 cmtCover.repaint();
                 cmtCover.revalidate();
             }  else{
                     Cmts =  new ArrayList<>();
                 }
+                Map<String,String> Rating = (Map<String,String>) document.get("TourRating");
+                txtScore.setText(Rating.get("Rate"));
                 
             }
         } catch (InterruptedException | ExecutionException ex) {
@@ -792,7 +790,7 @@ public class FullTourInfo extends javax.swing.JPanel {
                     .addComponent(bookingCover, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(379, Short.MAX_VALUE))
+                .addContainerGap(91, Short.MAX_VALUE))
         );
 
         main.setViewportView(txtNumberComments);

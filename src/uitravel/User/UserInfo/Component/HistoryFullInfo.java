@@ -499,7 +499,7 @@ private void updateCommentByUserID(Map<String, Object> updatedComment) {
                 numberCMt++;
                 Rating.put("NumberVotted", String.valueOf(numberCMt));
                 tourInfoDoc.update("TourRating",Rating);
-                
+                oldUserRating= currentRating;
                 CmtRight chat = new CmtRight();
                 chat.setAttitude(UID);
                 chat.setText(cmt.getText());
