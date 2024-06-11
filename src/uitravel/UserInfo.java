@@ -46,6 +46,7 @@ import uitravel.User.UserInfo.AccountInfo;
 import uitravel.User.UserInfo.Balances;
 import uitravel.User.UserInfo.BookingHistory;
 import uitravel.User.UserInfo.Component.ChangePass;
+import uitravel.User.UserInfo.Component.HistoryFullInfo;
 
 /**
  *
@@ -429,6 +430,7 @@ public class UserInfo extends javax.swing.JFrame {
     private void item3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_item3MousePressed
         cover.removeAll();
         bookingHistory = new BookingHistory();
+        bookingHistory.setUID(uid);
         cover.setLayout(new MigLayout("wrap, fill, insets 0","[]","[]push"));
         cover.add(bookingHistory);
         cover.repaint();
@@ -602,4 +604,18 @@ public class UserInfo extends javax.swing.JFrame {
     private uitravel.Components.RoundedPanel roundedPanel1;
     private javax.swing.JTextArea txtName;
     // End of variables declaration//GEN-END:variables
+
+    public void callOpenHistory(String uid,String tourID,ImageIcon img) {
+    }
+
+    public void callHistory(String uid, String tourid, ImageIcon img, String userName, String documentId) {
+         HistoryFullInfo fullHistory= new HistoryFullInfo();
+        fullHistory.setUserName(userName);
+        fullHistory.setUID(uid);
+        fullHistory.setTourID(tourid);
+        fullHistory.setPic(img);
+        fullHistory.setBookingID(documentId);
+        GlassPanePopup.showPopup(fullHistory);
+
+    }
 }

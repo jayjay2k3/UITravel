@@ -69,7 +69,7 @@ public class UserMain extends javax.swing.JFrame {
             System.out.println(document.getString("FullName"));
             if(document.exists()){
                 header2.setUserName(document.getString("FullName"));
-                 ImageIcon temp =loadImage();
+                 ImageIcon temp =loadImage(document);
                     if(temp!=null){
                         header2.setUserAvatar(temp);
                     }
@@ -80,12 +80,8 @@ public class UserMain extends javax.swing.JFrame {
         } 
     }
 
-     public ImageIcon loadImage() {
+     public ImageIcon loadImage(DocumentSnapshot document) {
      try {
-        DocumentReference docRef = firestore.collection("user").document(uid);
-        ApiFuture<DocumentSnapshot> future = docRef.get();
-        DocumentSnapshot document = future.get();
-
         if (document.exists()) {
             String imageDataString = document.getString("Avatar");
             if (imageDataString != null) {
@@ -107,7 +103,7 @@ public class UserMain extends javax.swing.JFrame {
                     "Thông báo!",
                     JOptionPane.ERROR_MESSAGE);
         }
-    } catch (HeadlessException | IOException | InterruptedException | ExecutionException e) {
+    } catch (HeadlessException | IOException  e) {
         JOptionPane.showMessageDialog(null,
                 "Lỗi khi tải ảnh!",
                 "Thông báo!",
@@ -609,8 +605,11 @@ public class UserMain extends javax.swing.JFrame {
                 protected Void doInBackground() throws Exception {
                     // Thực hiện tác vụ nặng ở đây
                     UserSearch userSearch = new UserSearch();
+
                     userSearch.setIsLogged(isLogged);
-                    userSearch.setUID(uid);
+                    if(isLogged){
+                        userSearch.setUID(uid);
+                    }
                     userSearch.setSearchData(entry.getKey());
                     userSearch.setAllPlaces(placeData);
 

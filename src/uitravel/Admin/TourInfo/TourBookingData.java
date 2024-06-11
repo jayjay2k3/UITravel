@@ -388,9 +388,13 @@ public class TourBookingData extends javax.swing.JPanel {
     }//GEN-LAST:event_lblEditMouseExited
 
     private void lblEditMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblEditMousePressed
-        callAddATour(this);
+        try {
+            callAddATour(this);
+        } catch (IOException ex) {
+            Logger.getLogger(TourBookingData.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_lblEditMousePressed
-    private void callAddATour(Component component) {
+    private void callAddATour(Component component) throws IOException {
         JFrame frame = getFrame(component);
         if (frame != null) {
             ((AdminMain) frame).EditTour(tourID);

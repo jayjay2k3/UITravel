@@ -1068,7 +1068,8 @@ public class SettingTour extends javax.swing.JFrame {
         } catch (NumberFormatException e) {
             return false;
         }
-    }        public void uploadImages(List<ImageIcon> imageIcons){
+    }        
+    public void uploadImages(List<ImageIcon> imageIcons){
        try {
         FirebaseInitializer.initialize();
         Firestore firestore = FirestoreClient.getFirestore();

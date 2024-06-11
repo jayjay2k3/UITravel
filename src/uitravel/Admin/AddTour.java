@@ -834,7 +834,11 @@ public class AddTour extends javax.swing.JFrame {
     tourData.put("TourDescription", txtDescription.getText());
     tourData.put("TourTime", txtChooseTime.getText());
     tourData.put("TourPrice", txtPrice.getText());
-    tourData.put("TourRating", "0");
+    Map<String,String> Rating = new HashMap<>();
+    Rating.put("Rate", "0");
+    Rating.put("NumberVotted", "0");
+
+    tourData.put("TourRating", Rating);
     tourData.put("TourActivities", Acctivities);
 
     // Format the tour length
@@ -971,7 +975,6 @@ public class AddTour extends javax.swing.JFrame {
     
     private void chooseImages() {
         images = new ArrayList<>();
-
        JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Choose image files");
         fileChooser.setMultiSelectionEnabled(true);
