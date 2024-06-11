@@ -488,19 +488,44 @@ public class UserSearch extends javax.swing.JFrame {
                 dispose();
             });
 
-            header2.addEvent(new MouseAdapter(){
+             header2.addEvent(new MouseAdapter(){
                 @Override
                     public void mousePressed(MouseEvent e) {
-                    UserInfo ui = new UserInfo();
-                    ui.setVisible(true);
-                    dispose();
-                }
+                    GlassPanePopup.showPopup(new Loading());
+                SwingWorker<Void, Void> worker = new SwingWorker<>() {
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                            UserInfo ui = new UserInfo();
+                            try {
+                                ui.setUID(uid);
+                            } catch (IOException ex) {
+                                Logger.getLogger(UserMain.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            // Hiển thị kết quả sau khi tác vụ hoàn thành
+                            SwingUtilities.invokeLater(() -> {
+                                ui.setVisible(true);
+                            });
+                            return null;
+                    }
+                    @Override
+                    protected void done() {
+                        // Ẩn màn hình loading sau khi tác vụ hoàn thành
+                        GlassPanePopup.closePopupAll();
+                        dispose();
+
+                    }
+                };
+                 worker.execute();                    
+                    }
             });
+            
             
             header2.addChatEvent((ActionEvent e)->{
                chatBox.setVisible(true);
 
             });
+                        loadDataFromFireStore(uid);
+
        }
     
 
@@ -545,7 +570,58 @@ public class UserSearch extends javax.swing.JFrame {
 
     }
     
+ private void loadDataFromFireStore(String uid){
+        try {
+            DocumentReference docRef  = firestore.collection("user").document(uid);
+            ApiFuture<DocumentSnapshot> future = docRef.get();
+            // Block on response
+            DocumentSnapshot document;  
+            document = future.get();
+            System.out.println(document.getString("FullName"));
+            if(document.exists()){
+                header2.setUserName(document.getString("FullName"));
+                 ImageIcon temp =loadImage( document);
+                    if(temp!=null){
+                        header2.setUserAvatar(temp);
+                    }
+                }
+        }
+        catch (ExecutionException | InterruptedException ex) {
+            Logger.getLogger(UserMain.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
+  public ImageIcon loadImage(DocumentSnapshot document) {
+     try {
+       
+        if (document.exists()) {
+            String imageDataString = document.getString("Avatar");
+            if (imageDataString != null) {
+                // Convert Base64 string back to byte array
+                byte[] imageData = Base64.getDecoder().decode(imageDataString);
 
+                ByteArrayInputStream bais = new ByteArrayInputStream(imageData);
+                BufferedImage bufferedImage = ImageIO.read(bais);
+                return new ImageIcon(bufferedImage);
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "Không tìm thấy dữ liệu ảnh!",
+                        "Thông báo!",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Không tìm thấy người dùng!",
+                    "Thông báo!",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (HeadlessException | IOException  e) {
+        JOptionPane.showMessageDialog(null,
+                "Lỗi khi tải ảnh!",
+                "Thông báo!",
+                JOptionPane.ERROR_MESSAGE);
+    }
+    return null;
+}
     private void loadHotelData(String searchData){
         try {
             coverTour.removeAll();
@@ -563,11 +639,13 @@ public class UserSearch extends javax.swing.JFrame {
                         t.setPlace(document.getString("Place"));
                         t.setDescription(document.getString("TourDescription"));
                         t.setTime("Thời gian: "+document.getString("TourLength"));
-                        t.setScore(document.getString("TourRating"));
+                        Map<String,String> Rating = (Map<String,String>) document.get("TourRating");
+                        t.setScore(document.getString(Rating.get("Rate")));
                         List<String> tourImagesBase64 = (List<String>) document.get("TourImages");
                         t.setPic(convertBase64ToImageIcon(tourImagesBase64));
                         t.addEvent((ActionEvent evt)->{
                         fullTour = new FullTourInfo();
+                        
                         fullTour.setTourID(t.getTourID());
                         fullTour.addEvent((ActionEvent e) -> {
                             UserPayment up = new UserPayment();

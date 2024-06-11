@@ -42,7 +42,7 @@ public class CmtItem extends javax.swing.JPanel {
     }
     public void setAttitude(String txt){
         JLabel t = new JLabel(txt);
-        t.setFont(new Font("Times New Roman", 1, 16));
+        t.setFont(new Font("Times New Roman", 2, 12));
         JLayeredPane layer = new JLayeredPane();
         layer.setLayout(new FlowLayout(FlowLayout.RIGHT,0,0));
         layer.setBorder(new EmptyBorder(10,5,5,5));

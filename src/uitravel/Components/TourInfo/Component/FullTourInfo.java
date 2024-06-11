@@ -40,6 +40,9 @@ import javax.swing.JOptionPane;
 import net.miginfocom.swing.MigLayout;
 import uitravel.Components.Activity;
 import uitravel.Components.SettingActivities;
+import uitravel.User.MainUI.Chat.CmtLeft;
+import uitravel.User.MainUI.Chat.CmtRight;
+import uitravel.User.UserInfo.Component.HistoryFullInfo;
 import uitravel.UserMain;
 
 /**
@@ -63,11 +66,12 @@ public class FullTourInfo extends javax.swing.JPanel {
         this.childTourID = new HashMap<>();
         initComponents();
         init();
-        loadCMT();
+        
     }
     public void setTourID(String tourID){
         this.tourID = tourID;
         loadDataFromFireStore();
+        loadCMT();
     }
     public void setPrice(String prices){
         this.price= Double.parseDouble(prices);
@@ -238,13 +242,39 @@ public class FullTourInfo extends javax.swing.JPanel {
         }
     }
     
-     private void loadCMT(){
-        tourComments = new ArrayList<>();
-        for(int i = 0;i<10;i++){
-            Comment temp = new Comment();
-            cmtCover.add(temp);
-            tourComments.add(temp);
+ private void loadCMT(){
+        try {
+            DocumentReference tourInfoDoc = firestore.collection("admin").document("AllTours").collection("TourInfo").document(tourID);
+            ApiFuture<DocumentSnapshot> future = tourInfoDoc.get();
+            DocumentSnapshot document = null;
+            document = future.get();
+            if (document.exists()) {
+
+                List<Map<String, Object>> Cmts = (List<Map<String, Object>>)document.get("Comments");
+                if(Cmts!=null){
+                    for (Map<String, Object> cmt : Cmts){
+
+                            CmtLeft t = new CmtLeft();
+                            t.setAttitude((String) cmt.get("Attitude"));
+                            t.setText((String) cmt.get("Content"));
+                            t.setUserName((String) cmt.get("UserName"));
+                            cmtCover.add(t,"wrap, w ::80%");
+
+
+                    }
+                Map<String,String> Rating = (Map<String,String>) document.get("TourRating");
+            
+                cmtCover.repaint();
+                cmtCover.revalidate();
+            }  else{
+                    Cmts =  new ArrayList<>();
+                }
+                
+            }
+        } catch (InterruptedException | ExecutionException ex) {
+            Logger.getLogger(HistoryFullInfo.class.getName()).log(Level.SEVERE, null, ex);
         }
+       
     }
     /**
      * This method is called from within the constructor to initialize the form.

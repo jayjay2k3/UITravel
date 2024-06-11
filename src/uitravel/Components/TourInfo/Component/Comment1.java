@@ -8,10 +8,10 @@ package uitravel.Components.TourInfo.Component;
  *
  * @author ACER
  */
-public class Comment extends javax.swing.JPanel {
+public class Comment1 extends javax.swing.JPanel {
 
     private String txt;
-    public Comment() {
+    public Comment1() {
         initComponents();
     }
     public void SetComment(String txt) {
@@ -37,14 +37,12 @@ public class Comment extends javax.swing.JPanel {
         txtContent = new uitravel.User.MainUI.Chat.JIMSendTextPane();
 
         setOpaque(false);
-        setPreferredSize(new java.awt.Dimension(820, 92));
+        setPreferredSize(new java.awt.Dimension(650, 92));
         setRequestFocusEnabled(false);
-        java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout();
-        flowLayout1.setAlignOnBaseline(true);
-        setLayout(flowLayout1);
 
         bg.setBackground(new java.awt.Color(255, 255, 255));
         bg.setBorderColor(new java.awt.Color(204, 204, 204));
+        bg.setPreferredSize(new java.awt.Dimension(650, 85));
         bg.setWithBorder(true);
 
         txtName.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
@@ -61,18 +59,7 @@ public class Comment extends javax.swing.JPanel {
         txtContent.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jPanel1.add(txtContent);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 642, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
+        jPanel2.add(jPanel1);
 
         javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
         bg.setLayout(bgLayout);
@@ -80,17 +67,15 @@ public class Comment extends javax.swing.JPanel {
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bgLayout.createSequentialGroup()
                 .addGap(72, 72, 72)
-                .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(bgLayout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(106, Short.MAX_VALUE))
+                .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(bgLayout.createSequentialGroup()
                         .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(214, 214, 214)
                         .addComponent(txtName1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtRate)
-                        .addGap(106, 106, 106))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtRate)))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         bgLayout.setVerticalGroup(
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -101,9 +86,11 @@ public class Comment extends javax.swing.JPanel {
                     .addComponent(txtName1)
                     .addComponent(txtRate))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jPanel2.getAccessibleContext().setAccessibleName("");
 
         add(bg);
     }// </editor-fold>//GEN-END:initComponents

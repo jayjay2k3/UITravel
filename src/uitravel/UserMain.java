@@ -607,9 +607,7 @@ public class UserMain extends javax.swing.JFrame {
                     UserSearch userSearch = new UserSearch();
 
                     userSearch.setIsLogged(isLogged);
-                    if(isLogged){
-                        userSearch.setUID(uid);
-                    }
+                    userSearch.setUID(uid);
                     userSearch.setSearchData(entry.getKey());
                     userSearch.setAllPlaces(placeData);
 

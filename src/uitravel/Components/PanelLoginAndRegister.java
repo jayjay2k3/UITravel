@@ -322,10 +322,11 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
                 }
                 else{
                     String loginResult  =loginUser(txtAccount.getText(),txtPass.getText());
+                    
                      if (loginResult.equals("Đăng nhập thành công")) {
+                        Loging.actionPerformed(e);
                         JOptionPane.showMessageDialog(null, loginResult);
                         System.out.println(uid);
-                        Loging.actionPerformed(e);
                     } else {
                         JOptionPane.showMessageDialog(null, loginResult, "Thông báo!", JOptionPane.INFORMATION_MESSAGE);
                     }
