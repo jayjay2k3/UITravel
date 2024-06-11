@@ -4,8 +4,10 @@
  */
 package uitravel.User.UserInfo.Component;
 import java.awt.Color;
+import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import java.util.Locale;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -13,23 +15,40 @@ import java.util.Locale;
  */
 public class BookingShortInfo extends javax.swing.JPanel {
 
-    /**
-     * Creates new form BookingShortInfo
-     */
+    private String id;
+    private ActionListener getHistory;
+
     public BookingShortInfo() {
         initComponents();
         init();
     }
     private void init(){
-         double amount = 1234567.89;
+       
+    }
+    public void setBookingID(String id){
+        this.id = id;
+        bookingID.setText(id);
+    }
+    public String getBookingID(){
+        return id;
+    }
+    public void setTime(String time){
+        txtTime.setText("Ngày đi: " + time);
+    }
+    public void setBookingName(String name){
+        txtName.setText(name);
+    }
+    public void setBackgroundImage(ImageIcon img){
+        pic.setbackgroundImage(img);
+    }
+    public void setPrices(String price){
+        double amount = Double.parseDouble(price);
         Locale vietnamLocale = new Locale("vi", "VN");
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(vietnamLocale);
-
         // Format the amount as currency
         String formattedAmount = currencyFormatter.format(amount);
         txtPrice.setText(formattedAmount);
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -44,9 +63,10 @@ public class BookingShortInfo extends javax.swing.JPanel {
         lblRefund = new javax.swing.JLabel();
         myButton1 = new uitravel.Components.MyButton();
         txtTime = new javax.swing.JLabel();
-        txtName = new javax.swing.JLabel();
-        pic = new uitravel.Components.RoundedImage();
+        bookingID2 = new javax.swing.JLabel();
         bookingID = new javax.swing.JLabel();
+        txtName = new javax.swing.JTextArea();
+        pic = new uitravel.Components.ImagePanel();
 
         setOpaque(false);
         setPreferredSize(new java.awt.Dimension(600, 150));
@@ -61,46 +81,73 @@ public class BookingShortInfo extends javax.swing.JPanel {
 
         roundedPanel1.setBackground(new java.awt.Color(255, 255, 255));
         roundedPanel1.setBorderColor(new java.awt.Color(204, 204, 204));
-        roundedPanel1.setOpaque(false);
-        roundedPanel1.setRadius(30);
         roundedPanel1.setWithBorder(true);
 
         txtPrice.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
         txtPrice.setForeground(new java.awt.Color(0, 0, 153));
-        txtPrice.setText("Booking ID: 12018201982018092");
+        txtPrice.setText("10000");
 
         lblRefund.setFont(new java.awt.Font("Times New Roman", 2, 14)); // NOI18N
-        lblRefund.setForeground(new java.awt.Color(0, 102, 255));
+        lblRefund.setForeground(new java.awt.Color(0, 0, 255));
         lblRefund.setText("Yêu cầu hoàn tiền");
+        lblRefund.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lblRefundMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                lblRefundMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                lblRefundMousePressed(evt);
+            }
+        });
 
-        myButton1.setForeground(new java.awt.Color(0, 102, 204));
+        myButton1.setForeground(new java.awt.Color(0, 0, 255));
         myButton1.setText("Đánh giá");
-        myButton1.setBorderColor(new java.awt.Color(0, 153, 204));
+        myButton1.setBorderColor(new java.awt.Color(0, 0, 255));
+        myButton1.setColorClick(new java.awt.Color(153, 204, 255));
+        myButton1.setColorOver(new java.awt.Color(204, 255, 255));
+        myButton1.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         myButton1.setRadius(10);
+        myButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                myButton1ActionPerformed(evt);
+            }
+        });
 
         txtTime.setFont(new java.awt.Font("Times New Roman", 2, 15)); // NOI18N
         txtTime.setText("Thời gian: 2 ngày");
 
-        txtName.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        txtName.setText("Du lịch Dĩ An");
+        bookingID2.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        bookingID2.setForeground(new java.awt.Color(51, 51, 51));
+        bookingID2.setText("Booking ID:");
 
-        pic.setOpaque(false);
+        bookingID.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        bookingID.setForeground(new java.awt.Color(51, 51, 51));
+        bookingID.setText("Booking ID: 12018201982018092");
+
+        txtName.setColumns(20);
+        txtName.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
+        txtName.setLineWrap(true);
+        txtName.setRows(5);
+        txtName.setText("qweqweqwqweqweqwqweqweqwqweqweqw");
+        txtName.setWrapStyleWord(true);
+        txtName.setMargin(new java.awt.Insets(2, 0, 2, 6));
+
+        pic.setbackgroundImage(new javax.swing.ImageIcon(getClass().getResource("/resources/BigBeach_GettyImages-874980426-ezgif.com-webp-to-png-converter.png"))); // NOI18N
+        pic.setisTransparent(false);
         pic.setRadius(30);
 
         javax.swing.GroupLayout picLayout = new javax.swing.GroupLayout(pic);
         pic.setLayout(picLayout);
         picLayout.setHorizontalGroup(
             picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 99, Short.MAX_VALUE)
+            .addGap(0, 100, Short.MAX_VALUE)
         );
         picLayout.setVerticalGroup(
             picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 101, Short.MAX_VALUE)
+            .addGap(0, 100, Short.MAX_VALUE)
         );
-
-        bookingID.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        bookingID.setForeground(new java.awt.Color(51, 51, 51));
-        bookingID.setText("Booking ID: 12018201982018092");
 
         javax.swing.GroupLayout roundedPanel1Layout = new javax.swing.GroupLayout(roundedPanel1);
         roundedPanel1.setLayout(roundedPanel1Layout);
@@ -110,11 +157,13 @@ public class BookingShortInfo extends javax.swing.JPanel {
                 .addGap(29, 29, 29)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
+                        .addComponent(bookingID2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bookingID)
                         .addContainerGap())
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
                         .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26)
+                        .addGap(25, 25, 25)
                         .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(roundedPanel1Layout.createSequentialGroup()
                                 .addComponent(txtTime, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -122,34 +171,38 @@ public class BookingShortInfo extends javax.swing.JPanel {
                             .addGroup(roundedPanel1Layout.createSequentialGroup()
                                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(roundedPanel1Layout.createSequentialGroup()
-                                        .addComponent(txtName)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                        .addGap(18, 18, 18)
                                         .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(roundedPanel1Layout.createSequentialGroup()
                                         .addComponent(txtPrice)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 229, Short.MAX_VALUE)
                                         .addComponent(lblRefund)))
                                 .addGap(71, 71, 71))))))
         );
         roundedPanel1Layout.setVerticalGroup(
             roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, roundedPanel1Layout.createSequentialGroup()
-                .addContainerGap(10, Short.MAX_VALUE)
-                .addComponent(bookingID)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bookingID2)
+                    .addComponent(bookingID))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
-                        .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtName)
-                            .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(roundedPanel1Layout.createSequentialGroup()
+                                .addGap(11, 11, 11)
+                                .addComponent(myButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtTime)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblRefund)
-                            .addComponent(txtPrice))))
-                .addGap(16, 16, 16))
+                            .addComponent(txtPrice)
+                            .addComponent(lblRefund)))
+                    .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -174,14 +227,34 @@ public class BookingShortInfo extends javax.swing.JPanel {
         repaint();
     }//GEN-LAST:event_formMouseExited
 
+    private void lblRefundMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRefundMouseEntered
+        lblRefund.setForeground(new Color(0,51,153));
+
+    }//GEN-LAST:event_lblRefundMouseEntered
+
+    private void lblRefundMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRefundMouseExited
+        lblRefund.setForeground(new Color(0,0,255));
+    }//GEN-LAST:event_lblRefundMouseExited
+
+    private void lblRefundMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRefundMousePressed
+        
+    }//GEN-LAST:event_lblRefundMousePressed
+
+    private void myButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myButton1ActionPerformed
+        getHistory.actionPerformed(evt);
+    }//GEN-LAST:event_myButton1ActionPerformed
+    public void addHitory(ActionListener evt) {                                          
+        this.getHistory = evt;
+    } 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel bookingID;
+    private javax.swing.JLabel bookingID2;
     private javax.swing.JLabel lblRefund;
     private uitravel.Components.MyButton myButton1;
-    private uitravel.Components.RoundedImage pic;
+    private uitravel.Components.ImagePanel pic;
     private uitravel.Components.RoundedPanel roundedPanel1;
-    private javax.swing.JLabel txtName;
+    private javax.swing.JTextArea txtName;
     private javax.swing.JLabel txtPrice;
     private javax.swing.JLabel txtTime;
     // End of variables declaration//GEN-END:variables
