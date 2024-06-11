@@ -594,7 +594,22 @@ public class UserPayment extends javax.swing.JPanel {
             CollectionReference AttendandCollectionRef = newDocRef.collection("Attendants");
             DocumentReference newUserRef ;
             if(userID!=null){
-                newUserRef = AttendandCollectionRef.document(userID);
+                DocumentReference userDocument = firestore.collection("user").document(userID);
+                CollectionReference userHistoryCollection = userDocument.collection("History");
+                DocumentReference newHistory =userHistoryCollection.document();
+                Map<String, Object> userHistory = new HashMap<>();
+                userHistory.put("TourID", childTourID);
+                userHistory.put("NumberOfAttendants", tickets[0]);
+                userHistory.put("NumberOfAdult", tickets[1]);
+                userHistory.put("NumberOfChild", tickets[2]);
+                userHistory.put("NumberOfInfant", tickets[3]);
+                userHistory.put("Prices", prices.toString());
+                userHistory.put("MainTourID", tourID);
+                userHistory.put("Time", newDocRef.get().get().getString("TourDateStart"));
+
+                newHistory.set(userHistory);
+                newUserRef = AttendandCollectionRef.document(newHistory.getId());
+
             }
             else{
                 newUserRef = AttendandCollectionRef.document();
