@@ -271,6 +271,11 @@ public class AddTour extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(0, 51, 204));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel4.setText("Quay về trang chủ");
+        jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLabel4MousePressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout user3Layout = new javax.swing.GroupLayout(user3);
         user3.setLayout(user3Layout);
@@ -971,6 +976,12 @@ public class AddTour extends javax.swing.JFrame {
         AddItem1.setVisible(false);
         AddItem.setVisible(true);
     }//GEN-LAST:event_jLabel11MousePressed
+
+    private void jLabel4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MousePressed
+         AdminMain am = new  AdminMain();
+        am.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jLabel4MousePressed
      
     
     private void chooseImages() {
