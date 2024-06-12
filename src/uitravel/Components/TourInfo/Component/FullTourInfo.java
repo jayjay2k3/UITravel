@@ -156,7 +156,6 @@ public class FullTourInfo extends javax.swing.JPanel {
                 });
                 
                 List<Map<String, Object>>Acctivities = (List<Map<String, Object>>) document.get("TourActivities");
-                    int index = 0;
                     for (Map<String, Object> tourActivity : Acctivities){
                         System.out.println(tourActivity);
                         String temp =(String) tourActivity.get("Length");
@@ -273,7 +272,10 @@ public class FullTourInfo extends javax.swing.JPanel {
                 txtScore.setText(Rating.get("Rate"));
                 int total = Integer.parseInt(Rating.get("NumberVotted"));
                 txtNumberVoted.setText("(" +Rating.get("NumberVotted") +" đánh giá)");
-                jProgressBar1.setValue(good/total*100);
+                if(total!=0)
+                    jProgressBar1.setValue(good/total*100);
+                else 
+                    jProgressBar1.setValue(0);
             }
         } catch (InterruptedException | ExecutionException ex) {
             Logger.getLogger(HistoryFullInfo.class.getName()).log(Level.SEVERE, null, ex);
