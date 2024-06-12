@@ -31,21 +31,35 @@ public class CmtItem extends javax.swing.JPanel {
         txt.setBackground(new Color(0, 0, 0, 0));
         txt.setFont(new Font("Times New Roman", 0, 14));
     }
+
+    public void setAttitude(String txt){
+        JLabel t = new JLabel(txt);
+        t.setFont(new Font("Times New Roman", 2, 12));
+        switch (txt) {
+            case "Tích cực" -> {
+                t.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/thumb_up.png"))); // NOI18N
+                t.setForeground(new Color(4,161,48));
+            }
+            case "Tiêu cực" -> {
+                t.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/thumb_down.png"))); // NOI18N
+                t.setForeground(new Color(255,0,0));
+            }
+            default -> {
+                return;
+            }
+        }
+        JLayeredPane layer = new JLayeredPane();
+        layer.setLayout(new FlowLayout(FlowLayout.RIGHT,0,0));
+        layer.setBorder(new EmptyBorder(0,5,10,5));
+        layer.add(t);
+        add(layer,0);
+    }
     public void setUserName(String txt){
         JLabel t = new JLabel(txt);
         t.setFont(new Font("Times New Roman", 1, 16));
         JLayeredPane layer = new JLayeredPane();
         layer.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
-        layer.setBorder(new EmptyBorder(10,5,5,5));
-        layer.add(t);
-        add(layer,0);
-    }
-    public void setAttitude(String txt){
-        JLabel t = new JLabel(txt);
-        t.setFont(new Font("Times New Roman", 2, 12));
-        JLayeredPane layer = new JLayeredPane();
-        layer.setLayout(new FlowLayout(FlowLayout.RIGHT,0,0));
-        layer.setBorder(new EmptyBorder(10,5,5,5));
+        layer.setBorder(new EmptyBorder(10,5,0,5));
         layer.add(t);
         add(layer,0);
     }
