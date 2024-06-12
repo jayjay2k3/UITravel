@@ -10,6 +10,10 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.cloud.FirestoreClient;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Paths;
 import net.miginfocom.swing.MigLayout;
 import uitravel.Components.TourInfo.Component.Comment;
 import java.util.Random;
@@ -488,7 +492,8 @@ private void updateCommentByUserID(Map<String, Object> updatedComment) {
                 t.put("UserName", userName);
                 t.put("UserID", UID);
                 t.put("Content", cmt.getText());
-                t.put("Attitude", UID);
+                String attitude = getAttitudePredict(cmt.getText());
+                t.put("Attitude", attitude);
                 t.put("UserRating", String.valueOf(rating.getStar()));
                 Cmts.add(t);
                 DocumentReference tourInfoDoc = firestore.collection("admin").document("AllTours").collection("TourInfo").document(TourID);
@@ -501,7 +506,7 @@ private void updateCommentByUserID(Map<String, Object> updatedComment) {
                 tourInfoDoc.update("TourRating",Rating);
                 oldUserRating= currentRating;
                 CmtRight chat = new CmtRight();
-                chat.setAttitude(UID);
+                chat.setAttitude(attitude);
                 chat.setText(cmt.getText());
                 chat.setUserName(userName);
                 isCmtBefore =true;
@@ -514,7 +519,7 @@ private void updateCommentByUserID(Map<String, Object> updatedComment) {
                 t.put("UserName", userName);
                 t.put("UserID", UID);
                 t.put("Content", cmt.getText());
-                t.put("Attitude", UID);
+                t.put("Attitude", getAttitudePredict(cmt.getText()));
                 t.put("UserRating", String.valueOf(rating.getStar()));
                 
                 updateCommentByUserID(t);
@@ -555,7 +560,48 @@ private void updateCommentByUserID(Map<String, Object> updatedComment) {
         }
         
     }//GEN-LAST:event_btnCmtActionPerformed
+    private String getAttitudePredict(String inputData){
+        String basePath = System.getProperty("user.dir");
+        String scriptPath = Paths.get(basePath, "src",  "model", "model.py").toString();
+        try {
+            // Construct the command to run the Python script
+            ProcessBuilder pb = new ProcessBuilder("python", scriptPath, inputData);
+            pb.redirectErrorStream(true); // Redirect error stream to the output stream
+            Process process = pb.start();
 
+            // Capture the output from the script
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            StringBuilder result = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+                break;
+            }
+
+            // Wait for the process to complete
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                System.out.println("Prediction result: " + result.toString());
+                System.out.println(                result.toString().equals("POSITIVE"));
+                if(result.toString().equals("POSITIVE")){
+                    return "Tích cực";
+                }
+                 if(result.toString().equals("NEGATIVE")){
+                    return "Tiêu cực";
+                }
+                  if(result.toString().equals("NEUTRAL")){
+                    return "";
+                }
+                reader.close();
+                process.destroy(); // Ensure the process is terminated
+            } else {
+                System.out.println("Error occurred: " + result.toString());
+            }
+
+        } catch (IOException | InterruptedException e) {
+        }
+        return "";
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private uitravel.Components.MyButton btnCmt;
