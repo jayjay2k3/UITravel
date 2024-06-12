@@ -21,9 +21,13 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +44,7 @@ import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import org.apache.commons.lang3.RandomStringUtils;
 import uitravel.Admin.component.cell.TableActionCellRender;
 import uitravel.AdminMain;
@@ -98,20 +103,34 @@ public class TourBookingData extends javax.swing.JPanel {
                 CollectionReference historyCollection = newHistoryDocRef.collection("History");
                 ApiFuture<QuerySnapshot> querySnapshot = historyCollection.get();
                 try {
+                    DefaultTableModel  model =  (DefaultTableModel)table.getModel();
                     for (DocumentSnapshot document1 : querySnapshot.get().getDocuments()) {
                         if (document1.exists()) {
-                            DefaultTableModel  model =  (DefaultTableModel)table.getModel();
                             Object []row = new Object[]{document1.getId(),document1.getString("TourDateStart"),document1.getString("TourNumberAttendants")+"/"+document1.getString("TourNumber"), document1.getString("TourRevenue"),document1.getString("TourState"),""};
                             model.addRow( row);
-                            
                         }
-                        else {
-                            
+                        
+                    }
+                    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+                    sorter.setComparator(1, new Comparator<String>() {
+                        private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                        @Override
+                        public int compare(String date1, String date2) {
+                            try {
+                                Date parsedDate1 = dateFormat.parse(date1);
+                                Date parsedDate2 = dateFormat.parse(date2);
+                                return parsedDate1.compareTo(parsedDate2);
+                            } catch (ParseException e) {
+                                return 0;
+                            }
                         }
-                    }       
-                } catch (InterruptedException | ExecutionException ex) {
-                    Logger.getLogger(TourBookingData.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                    });
+
+            // Apply the TableRowSorter to the JTable
+                    table.setRowSorter(sorter);
+                    } catch (InterruptedException | ExecutionException ex) {
+                        Logger.getLogger(TourBookingData.class.getName()).log(Level.SEVERE, null, ex);
+                    }
             }
         }
         catch (HeadlessException | InterruptedException | ExecutionException e) {
@@ -120,6 +139,9 @@ public class TourBookingData extends javax.swing.JPanel {
     private void UploadNewTourInfo(Object []row) {
         CollectionReference collection = firestore.collection("history");
         DocumentReference newHistoryDocRef = collection.document(tourID);
+        Map<String, Object> tourData1 = new HashMap<>();
+        tourData1.put("TourID",tourID);
+        newHistoryDocRef.update(tourData1);
         CollectionReference subCollectionRef = newHistoryDocRef.collection("History");
         DocumentReference newDocRef = subCollectionRef.document((String) row[0]);
 

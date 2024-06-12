@@ -67,10 +67,10 @@ public class PanelCover extends javax.swing.JPanel {
         else{
             title = new JLabel("Bạn đã có tài khoản?");
             title.setFont(new Font("Times new roman", 1, 30));
-            title.setForeground(new Color(0,51,153));
+            title.setForeground(new Color(255,255,255));
             add(title);
             description = new JLabel("Bạn có thể đăng nhập tại đây");
-            description.setForeground(new Color(0,51,153));
+            description.setForeground(new Color(255,255,255));
             description.setFont(new Font("Times new roman", 0, 16));
             add(description);
             myButton1.setText("Đăng nhập");

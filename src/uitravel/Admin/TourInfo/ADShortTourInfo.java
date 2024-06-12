@@ -37,8 +37,8 @@ public class ADShortTourInfo extends javax.swing.JPanel {
         txtPlace.setText(place);
     }
    
-     public void setScore(Double score){
-        txtScore.setText(score.toString());
+     public void setScore(String score){
+        txtScore.setText(score);
     }
 
      public void setPic(ImageIcon pictrue){
@@ -133,16 +133,13 @@ public class ADShortTourInfo extends javax.swing.JPanel {
             .addGroup(picLayout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addGroup(picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtName, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
+                    .addComponent(txtScore)
                     .addGroup(picLayout.createSequentialGroup()
-                        .addGroup(picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtScore)
-                            .addGroup(picLayout.createSequentialGroup()
-                                .addComponent(txtPlace1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtID)))
-                        .addGap(0, 0, 0)))
-                .addContainerGap())
+                        .addComponent(txtPlace1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtID))
+                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         picLayout.setVerticalGroup(
             picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

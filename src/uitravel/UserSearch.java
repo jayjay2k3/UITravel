@@ -41,6 +41,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import uitravel.Components.Loading;
@@ -59,7 +60,7 @@ public class UserSearch extends javax.swing.JFrame {
     private String searchData;
     private String uid;
 
-    public boolean isLogged = false;
+    private boolean isLogged = false;
     private MigLayout layout;
     private Map<String, String> AllPlaces;
     FullTourInfo fullTour ;
@@ -366,8 +367,11 @@ public class UserSearch extends javax.swing.JFrame {
             protected Void doInBackground() throws Exception {
                 // Thực hiện tác vụ nặng ở đây
                 UserMain um = new UserMain();
+                if(isLogged){
+                    um.setUID(uid);
+                }
                 um.setIsLogged(isLogged);
-                um.setUID(uid);
+               
                 // Hiển thị kết quả sau khi tác vụ hoàn thành
                 SwingUtilities.invokeLater(() -> {
                 um.setVisible(true);
@@ -496,11 +500,9 @@ public class UserSearch extends javax.swing.JFrame {
                     @Override
                     protected Void doInBackground() throws Exception {
                             UserInfo ui = new UserInfo();
-                            try {
+                            if(isLogged) {
                                 ui.setUID(uid);
-                            } catch (IOException ex) {
-                                Logger.getLogger(UserMain.class.getName()).log(Level.SEVERE, null, ex);
-                            }
+                            } 
                             // Hiển thị kết quả sau khi tác vụ hoàn thành
                             SwingUtilities.invokeLater(() -> {
                                 ui.setVisible(true);
@@ -590,11 +592,12 @@ public class UserSearch extends javax.swing.JFrame {
             Logger.getLogger(UserMain.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
-  public ImageIcon loadImage(DocumentSnapshot document) {
+    private ImageIcon loadImage(DocumentSnapshot document) {
      try {
        
         if (document.exists()) {
             String imageDataString = document.getString("Avatar");
+            System.out.println(imageDataString);
             if (imageDataString != null) {
                 // Convert Base64 string back to byte array
                 byte[] imageData = Base64.getDecoder().decode(imageDataString);
@@ -603,10 +606,7 @@ public class UserSearch extends javax.swing.JFrame {
                 BufferedImage bufferedImage = ImageIO.read(bais);
                 return new ImageIcon(bufferedImage);
             } else {
-                JOptionPane.showMessageDialog(null,
-                        "Không tìm thấy dữ liệu ảnh!",
-                        "Thông báo!",
-                        JOptionPane.ERROR_MESSAGE);
+               
             }
         } else {
             JOptionPane.showMessageDialog(null,
@@ -640,7 +640,7 @@ public class UserSearch extends javax.swing.JFrame {
                         t.setDescription(document.getString("TourDescription"));
                         t.setTime("Thời gian: "+document.getString("TourLength"));
                         Map<String,String> Rating = (Map<String,String>) document.get("TourRating");
-                        t.setScore(document.getString(Rating.get("Rate")));
+                        t.setScore(Rating.get("Rate"));
                         List<String> tourImagesBase64 = (List<String>) document.get("TourImages");
                         t.setPic(convertBase64ToImageIcon(tourImagesBase64));
                         t.addEvent((ActionEvent evt)->{

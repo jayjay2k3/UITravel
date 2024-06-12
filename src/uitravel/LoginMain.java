@@ -167,7 +167,11 @@ public class LoginMain extends javax.swing.JFrame {
         };
         worker.execute();
         });
-
+        loginAndRegister.addRefresh((ActionEvent e) -> {
+            if(!ani.isRunning()){
+                ani.start();                
+            }
+        });
     }
     /**
      * This method is called from within the constructor to initialize the form.

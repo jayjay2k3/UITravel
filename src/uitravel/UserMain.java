@@ -49,9 +49,9 @@ public class UserMain extends javax.swing.JFrame {
 
     Map<String, String> placeData;
 
-    public boolean isLogged = false;
+    private boolean isLogged = false;
     private MigLayout layout;
-    private String uid;
+    private String uid=null;
     private List<Place> allHotels;
     Firestore firestore = FirestoreClient.getFirestore();
 
@@ -80,7 +80,7 @@ public class UserMain extends javax.swing.JFrame {
         } 
     }
 
-     public ImageIcon loadImage(DocumentSnapshot document) {
+     private ImageIcon loadImage(DocumentSnapshot document) {
      try {
         if (document.exists()) {
             String imageDataString = document.getString("Avatar");
@@ -92,10 +92,7 @@ public class UserMain extends javax.swing.JFrame {
                 BufferedImage bufferedImage = ImageIO.read(bais);
                 return new ImageIcon(bufferedImage);
             } else {
-                JOptionPane.showMessageDialog(null,
-                        "Không tìm thấy dữ liệu ảnh!",
-                        "Thông báo!",
-                        JOptionPane.ERROR_MESSAGE);
+              
             }
         } else {
             JOptionPane.showMessageDialog(null,
@@ -330,8 +327,11 @@ public class UserMain extends javax.swing.JFrame {
             protected Void doInBackground() throws Exception {
                 // Thực hiện tác vụ nặng ở đây
                 UserSearch userSearch = new UserSearch();
+                if(isLogged){
+                    userSearch.setUID(uid);
+                }
                 userSearch.setIsLogged(isLogged);
-                userSearch.setUID(uid);
+
                 userSearch.setSearchData((String) txtSearch.getSelectedItem());
                 userSearch.setAllPlaces(placeData);
                 
@@ -606,8 +606,11 @@ public class UserMain extends javax.swing.JFrame {
                     // Thực hiện tác vụ nặng ở đây
                     UserSearch userSearch = new UserSearch();
 
+                    if(isLogged){
+                        userSearch.setUID(uid);
+                    }
                     userSearch.setIsLogged(isLogged);
-                    userSearch.setUID(uid);
+
                     userSearch.setSearchData(entry.getKey());
                     userSearch.setAllPlaces(placeData);
 

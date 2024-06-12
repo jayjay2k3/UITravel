@@ -40,6 +40,8 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
 
     private boolean isLogin;
     private ActionListener Loging;
+    private ActionListener refresh;
+
     private String uid;
 
     public void setLogin(boolean t){
@@ -65,6 +67,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     private void initRegister() {
         //register = new JPanel();
         register.removeAll();
+        register.revalidate();
         register.setLayout(new MigLayout("wrap", "push[center]push", "push[]25[]10[]10[]10[]10[]15[]25[]push"));
         JLabel label = new JLabel("Tạo tài khoản");
         label.setFont(new Font("Times new roman", 1, 30));
@@ -166,6 +169,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
               //Đăng ký Authentication FireBase
                 String uid = registerUser(txtEmail.getText(),txtPass.getText());
                // Lưu data đăng ký vào Firestore
+               if(uid!=null){
                 Firestore db = FirestoreClient.getFirestore();
                 Map<String, Object> UserData = new HashMap<>();
                 UserData.put("FullName", txtName.getText());
@@ -177,23 +181,44 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
                     "Đăng ký thành công, vui lòng đang nhập lại!",
                     "Thông báo!",
                     JOptionPane.INFORMATION_MESSAGE);
+               }
+               refresh.actionPerformed(e);
           }
         });
         register.add(btn,"w 25%,h 50");
     }
-        
-        public String registerUser(String email, String password) {
-        UserRecord.CreateRequest request = new UserRecord.CreateRequest()
-                .setEmail(email)
-                .setPassword(password);
-
-        try {
-            UserRecord userRecord = FirebaseAuth.getInstance().createUser(request);
-            return userRecord.getUid();
-        } catch (FirebaseAuthException e) {
-            return null;
+        public void addRefresh(ActionListener event){
+            this.refresh = event;
         }
-    }
+        public String registerUser(String email, String password) {
+            if(password.length()>=6)
+            {
+                    UserRecord.CreateRequest request = new UserRecord.CreateRequest()
+                       .setEmail(email)
+                       .setPassword(password);
+                 UserRecord userRecord;
+               try {
+                   userRecord = FirebaseAuth.getInstance().createUser(request);
+               } catch (FirebaseAuthException e) {
+                 
+                    JOptionPane.showMessageDialog(null,
+                        e.getMessage(),
+                        "Đăng ký không thành công!",
+                        JOptionPane.INFORMATION_MESSAGE);
+                    return null;
+               }
+                   return userRecord.getUid();
+
+            }
+            else{
+                JOptionPane.showMessageDialog(null,
+                    "Vui lòng nhập mật khẩu có độ dài ít nhất 6 kí tự!",
+                    "Đăng ký không thành công!",
+                    JOptionPane.INFORMATION_MESSAGE);
+               
+            }
+             return null;
+        }
         public String  loginUser(String email, String password) {
         try {
             String url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + "AIzaSyCGYnqZl2CkCfgJZXj8M_O_CFPOoy2Mdi0";
@@ -351,6 +376,13 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     }
     public void addEvent(ActionListener event) {
         this.Loging = event;
+    }
+    
+     public enum RegistrationError {
+        EMAIL_ALREADY_EXISTS,
+        INVALID_PASSWORD,
+        PASSWORD_TOO_SHORT,
+        UNKNOWN_ERROR
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

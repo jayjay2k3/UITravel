@@ -24,8 +24,8 @@ public class UITravel {
     public static void main(String[] args) throws IOException {
         FlatIntelliJLaf.setup();
         FirebaseInitializer.initialize();
-
         UserMain um = new UserMain();
+        um.setIsLogged(false);
         um.setVisible(true);
     }
     }

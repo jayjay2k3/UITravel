@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,7 +61,7 @@ public class AdminMain extends javax.swing.JFrame {
         userBar.setVisible(false);
     }
     private void retrieveTourInfo() {
-        cover.setLayout( new MigLayout("wrap, fill, insets 50","[]10[]10[]10", "12[]12[]"));
+        cover.setLayout( new MigLayout("wrap, fill, insets 50","push[]20[]20[]20[]push", "12[]12[]push"));
         allTour = new ArrayList<>();    
         try {
             CollectionReference collection = firestore.collection("admin").document("AllTours").collection("TourInfo");
@@ -78,7 +79,8 @@ public class AdminMain extends javax.swing.JFrame {
                     
                     t.setPlace(document.getString("Place"));
                     t.setTourName(document.getString("TourName"));
-                    t.setScore( Double.valueOf(document.getString("TourRating")));   
+                    Map<String,String> Rating = (Map<String,String>) document.get("TourRating");
+                    t.setScore( Rating.get("Rate"));   
                     List<String> tourImagesBase64 = (List<String>) document.get("TourImages");
                     
                     // Convert Base64 encoded images back to ImageIcon

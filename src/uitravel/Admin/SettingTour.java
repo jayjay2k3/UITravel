@@ -154,7 +154,6 @@ public class SettingTour extends javax.swing.JFrame {
                     txtDescription.setText((String) tourData.get("TourDescription"));
                     txtChooseTime.setText((String) tourData.get("TourTime"));
                     txtPrice.setText((String) tourData.get("TourPrice"));
-                    String tourRating = (String) tourData.get("TourRating");
                     String tourLength = (String) tourData.get("TourLength");
                     
                     Acctivities = (List<Map<String, Object>>) tourData.get("TourActivities");
@@ -207,7 +206,6 @@ public class SettingTour extends javax.swing.JFrame {
                     }
                     // Use the retrieved data (for demonstration purposes)
 
-                    System.out.println("TourRating: " + tourRating);
                     System.out.println("TourLength: " + tourLength);
                     System.out.println("TourIncludes: " + tourIncludes);
                     System.out.println("TourImages: " + tourImages);
