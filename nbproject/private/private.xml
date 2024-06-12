@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/F:/IE003/UITravel/src/uitravel/Components/Loading.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/Components/PanelLoginAndRegister.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/User/MainUI/Place.java</file>
+            <file>file:/F:/IE003/UITravel/src/FireBase/FirebaseInitializer.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/User/MainUI/Chat/CmtItem.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/AdminWelcome.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/Admin/AdminRegister.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/Components/TourInfo/Component/TourImage.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/Components/startRating/Star2D.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/Components/PanelCover.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/User/MainUI/NoLoggedHeader.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/Components/Loading1.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/Admin/AdminLogin.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/UserInfo.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/Components/startRating/StarRating.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/Components/TourInfo/Component/FullTourInfo.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/User/MainUI/Chat/ChatRight.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/User/MainUI/Chat/CmtRight.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/Admin/TourInfo/ADShortTourInfo.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/Admin/AddAPlace.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/Admin/SettingTour.java</file>
+            <file>file:/F:/IE003/UITravel/src/model/model.py</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/Components/TourInfo/Component/ShortTourInfo.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/User/MainUI/LoggedHeader.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/UserSearch.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/Admin/TourInfo/TourBookingData.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/User/MainUI/ImageAvatar.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/UITravel.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/User/UserInfo/Component/HistoryFullInfo.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/User/MainUI/Chat/CmtLeft.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/User/UserInfo/Component/BookingShortInfo.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/UserMain.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/Admin/component/AddNewTour.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/Components/startRating/EventStarRating.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/User/MainUI/ChatBox.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/LoginMain.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/Components/PasswordField.java</file>
+            <file>file:/F:/IE003/UITravel/src/com/raven/datechooser/DateSelectable.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/User/UserInfo/AccountInfo.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/User/UserPayment.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/AdminMain.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/User/UserInfo/Component/ChangePass.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/User/UserInfo/Balances.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/FirebaseConnection.java</file>
+            <file>file:/F:/IE003/UITravel/src/model/PythonModel.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/Admin/component/ChooseTime.java</file>
+            <file>file:/F:/IE003/UITravel/src/com/raven/datechooser/DateChooser.java</file>
+            <file>file:/F:/IE003/UITravel/src/uitravel/User/MainUI/Chat/ChatItem.java</file>
+        </group>
+    </open-files>
+</project-private>

@@ -264,6 +264,9 @@
                         <Property name="horizontalAlignment" type="int" value="2"/>
                         <Property name="text" type="java.lang.String" value="Quay v&#x1ec1; trang ch&#x1ee7;"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel4MousePressed"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
