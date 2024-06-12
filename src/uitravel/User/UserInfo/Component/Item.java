@@ -5,6 +5,8 @@
 package uitravel.User.UserInfo.Component;
 
 import java.awt.Color;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -12,7 +14,7 @@ import java.awt.Color;
  */
 public class Item extends javax.swing.JPanel {
 
-
+    private Icon img;
     private String text;
     public Item() {
         initComponents();
@@ -24,6 +26,14 @@ public class Item extends javax.swing.JPanel {
         this.text = text;
         txt.setText(text);
     }
+        
+    public Icon getBackImg(){
+        return img;
+    }
+    public void setBackImg(Icon img){
+        this.img = img;
+        pic.setbackgroundImage(img);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -33,8 +43,8 @@ public class Item extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        pic = new uitravel.Components.RoundedImage();
         txt = new javax.swing.JLabel();
+        pic = new uitravel.Components.ImagePanel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(313, 43));
@@ -50,7 +60,14 @@ public class Item extends javax.swing.JPanel {
             }
         });
 
+        txt.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
+        txt.setText("jLabel1");
+
+        pic.setbackgroundImage(new javax.swing.ImageIcon(getClass().getResource("/resources/Star1.png"))); // NOI18N
+        pic.setisTransparent(false);
         pic.setPreferredSize(new java.awt.Dimension(30, 30));
+        pic.setRequestFocusEnabled(false);
+        pic.setVerifyInputWhenFocusTarget(false);
 
         javax.swing.GroupLayout picLayout = new javax.swing.GroupLayout(pic);
         pic.setLayout(picLayout);
@@ -63,19 +80,16 @@ public class Item extends javax.swing.JPanel {
             .addGap(0, 30, Short.MAX_VALUE)
         );
 
-        txt.setFont(new java.awt.Font("Times New Roman", 1, 16)); // NOI18N
-        txt.setText("jLabel1");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(17, 17, 17)
+                .addGap(16, 16, 16)
                 .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txt)
-                .addContainerGap(196, Short.MAX_VALUE))
+                .addContainerGap(203, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -107,7 +121,7 @@ public class Item extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private uitravel.Components.RoundedImage pic;
+    private uitravel.Components.ImagePanel pic;
     private javax.swing.JLabel txt;
     // End of variables declaration//GEN-END:variables
 }

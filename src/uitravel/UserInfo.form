@@ -167,6 +167,9 @@
               <SubComponents>
                 <Component class="uitravel.User.UserInfo.Component.Item" name="item2">
                   <Properties>
+                    <Property name="backImg" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/resources/Credit Card.png"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Qu&#x1ea3;n l&#xed; s&#x1ed1; d&#x1b0;"/>
                   </Properties>
                   <Events>
@@ -175,6 +178,9 @@
                 </Component>
                 <Component class="uitravel.User.UserInfo.Component.Item" name="item3">
                   <Properties>
+                    <Property name="backImg" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/resources/history.png"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="L&#x1ecb;ch s&#x1eed;"/>
                   </Properties>
                   <Events>
@@ -183,6 +189,9 @@
                 </Component>
                 <Component class="uitravel.User.UserInfo.Component.Item" name="item4">
                   <Properties>
+                    <Property name="backImg" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/resources/my_location.png"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="Chuy&#x1ebf;n &#x111;i hi&#x1ec7;n t&#x1ea1;i"/>
                   </Properties>
                   <Events>
@@ -191,6 +200,9 @@
                 </Component>
                 <Component class="uitravel.User.UserInfo.Component.Item" name="item5">
                   <Properties>
+                    <Property name="backImg" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/resources/settings.png"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="C&#xe0;i &#x111;&#x1eb7;t"/>
                   </Properties>
                   <Events>
@@ -200,6 +212,9 @@
                 </Component>
                 <Component class="uitravel.User.UserInfo.Component.Item" name="item6">
                   <Properties>
+                    <Property name="backImg" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/resources/power_settings_new.png"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="&#x110;&#x103;ng xu&#x1ea5;t"/>
                   </Properties>
                   <Events>
@@ -221,7 +236,7 @@
                 <Container class="uitravel.Components.ImagePanel" name="UserPic">
                   <Properties>
                     <Property name="backgroundImage" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/resources/BigBeach_GettyImages-874980426-ezgif.com-webp-to-png-converter.png"/>
+                      <Image iconType="3" name="/resources/backimg.jpg"/>
                     </Property>
                     <Property name="isTransparent" type="boolean" value="false"/>
                     <Property name="radius" type="int" value="90"/>

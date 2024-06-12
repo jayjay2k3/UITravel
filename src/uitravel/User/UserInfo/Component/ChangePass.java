@@ -4,7 +4,20 @@
  */
 package uitravel.User.UserInfo.Component;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.UserRecord;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -12,13 +25,13 @@ import javax.swing.JOptionPane;
  */
 public class ChangePass extends javax.swing.JPanel {
 
-    /**
-     * Creates new form ChangePass
-     */
+    private String UID;
     public ChangePass() {
         initComponents();
     }
-
+    public void setUID(String uid){
+        this.UID = uid;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -134,7 +147,7 @@ public class ChangePass extends javax.swing.JPanel {
 
                 JOptionPane.INFORMATION_MESSAGE);
         }
-        else if(txtNewPass.getText().equals(ttxPassConfirm.getText())){
+        else if(!txtNewPass.getText().equals(ttxPassConfirm.getText())){
             JOptionPane.showMessageDialog(null,
                 "Mật khẩu xác nhận không trùng khớp!",
                 "Thông báo!",
@@ -142,11 +155,117 @@ public class ChangePass extends javax.swing.JPanel {
                 JOptionPane.INFORMATION_MESSAGE);
         }
         else{
+            changeUserPassword(UID,txtNewPass.getText(),txtOldPass.getText());
             setVisible(false);
         }
     }//GEN-LAST:event_btnSubmitActionPerformed
+    private void changeUserPassword(String uid, String newPassword,String oldPassword) {
+        // Authenticate the user with old password
+        String email = getEmailFromUID(uid);
+        if (email == null) {
+            return;
+        }
+        String loginResult = loginUser(email, oldPassword);
+        if (!loginResult.equals("Đăng nhập thành công")) {
+             JOptionPane.showMessageDialog(null,
+                loginResult,
+                "Thông báo!",
+                JOptionPane.INFORMATION_MESSAGE);
+             return;
+        }
 
+        // If authentication is successful, update the password
+        try {
+            UserRecord.UpdateRequest request = new UserRecord.UpdateRequest(uid)
+                    .setPassword(newPassword);
 
+            UserRecord userRecord = FirebaseAuth.getInstance().updateUser(request);
+              JOptionPane.showMessageDialog(null,
+                "Đổi mật khẩu thành công!",
+                "Thông báo!",
+                JOptionPane.INFORMATION_MESSAGE);
+        } catch (FirebaseAuthException e) {
+            JOptionPane.showMessageDialog(null,
+                "Đổi mật khẩu thất bại " +  e.getMessage(),
+                "Thông báo!",
+                JOptionPane.INFORMATION_MESSAGE);
+        }
+    } 
+    private String  loginUser(String email, String password) {
+        try {
+            String url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + "AIzaSyCGYnqZl2CkCfgJZXj8M_O_CFPOoy2Mdi0";
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json");
+
+            JSONObject jsonInput = new JSONObject();
+            jsonInput.put("email", email);
+            jsonInput.put("password", password);
+            jsonInput.put("returnSecureToken", true);
+
+            con.setDoOutput(true);
+            try (OutputStream os = con.getOutputStream()) {
+                os.write(jsonInput.toString().getBytes());
+                os.flush();
+            }
+
+            int responseCode = con.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                StringBuilder response;
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+                    String inputLine;
+                    response = new StringBuilder();
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
+                }
+
+                JSONObject jsonResponse = new JSONObject(response.toString());
+                // You can use idToken for authenticated requests to your Firebase backend
+                return "Đăng nhập thành công";
+
+            } else {
+                StringBuilder response;
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getErrorStream()))) {
+                String inputLine;
+                response = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+            }
+            JSONObject errorResponse = new JSONObject(response.toString());
+            String errorMessage = errorResponse.getJSONObject("error").getString("message");
+            System.out.println("Login failed1: " + response.toString());
+
+            System.out.println("Login failed2: " +errorMessage);
+            return switch (errorMessage) {
+                case "INVALID_EMAIL" -> "Email không đúng định dạng";
+                case "EMAIL_NOT_FOUND" -> "Email không tồn tại";
+                case "INVALID_PASSWORD" -> "Mật khẩu không đúng";
+                case "USER_DISABLED" -> "Tài khoản đã bị vô hiệu hóa";
+                case "INVALID_LOGIN_CREDENTIALS" -> "Thông tin đăng nhập không chính xác";
+                case "TOO_MANY_ATTEMPTS_TRY_LATER : Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later." -> "Nhập sai thông tin đăng nhập quá nhiều lần, tài khoản sẽ tạm thời bị vô hiệu hóa.";
+                default -> "Đăng nhập thất bại: " + errorMessage;
+            };
+            }
+        } catch (IOException | JSONException e) {
+            return "Đăng nhập thất bại: " + e.getMessage();
+
+        }
+    }
+    private String getEmailFromUID(String UID) {
+        try {
+            System.out.println(UID);
+
+            UserRecord user = FirebaseAuth.getInstance().getUser(UID);
+            return user.getEmail();
+        } catch (FirebaseAuthException ex) {
+            return null;
+
+        }
+        
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private uitravel.Components.MyButton btnSubmit;
     private javax.swing.JLabel lblPassConfirm3;
@@ -155,4 +274,6 @@ public class ChangePass extends javax.swing.JPanel {
     private uitravel.Components.PasswordField txtNewPass;
     private uitravel.Components.PasswordField txtOldPass;
     // End of variables declaration//GEN-END:variables
+
+
 }

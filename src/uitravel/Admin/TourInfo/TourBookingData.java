@@ -141,7 +141,7 @@ public class TourBookingData extends javax.swing.JPanel {
         DocumentReference newHistoryDocRef = collection.document(tourID);
         Map<String, Object> tourData1 = new HashMap<>();
         tourData1.put("TourID",tourID);
-        newHistoryDocRef.update(tourData1);
+        newHistoryDocRef.set(tourData1);
         CollectionReference subCollectionRef = newHistoryDocRef.collection("History");
         DocumentReference newDocRef = subCollectionRef.document((String) row[0]);
 

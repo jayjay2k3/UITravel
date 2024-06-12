@@ -120,10 +120,11 @@ public class FullTourInfo extends javax.swing.JPanel {
                     LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     return !localDate.isBefore(LocalDate.now())&&selectableDates.contains(localDate);
                 }
+               
             });
                 ZoneId defaultZoneId = ZoneId.systemDefault();
                 selectDate.setSelectedDate(Date.from(selectableDates.get(0).atStartOfDay(defaultZoneId).toInstant()));
-
+                selectDate.setTextField(txtChooseTime);
             }
         } catch (InterruptedException | ExecutionException ex) {
             Logger.getLogger(FullTourInfo.class.getName()).log(Level.SEVERE, null, ex);
@@ -212,14 +213,13 @@ public class FullTourInfo extends javax.swing.JPanel {
         imgCover.setLayout(new MigLayout(" fillx, insets 0","[]30[]","[]"));
         cmtCover.setLayout(new MigLayout(" wrap, fill, insets 10","[]","[]10[]"));
         selectDate = new DateChooser();
-        selectDate.setTextField(txtChooseTime);
         selectDate.setBetweenCharacter(" đến ");
         selectDate.setDateSelectionMode(DateChooser.DateSelectionMode.SINGLE_DATE_SELECTED);
         selectDate.setDateSelectable(new DateSelectable() {
             @Override
             public boolean isDateSelectable(Date date) {
                 LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                return !localDate.isBefore(LocalDate.now());
+                return false;
             }
         });
         btnAdult.addEvent((ActionEvent e) -> {
@@ -561,7 +561,7 @@ public class FullTourInfo extends javax.swing.JPanel {
         );
 
         txtChooseTime.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
-        txtChooseTime.setText("jTextField1");
+        txtChooseTime.setText("Đã hết chỗ");
         txtChooseTime.setOpaque(true);
 
         jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
@@ -790,7 +790,7 @@ public class FullTourInfo extends javax.swing.JPanel {
                     .addComponent(bookingCover, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(91, Short.MAX_VALUE))
+                .addContainerGap(182, Short.MAX_VALUE))
         );
 
         main.setViewportView(txtNumberComments);
@@ -799,7 +799,7 @@ public class FullTourInfo extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void myButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myButton1ActionPerformed
-        if(btnAdult.getNumber()==0&&btnChild.getNumber()==0&&btnInfant.getNumber()==0){
+        if(btnAdult.getNumber()==0&&btnChild.getNumber()==0&&btnInfant.getNumber()==0&&txtChooseTime.getText().equals("Đã hết chỗ")){
             
         }
         else{

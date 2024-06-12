@@ -47,6 +47,7 @@ import uitravel.User.UserInfo.Balances;
 import uitravel.User.UserInfo.BookingHistory;
 import uitravel.User.UserInfo.Component.ChangePass;
 import uitravel.User.UserInfo.Component.HistoryFullInfo;
+import uitravel.User.UserInfo.CurrentTour;
 
 /**
  *
@@ -57,7 +58,9 @@ public class UserInfo extends javax.swing.JFrame {
 
     private AccountInfo accountInfo;
     private BookingHistory bookingHistory;
+    private CurrentTour currentTour;
     private Balances balances;
+
     private String uid;
 
     public UserInfo() {
@@ -66,7 +69,7 @@ public class UserInfo extends javax.swing.JFrame {
     }
     public void setUID(String uid) throws IOException{
         this.uid = uid;
-        accountInfo.setUID(uid);
+        currentTour.setUID(uid);
         loadDataFromFireStore(uid);
         }
     private void loadDataFromFireStore(String uid){
@@ -115,15 +118,13 @@ public class UserInfo extends javax.swing.JFrame {
     }
     private void init(){
         GlassPanePopup.install(this);
-        accountInfo = new AccountInfo();
-        accountInfo.addChangePass(new MouseAdapter(){
-                @Override
-                    public void mousePressed(MouseEvent e) {
-                        GlassPanePopup.showPopup(new ChangePass());
-                }
-            });
-        cover.setLayout(new MigLayout("wrap, fill, insets 0"));
-        cover.add(accountInfo);
+        cover.removeAll();
+        currentTour = new CurrentTour();
+        cover.setLayout(new MigLayout("wrap, fill, insets 0","[]","[]push"));
+        cover.add(currentTour);
+        cover.repaint();
+        cover.revalidate();
+       
         header.addEvent((ActionEvent e) -> {
                 UserMain um = new UserMain();
                 um.setUID(uid);
@@ -182,6 +183,7 @@ public class UserInfo extends javax.swing.JFrame {
         roundedPanel1.setBorderColor(new java.awt.Color(204, 204, 204));
         roundedPanel1.setWithBorder(true);
 
+        item2.setBackImg(new javax.swing.ImageIcon(getClass().getResource("/resources/Credit Card.png"))); // NOI18N
         item2.setText("Quản lí số dư");
         item2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -189,6 +191,7 @@ public class UserInfo extends javax.swing.JFrame {
             }
         });
 
+        item3.setBackImg(new javax.swing.ImageIcon(getClass().getResource("/resources/history.png"))); // NOI18N
         item3.setText("Lịch sử");
         item3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -196,6 +199,7 @@ public class UserInfo extends javax.swing.JFrame {
             }
         });
 
+        item4.setBackImg(new javax.swing.ImageIcon(getClass().getResource("/resources/my_location.png"))); // NOI18N
         item4.setText("Chuyến đi hiện tại");
         item4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -203,6 +207,7 @@ public class UserInfo extends javax.swing.JFrame {
             }
         });
 
+        item5.setBackImg(new javax.swing.ImageIcon(getClass().getResource("/resources/settings.png"))); // NOI18N
         item5.setText("Cài đặt");
         item5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -215,6 +220,7 @@ public class UserInfo extends javax.swing.JFrame {
             }
         });
 
+        item6.setBackImg(new javax.swing.ImageIcon(getClass().getResource("/resources/power_settings_new.png"))); // NOI18N
         item6.setText("Đăng xuất");
         item6.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -222,7 +228,7 @@ public class UserInfo extends javax.swing.JFrame {
             }
         });
 
-        UserPic.setbackgroundImage(new javax.swing.ImageIcon(getClass().getResource("/resources/BigBeach_GettyImages-874980426-ezgif.com-webp-to-png-converter.png"))); // NOI18N
+        UserPic.setbackgroundImage(new javax.swing.ImageIcon(getClass().getResource("/resources/backimg.jpg"))); // NOI18N
         UserPic.setisTransparent(false);
         UserPic.setRadius(90);
         UserPic.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -447,7 +453,13 @@ public class UserInfo extends javax.swing.JFrame {
     }//GEN-LAST:event_item2MousePressed
 
     private void item4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_item4MousePressed
-        // TODO add your handling code here:
+        cover.removeAll();
+        currentTour = new CurrentTour();
+        currentTour.setUID(uid);
+        cover.setLayout(new MigLayout("wrap, fill, insets 0","[]","[]push"));
+        cover.add(currentTour);
+        cover.repaint();
+        cover.revalidate();
     }//GEN-LAST:event_item4MousePressed
 
     private void item5KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_item5KeyPressed
@@ -508,10 +520,7 @@ public class UserInfo extends javax.swing.JFrame {
                 BufferedImage bufferedImage = ImageIO.read(bais);
                 return new ImageIcon(bufferedImage);
             } else {
-                JOptionPane.showMessageDialog(null,
-                        "Không tìm thấy dữ liệu ảnh!",
-                        "Thông báo!",
-                        JOptionPane.ERROR_MESSAGE);
+             
             }
         } else {
             JOptionPane.showMessageDialog(null,
