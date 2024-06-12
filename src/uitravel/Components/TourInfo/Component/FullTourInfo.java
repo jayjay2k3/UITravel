@@ -244,17 +244,21 @@ public class FullTourInfo extends javax.swing.JPanel {
     
  private void loadCMT(){
         try {
+            int good = 0;
+            
             DocumentReference tourInfoDoc = firestore.collection("admin").document("AllTours").collection("TourInfo").document(tourID);
             ApiFuture<DocumentSnapshot> future = tourInfoDoc.get();
             DocumentSnapshot document = null;
             document = future.get();
             if (document.exists()) {
-
                 List<Map<String, Object>> Cmts = (List<Map<String, Object>>)document.get("Comments");
                 if(Cmts!=null){
                     for (Map<String, Object> cmt : Cmts){
                             CmtLeft t = new CmtLeft();
-                            t.setAttitude((String) cmt.get("Attitude"));
+                            String attitude = (String) cmt.get("Attitude");
+                            t.setAttitude(attitude);
+                            if(attitude.equals("Tích cực"))
+                                good++;
                             t.setText((String) cmt.get("Content"));
                             t.setUserName((String) cmt.get("UserName"));
                             cmtCover.add(t,"wrap, w ::80%");
@@ -267,7 +271,9 @@ public class FullTourInfo extends javax.swing.JPanel {
                 }
                 Map<String,String> Rating = (Map<String,String>) document.get("TourRating");
                 txtScore.setText(Rating.get("Rate"));
-                
+                int total = Integer.parseInt(Rating.get("NumberVotted"));
+                txtNumberVoted.setText("(" +Rating.get("NumberVotted") +" đánh giá)");
+                jProgressBar1.setValue(good/total*100);
             }
         } catch (InterruptedException | ExecutionException ex) {
             Logger.getLogger(HistoryFullInfo.class.getName()).log(Level.SEVERE, null, ex);
@@ -323,7 +329,7 @@ public class FullTourInfo extends javax.swing.JPanel {
         jProgressBar1 = new javax.swing.JProgressBar();
         txtScore1 = new javax.swing.JLabel();
         txtScore2 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
+        txtNumberVoted = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         listItem = new javax.swing.JList<>();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -643,9 +649,9 @@ public class FullTourInfo extends javax.swing.JPanel {
         txtScore2.setText("Đánh giá tích cực:");
         txtScore2.setIconTextGap(10);
 
-        jLabel13.setFont(new java.awt.Font("Times New Roman", 2, 20)); // NOI18N
-        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel13.setText("(20 đánh giá)");
+        txtNumberVoted.setFont(new java.awt.Font("Times New Roman", 2, 20)); // NOI18N
+        txtNumberVoted.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        txtNumberVoted.setText("(20 đánh giá)");
 
         jScrollPane3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -691,7 +697,7 @@ public class FullTourInfo extends javax.swing.JPanel {
         txtNumberComments.setLayer(jProgressBar1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtNumberComments.setLayer(txtScore1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtNumberComments.setLayer(txtScore2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        txtNumberComments.setLayer(jLabel13, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        txtNumberComments.setLayer(txtNumberVoted, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtNumberComments.setLayer(jScrollPane3, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtNumberComments.setLayer(jScrollPane4, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -732,7 +738,7 @@ public class FullTourInfo extends javax.swing.JPanel {
                                     .addGroup(txtNumberCommentsLayout.createSequentialGroup()
                                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(txtNumberVoted, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(txtNumberCommentsLayout.createSequentialGroup()
                                         .addGap(40, 40, 40)
                                         .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -776,7 +782,7 @@ public class FullTourInfo extends javax.swing.JPanel {
                         .addGap(53, 53, 53)
                         .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtNumberVoted, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(txtNumberCommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtNumberCommentsLayout.createSequentialGroup()
@@ -836,7 +842,6 @@ public class FullTourInfo extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -866,6 +871,7 @@ public class FullTourInfo extends javax.swing.JPanel {
     private javax.swing.JTextArea txtName;
     private javax.swing.JTextArea txtName1;
     private javax.swing.JLayeredPane txtNumberComments;
+    private javax.swing.JLabel txtNumberVoted;
     private javax.swing.JLabel txtScore;
     private javax.swing.JLabel txtScore1;
     private javax.swing.JLabel txtScore2;
