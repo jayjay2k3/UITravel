@@ -71,6 +71,9 @@
             <Property name="radius" type="int" value="20"/>
             <Property name="withBlack" type="boolean" value="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="backgroundMousePressed"/>
+          </Events>
 
           <Layout>
             <DimensionLayout dim="0">

@@ -4,6 +4,9 @@
  */
 package uitravel.User.MainUI;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.ImageIcon;
 
 /**
@@ -11,7 +14,7 @@ import javax.swing.ImageIcon;
  * @author ACER
  */
 public class Place extends javax.swing.JPanel {
-
+    private MouseListener event;
     private String id;
     public Place() {
         initComponents();
@@ -31,6 +34,9 @@ public class Place extends javax.swing.JPanel {
     }
     public void setTxtPlace(String txt){
         txtPlace.setText(txt);
+    }    
+    public String getTxtPlace() {
+        return txtPlace.getText();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -55,6 +61,11 @@ public class Place extends javax.swing.JPanel {
         background.setisTransparent(false);
         background.setRadius(20);
         background.setwithBlack(true);
+        background.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                backgroundMousePressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout backgroundLayout = new javax.swing.GroupLayout(background);
         background.setLayout(backgroundLayout);
@@ -100,10 +111,20 @@ public class Place extends javax.swing.JPanel {
         add(jLayeredPane1);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void backgroundMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundMousePressed
+            event.mousePressed(evt);
+    }//GEN-LAST:event_backgroundMousePressed
 
+
+    public void getPlaceTour(MouseAdapter mouseAdapter) {
+        this.event = mouseAdapter;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private uitravel.Components.ImagePanel background;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JLabel txtPlace;
     // End of variables declaration//GEN-END:variables
+
+
+
 }
