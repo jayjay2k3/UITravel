@@ -57,7 +57,7 @@ public class UserMain extends javax.swing.JFrame {
 
     public UserMain() {
         initComponents();
-        init();
+        
     }
     private void loadDataFromFireStore(String uid){
         try {
@@ -508,10 +508,6 @@ public class UserMain extends javax.swing.JFrame {
             loadDataFromFireStore(uid);
        }
        
-       
-
-
-
         //btnSearch.setBackground(new Color(255,128,0));
      
         selectDate = new DateChooser();
@@ -522,7 +518,7 @@ public class UserMain extends javax.swing.JFrame {
       
         
         loadHotelData();
-
+        System.out.println("!");
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
 
         model.addElement("Chọn nơi bạn muốn đến");
@@ -568,6 +564,7 @@ public class UserMain extends javax.swing.JFrame {
     
     private Map<String, String> getTourData(){
         Map<String, String>  placeData = new HashMap<>();
+        System.out.println("3");
         try {
             CollectionReference userCollection = firestore.collection("Place");
             ApiFuture<QuerySnapshot> querySnapshot = userCollection.get();
@@ -580,12 +577,15 @@ public class UserMain extends javax.swing.JFrame {
                 System.out.println(background);
             }
         } catch (ExecutionException | InterruptedException e) {
+            System.out.print(e);
         }
         return placeData;
     }
 
     private void loadHotelData(){
         pnlHotel.removeAll();
+        System.out.print("2");
+
         pnlHotel.setLayout(new MigLayout("wrap,fill, insets 0","push[]20[]20[]push","30[]20[]push"));
         placeData = getTourData();
         allHotels = new ArrayList<>();
