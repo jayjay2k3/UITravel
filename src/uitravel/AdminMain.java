@@ -32,6 +32,8 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
+import javax.swing.table.DefaultTableModel;
 import net.miginfocom.layout.ComponentWrapper;
 import net.miginfocom.layout.LayoutCallback;
 import net.miginfocom.swing.MigLayout;
@@ -42,6 +44,7 @@ import uitravel.Admin.TourInfo.ADShortTourInfo;
 import uitravel.Admin.TourInfo.TourBookingData;
 import uitravel.Admin.component.ChooseTime;
 import uitravel.Admin.component.UserBar;
+import uitravel.Admin.saoke;
 
 /**
  *
@@ -54,13 +57,34 @@ public class AdminMain extends javax.swing.JFrame {
     public AdminMain() {
         initComponents();
         init();
-        retrieveTourInfo();
+        SwingWorker<Void, ADShortTourInfo> worker2 = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                retrieveTourInfo(this);
+                return null;
+            }
+            @Override
+            protected void process(List<ADShortTourInfo> chunks) {
+                for (ADShortTourInfo t : chunks) {
+                    cover.add(t);
+                    allTour.add(t);
+                    cover.revalidate(); // Tái xác nhận lại layout của JPanel
+                    cover.repaint(); 
+            }
+            }
+            @Override
+            protected void done() {
+                // Ẩn màn hình loading sau khi tác vụ hoàn thành
+            }
+        };
+        worker2.execute();
     }
     private void init(){
+        cover.setLayout( new MigLayout("wrap, fill, insets 50","push[]20[]20[]20[]push", "12[]12[]push"));
         GlassPanePopup.install(this);
         userBar.setVisible(false);
     }
-    private void retrieveTourInfo() {
+    private void retrieveTourInfo(SwingWorker<Void, ADShortTourInfo> worker2 ) {
         cover.setLayout( new MigLayout("wrap, fill, insets 50","push[]20[]20[]20[]push", "12[]12[]push"));
         allTour = new ArrayList<>();    
         try {
@@ -82,12 +106,15 @@ public class AdminMain extends javax.swing.JFrame {
                     Map<String,String> Rating = (Map<String,String>) document.get("TourRating");
                     t.setScore( Rating.get("Rate"));   
                     List<String> tourImagesBase64 = (List<String>) document.get("TourImages");
-                    
+                    System.out.println(t);
                     // Convert Base64 encoded images back to ImageIcon
                     t.setPic( convertBase64ToImageIcon(tourImagesBase64));
-                    
-                    allTour.add(t);
-                    cover.add(t);
+                    SwingUtilities.invokeLater(() -> {
+                        cover.add(t);
+                        allTour.add(t);
+                        cover.repaint();
+                        cover.revalidate();
+                    });
                 }
                 
             }
@@ -126,6 +153,7 @@ public class AdminMain extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         txtEmail = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         imagePanel1 = new uitravel.Components.ImagePanel();
         addNewTour = new uitravel.Admin.component.AddNewTour();
         txtEmail1 = new javax.swing.JLabel();
@@ -189,12 +217,23 @@ public class AdminMain extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jButton1.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
+        jButton1.setText("Thống kê doanh thu");
+        jButton1.setBorderPainted(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout headerLayout = new javax.swing.GroupLayout(header);
         header.setLayout(headerLayout);
         headerLayout.setHorizontalGroup(
             headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(headerLayout.createSequentialGroup()
-                .addContainerGap(1148, Short.MAX_VALUE)
+                .addContainerGap(955, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(41, 41, 41)
                 .addComponent(user, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(49, 49, 49))
         );
@@ -202,7 +241,9 @@ public class AdminMain extends javax.swing.JFrame {
             headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(headerLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addComponent(user, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(user, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(17, Short.MAX_VALUE))
         );
 
@@ -356,6 +397,10 @@ public class AdminMain extends javax.swing.JFrame {
       
     }//GEN-LAST:event_userMousePressed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        GlassPanePopup.showPopup(new saoke());
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -399,6 +444,7 @@ public class AdminMain extends javax.swing.JFrame {
     private javax.swing.JLayeredPane cover1;
     private javax.swing.JPanel header;
     private uitravel.Components.ImagePanel imagePanel1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane main;
