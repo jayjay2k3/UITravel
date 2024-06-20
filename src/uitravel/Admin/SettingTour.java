@@ -974,7 +974,6 @@ public class SettingTour extends javax.swing.JFrame {
     tourData.put("TourDescription", txtDescription.getText());
     tourData.put("TourTime", txtChooseTime.getText());
     tourData.put("TourPrice", txtPrice.getText());
-    tourData.put("TourRating", "0");
     tourData.put("TourActivities", Acctivities);
 
     // Format the tour length
@@ -1028,7 +1027,7 @@ public class SettingTour extends javax.swing.JFrame {
             System.out.println("Uploading tour data: " + tourData);
             System.out.println("Uploading tour data: " + tourData.get("TourLength"));
 
-        collection.document(tourID).set(tourData);
+        collection.document(tourID).update(tourData);
         JOptionPane.showMessageDialog(null,
                     "Thêm chuyến đi thành công!.",
                     "Thông báo",
