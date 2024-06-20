@@ -56,12 +56,18 @@ public class FullTourInfo extends javax.swing.JPanel {
     Map<String,String> childTourID;
 
     List<TourImage> tourImages;
+    
     private DateChooser selectDate;
     private String tourID;
     Firestore firestore = FirestoreClient.getFirestore();
     DefaultListModel<String> listModel = new DefaultListModel<>();
     private double price;
-
+    public String getTourName(){
+        return txtName.getText();
+    }
+    public ImageIcon getTourPic(){
+        return tourImages.get(0).getTourImage();
+    }
     public FullTourInfo() {
         this.childTourID = new HashMap<>();
         initComponents();
@@ -272,8 +278,9 @@ public class FullTourInfo extends javax.swing.JPanel {
                 txtScore.setText(Rating.get("Rate"));
                 int total = Integer.parseInt(Rating.get("NumberVotted"));
                 txtNumberVoted.setText("(" +Rating.get("NumberVotted") +" đánh giá)");
+                
                 if(total!=0)
-                    jProgressBar1.setValue(good/total*100);
+                    jProgressBar1.setValue((int) ((double)good/total*100));
                 else 
                     jProgressBar1.setValue(0);
             }
@@ -807,7 +814,8 @@ public class FullTourInfo extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void myButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myButton1ActionPerformed
-        if(btnAdult.getNumber()==0&&btnChild.getNumber()==0&&btnInfant.getNumber()==0&&txtChooseTime.getText().equals("Đã hết chỗ")){
+        System.out.println(txtChooseTime.getText());
+        if((btnAdult.getNumber()==0&&btnChild.getNumber()==0&&btnInfant.getNumber()==0)||txtChooseTime.getText().equals("Đã hết chỗ")){
             
         }
         else{
