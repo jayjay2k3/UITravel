@@ -461,7 +461,7 @@ public class UserSearch extends javax.swing.JFrame {
         GlassPanePopup.install(this);
 
         //bg.setPreferredSize(new java.awt.Dimension(1400, 10000));
-
+        txtPlace.setText(searchData);
         layout = new MigLayout("wrap, fill, insets 0","[]", "12[]12[]12");
         //bg.setLayout(layout);
        if(!isLogged){
@@ -538,10 +538,6 @@ public class UserSearch extends javax.swing.JFrame {
         selectDate = new DateChooser();
         selectDate.setBetweenCharacter(" đến ");
         selectDate.setDateSelectionMode(DateChooser.DateSelectionMode.BETWEEN_DATE_SELECTED);
-       
-      
-        
-
         main.setViewportView(bg);
         addChatBox();
   
@@ -649,6 +645,8 @@ public class UserSearch extends javax.swing.JFrame {
                         fullTour.setTourID(t.getTourID());
                         fullTour.addEvent((ActionEvent e) -> {
                             UserPayment up = new UserPayment();
+                            up.setTourName(fullTour.getTourName());
+                            up.setBackImg(fullTour.getTourPic());
                             up.setTicketData(fullTour.getTicketData());
                             up.setPrices(fullTour.getPrices());
                             up.setChildTourID(fullTour.getChildID());
