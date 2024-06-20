@@ -11,12 +11,16 @@ import javax.swing.ImageIcon;
  * @author ACER
  */
 public class TourImage extends javax.swing.JPanel {
-
+    private ImageIcon img;
     public void setBackgroundIcon(ImageIcon img){
+        this.img = img;
         bg.setbackgroundImage(img);
     }
     public TourImage() {
         initComponents();
+    }
+    public ImageIcon getTourImage() {
+        return img;
     }
 
     /**
