@@ -34,25 +34,30 @@ public class FirebaseInitializer {
     /**
      *
      */
-    public static void initialize() throws java.io.IOException{
-          if (!initialized) {
+    public static void initialize() throws IOException {
+        if (!initialized) {
             synchronized (FirebaseInitializer.class) {
                 if (!initialized) {
-                try {
-                    FileInputStream serviceAccount = new FileInputStream("src\\FireBase\\uitravel-22edb-firebase-adminsdk-iz6t6-c31d6ea6fc.json");
+                    try {
+                        // Sử dụng đường dẫn tương đối đến tệp JSON
+                        String serviceAccountPath = "src/FireBase/uitravel-22edb-firebase-adminsdk-iz6t6-5ee03b5e16.json";
+                        FileInputStream serviceAccount = new FileInputStream(serviceAccountPath);
+                        
+                        FirebaseOptions options = new FirebaseOptions.Builder()
+                                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                                .build();
 
-                    FirebaseOptions options = new FirebaseOptions.Builder()
-                            .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                            .build();
-
-                    FirebaseApp.initializeApp(options);
-                    initialized = true;
-                    System.out.println("Firebase Initialized");
-                } catch (IOException e) {
-                }
+                        FirebaseApp.initializeApp(options);
+                        initialized = true;
+                        System.out.println("Firebase Initialized");
+                    } catch (IOException e) {
+                        // Xử lý IOException, ví dụ: ném lại ngoại lệ hoặc ghi log
+                        System.err.println("Error initializing Firebase: " + e.getMessage());
+                        throw e; // Ném lại ngoại lệ để báo lỗi cho người dùng hoặc hệ thống
+                    }
                 }
             }
-          }
+        }
     }
     public void uploadImage(ImageIcon imageIcon ) {
         try {
